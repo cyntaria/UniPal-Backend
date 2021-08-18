@@ -1,0 +1,10 @@
+node_modules
+
+#env configs
+envs
+
+#compressed code
+ez_tickets_backend.rar
+
+#bash scripts
+*.bat

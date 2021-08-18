@@ -1,0 +1,3 @@
+exports.tables = {
+    Users: 'users'
+};

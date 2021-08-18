@@ -1,0 +1,26 @@
+{
+    "extends": "strongloop",
+    "env": {
+        "browser": false,
+        "es6": true,
+        "node": true
+    },
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "requireConfigFile": false,
+        "ecmaVersion": 2020
+    },
+    "rules":{
+        "indent": ["error",4],
+        "comma-spacing": [2, { "before": false, "after": true }],
+        "quotes":"off",
+        "strict": [2, "never"],
+        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
+        "comma-dangle": ["error", "never"],
+        "max-len": "off",
+        "keyword-spacing": ["error", {"before":true,"after":true}],
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "eol-last": ["error", "never"],
+        "space-before-function-paren": ["error", "never"]
+    }
+}

@@ -1,0 +1,26 @@
+const { Config } = require('../configs/config');
+const { failureResponse } = require('../utils/responses.utils');
+const { InternalServerException } = require('../utils/exceptions/api.exception');
+const { TokenVerificationException, TokenExpiredException } = require('../utils/exceptions/auth.exception');
+
+function errorMiddleware(err, req, res, next) {
+    // TODO: Add better code checking for JWT errors
+    if (err.status === 500 || !err.message) {
+        if (!err.isOperational) err = new InternalServerException('Internal server error');
+    } else if (err.name === "JsonWebTokenError") err = new TokenVerificationException();
+    else if (err.message === "jwt expired") err = new TokenExpiredException();
+
+    let { message, code, status, data, stack } = err;
+
+    if (Config.NODE_ENV === "dev"){
+        console.log(`[Exception] ${code}, [Code] ${status}`);
+        console.log(`[Error] ${message}`);
+        console.log(`[Stack] ${stack}`);
+    }
+
+    const response = failureResponse(code, message, data);
+
+    res.status(status).send(response);
+}
+
+module.exports = errorMiddleware;
