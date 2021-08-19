@@ -2,7 +2,7 @@
 name: Epic template
 about: Use this template to streamline information you track about large projects
   and user stories.
-title: ''
+title: "[EPIC]"
 labels: epic
 assignees: ''
 
