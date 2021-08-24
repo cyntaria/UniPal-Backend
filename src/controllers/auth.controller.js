@@ -22,18 +22,6 @@ class AuthController {
         res.send(response);
     };
 
-    forgotPassword = async(req, res, next) => {
-        checkValidation(req);
-        const response = await AuthRepository.forgotPassword(req.body);
-        res.send(response);
-    }
-
-    verifyOTP = async(req, res, next) => {
-        checkValidation(req);
-        const response = await AuthRepository.verifyOTP(req.body);
-        res.send(response);
-    }
-
     changePassword = async(req, res, next) => {
         checkValidation(req);
         const response = await AuthRepository.changePassword(req.body);
