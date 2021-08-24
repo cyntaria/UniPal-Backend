@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const UserRole = require('../../utils/enums/userRoles.utils');
+const { Roles } = require('../../utils/enums/roles.utils');
 const EmailValidator = require('deep-email-validator');
 
 // TODO: Adjust schema according to your db
@@ -29,8 +29,8 @@ exports.createUserSchema = [
     body('role')
         .optional()
         .trim()
-        .isIn([...Object.values(UserRole)])
-        .withMessage('Invalid UserRole type'),
+        .isIn([...Object.values(Roles)])
+        .withMessage('Invalid Role type'),
     body('password')
         .trim()
         .exists()
@@ -66,8 +66,8 @@ exports.updateUserSchema = [
     body('role')
         .optional()
         .trim()
-        .isIn([...Object.values(UserRole)])
-        .withMessage('Invalid UserRole type'),
+        .isIn([...Object.values(Roles)])
+        .withMessage('Invalid Role type'),
     body('contact')
         .optional()
         .trim()

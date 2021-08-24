@@ -1,6 +1,6 @@
 const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
-const UserRole = require('../utils/enums/userRoles.utils');
+const { Roles } = require('../utils/enums/roles.utils');
 const { tables } = require('../utils/tableNames.utils');
 
 class UserModel {
@@ -31,7 +31,7 @@ class UserModel {
     }
 
     // TODO: Check params for schema
-    create = async({ full_name, email, password, role = UserRole.ApiUser, contact, address }) => {
+    create = async({ full_name, email, password, role = Roles.ApiUser, contact, address }) => {
         const sql = `INSERT INTO ${tables.Users}
         (full_name, email, password, role, contact, address) VALUES (?,?,?,?,?,?)`;
 
