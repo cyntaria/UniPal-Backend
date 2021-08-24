@@ -1,3 +1,3 @@
 exports.tables = {
-    Users: 'users'
+    Students: 'students'
 };

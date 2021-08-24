@@ -3,7 +3,7 @@ const { Roles } = require('../../utils/enums/roles.utils');
 const EmailValidator = require('deep-email-validator');
 
 // TODO: Adjust schema according to your db
-exports.createUserSchema = [
+exports.createStudentSchema = [
     body('full_name')
         .trim()
         .exists()
@@ -44,7 +44,7 @@ exports.createUserSchema = [
         .withMessage('Must be a valid Pakistan mobile number along with country code')
 ];
 
-exports.updateUserSchema = [
+exports.updateStudentSchema = [
     body('full_name')
         .optional()
         .trim()

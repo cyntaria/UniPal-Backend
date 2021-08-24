@@ -4,15 +4,15 @@ const AuthRepository = require('../repositories/auth.repository');
 
 class AuthController {
 
-    registerUser = async(req, res, next) => {
+    register = async(req, res, next) => {
         checkValidation(req);
-        const response = await AuthRepository.registerUser(req.body);
+        const response = await AuthRepository.register(req.body);
         res.send(response);
     };
 
-    userLogin = async(req, res, next) => {
+    login = async(req, res, next) => {
         checkValidation(req);
-        const response = await AuthRepository.userLogin(req.body.email, req.body.password);
+        const response = await AuthRepository.login(req.body.email, req.body.password);
         res.send(response);
     };
 
