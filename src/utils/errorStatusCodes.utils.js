@@ -12,9 +12,6 @@ module.exports.ErrorStatusCodes = {
     RegistrationFailedException: 500,
     InvalidEndpointException: 404,
     TokenVerificationException: 401,
-    OTPGenerationException: 401,
-    OTPExpiredException: 401,
-    OTPVerificationException: 401,
     ForeignKeyViolationException: 512,
     UnimplementedException: 404,
     HealthCheckFailedException: 503
