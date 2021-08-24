@@ -14,4 +14,4 @@ class MiddlewareLoader {
     }
 }
 
-exports = { MiddlewareLoader };
+module.exports = { MiddlewareLoader };

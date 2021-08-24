@@ -11,4 +11,4 @@ class RoutesLoader {
     }
 }
 
-exports = {RoutesLoader};
+module.exports = {RoutesLoader};
