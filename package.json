@@ -33,6 +33,7 @@
     "@babel/core": "^7.15.0",
     "@babel/eslint-parser": "^7.15.0",
     "axios": "^0.21.1",
+    "chai": "^4.3.4",
     "eslint": "^7.25.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.3.2",
