@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 24, 2021 at 12:13 AM
+-- Generation Time: Aug 26, 2021 at 04:19 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -93,8 +93,7 @@ CREATE TABLE `activity_types` (
 CREATE TABLE `campuses` (
   `campus_id` int(10) UNSIGNED NOT NULL,
   `campus` varchar(45) NOT NULL,
-  `university_id` int(10) UNSIGNED NOT NULL,
-  `location` varchar(45) NOT NULL
+  `location` point NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -248,8 +247,7 @@ CREATE TABLE `post_uploads` (
 
 CREATE TABLE `programs` (
   `program_id` int(10) UNSIGNED NOT NULL,
-  `program` varchar(45) NOT NULL,
-  `university_id` int(10) UNSIGNED NOT NULL
+  `program` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -293,20 +291,19 @@ CREATE TABLE `students` (
   `profile_picture_url` text NOT NULL,
   `graduation_year` year(4) NOT NULL,
   `uni_email` varchar(45) NOT NULL,
-  `hobby1` int(10) UNSIGNED NOT NULL,
-  `hobby2` int(10) UNSIGNED NOT NULL,
-  `hobby3` int(10) UNSIGNED NOT NULL,
-  `interest1` int(10) UNSIGNED NOT NULL,
-  `interest2` int(10) UNSIGNED NOT NULL,
-  `interest3` int(10) UNSIGNED NOT NULL,
-  `university_id` int(10) UNSIGNED NOT NULL,
+  `hobby_1` int(10) UNSIGNED NOT NULL,
+  `hobby_2` int(10) UNSIGNED NOT NULL,
+  `hobby_3` int(10) UNSIGNED NOT NULL,
+  `interest_1` int(10) UNSIGNED NOT NULL,
+  `interest_2` int(10) UNSIGNED NOT NULL,
+  `interest_3` int(10) UNSIGNED NOT NULL,
   `program_id` int(10) UNSIGNED NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL,
   `favourite_campus_hangout_spot` varchar(45) NOT NULL,
   `favourite_campus_activity` varchar(45) NOT NULL,
   `current_user_status` int(10) UNSIGNED NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `role` enum('admin','moderator','user','') NOT NULL DEFAULT 'user'
+  `role` enum('admin','api_user','moderator') NOT NULL DEFAULT 'api_user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -426,17 +423,6 @@ CREATE TABLE `tsr_members` (
   `timetable_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `universities`
---
-
-CREATE TABLE `universities` (
-  `university_id` int(10) UNSIGNED NOT NULL,
-  `university` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexes for dumped tables
 --
@@ -476,7 +462,7 @@ ALTER TABLE `activity_types`
 --
 ALTER TABLE `campuses`
   ADD PRIMARY KEY (`campus_id`),
-  ADD KEY `fk_campuses_university_id_idx` (`university_id`);
+  ADD SPATIAL KEY `SPATIAL_LOCATION_idx` (`location`);
 
 --
 -- Indexes for table `campus_spots`
@@ -571,8 +557,7 @@ ALTER TABLE `post_uploads`
 -- Indexes for table `programs`
 --
 ALTER TABLE `programs`
-  ADD PRIMARY KEY (`program_id`),
-  ADD KEY `fk_programs_university_id_idx` (`university_id`);
+  ADD PRIMARY KEY (`program_id`);
 
 --
 -- Indexes for table `reaction_types`
@@ -595,14 +580,13 @@ ALTER TABLE `students`
   ADD PRIMARY KEY (`student_erp`),
   ADD UNIQUE KEY `email` (`email`),
   ADD KEY `fk_students_campus_id_idx` (`campus_id`),
-  ADD KEY `fk_students_hobby_id_1_idx` (`hobby1`),
-  ADD KEY `fk_students_hobby_id_2_idx` (`hobby2`),
-  ADD KEY `fk_students_hobby_id_3_idx` (`hobby3`),
-  ADD KEY `fk_students_interest_id_1_idx` (`interest1`),
-  ADD KEY `fk_students_interest_id_2_idx` (`interest2`),
-  ADD KEY `fk_students_interest_id_3_idx` (`interest3`),
+  ADD KEY `fk_students_hobby_id_1_idx` (`hobby_1`),
+  ADD KEY `fk_students_hobby_id_2_idx` (`hobby_2`),
+  ADD KEY `fk_students_hobby_id_3_idx` (`hobby_3`),
+  ADD KEY `fk_students_interest_id_1_idx` (`interest_1`),
+  ADD KEY `fk_students_interest_id_2_idx` (`interest_2`),
+  ADD KEY `fk_students_interest_id_3_idx` (`interest_3`),
   ADD KEY `fk_students_program_id_idx` (`program_id`),
-  ADD KEY `fk_students_university_id_idx` (`university_id`),
   ADD KEY `fk_students_user_status_id_idx` (`current_user_status`);
 
 --
@@ -630,7 +614,8 @@ ALTER TABLE `teacher_reviews`
   ADD PRIMARY KEY (`review_id`),
   ADD UNIQUE KEY `unique_review` (`teacher_id`,`reviewed_by_erp`) USING BTREE,
   ADD KEY `fk_teacher_reviews_student_erp_idx` (`reviewed_by_erp`),
-  ADD KEY `fk_teacher_reviews_teacher_id_idx` (`teacher_id`);
+  ADD KEY `fk_teacher_reviews_teacher_id_idx` (`teacher_id`),
+  ADD KEY `fk_teacher_reviews_subject_code` (`subject_code`);
 
 --
 -- Indexes for table `timeslots`
@@ -670,12 +655,6 @@ ALTER TABLE `tsr_members`
   ADD KEY `fk_tsr_members_student_erp_idx` (`student_erp`),
   ADD KEY `fk_tsr_members_timetable_id_idx` (`timetable_id`),
   ADD KEY `fk_tsr_members_tsr_id_idx` (`tsr_id`);
-
---
--- Indexes for table `universities`
---
-ALTER TABLE `universities`
-  ADD PRIMARY KEY (`university_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -784,12 +763,6 @@ ALTER TABLE `timetable_share_rooms`
   MODIFY `tsr_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `universities`
---
-ALTER TABLE `universities`
-  MODIFY `university_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- Constraints for dumped tables
 --
 
@@ -808,12 +781,6 @@ ALTER TABLE `activities`
 ALTER TABLE `activity_attendees`
   ADD CONSTRAINT `fk_activity_attendees_activity_id` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`activity_id`),
   ADD CONSTRAINT `fk_activity_attendees_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
-
---
--- Constraints for table `campuses`
---
-ALTER TABLE `campuses`
-  ADD CONSTRAINT `fk_campuses_university_id` FOREIGN KEY (`university_id`) REFERENCES `universities` (`university_id`);
 
 --
 -- Constraints for table `campus_spots`
@@ -882,12 +849,6 @@ ALTER TABLE `post_uploads`
   ADD CONSTRAINT `fk_post_uploads_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`);
 
 --
--- Constraints for table `programs`
---
-ALTER TABLE `programs`
-  ADD CONSTRAINT `fk_programs_university_id` FOREIGN KEY (`university_id`) REFERENCES `universities` (`university_id`);
-
---
 -- Constraints for table `saved_activities`
 --
 ALTER TABLE `saved_activities`
@@ -899,14 +860,13 @@ ALTER TABLE `saved_activities`
 --
 ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_campus_id` FOREIGN KEY (`campus_id`) REFERENCES `campuses` (`campus_id`),
-  ADD CONSTRAINT `fk_students_hobby_id_1` FOREIGN KEY (`hobby1`) REFERENCES `hobbies` (`hobby_id`),
-  ADD CONSTRAINT `fk_students_hobby_id_2` FOREIGN KEY (`hobby2`) REFERENCES `hobbies` (`hobby_id`),
-  ADD CONSTRAINT `fk_students_hobby_id_3` FOREIGN KEY (`hobby3`) REFERENCES `hobbies` (`hobby_id`),
-  ADD CONSTRAINT `fk_students_interest_id_1` FOREIGN KEY (`interest1`) REFERENCES `interests` (`interest_id`),
-  ADD CONSTRAINT `fk_students_interest_id_2` FOREIGN KEY (`interest2`) REFERENCES `interests` (`interest_id`),
-  ADD CONSTRAINT `fk_students_interest_id_3` FOREIGN KEY (`interest3`) REFERENCES `interests` (`interest_id`),
+  ADD CONSTRAINT `fk_students_hobby_id_1` FOREIGN KEY (`hobby_1`) REFERENCES `hobbies` (`hobby_id`),
+  ADD CONSTRAINT `fk_students_hobby_id_2` FOREIGN KEY (`hobby_2`) REFERENCES `hobbies` (`hobby_id`),
+  ADD CONSTRAINT `fk_students_hobby_id_3` FOREIGN KEY (`hobby_3`) REFERENCES `hobbies` (`hobby_id`),
+  ADD CONSTRAINT `fk_students_interest_id_1` FOREIGN KEY (`interest_1`) REFERENCES `interests` (`interest_id`),
+  ADD CONSTRAINT `fk_students_interest_id_2` FOREIGN KEY (`interest_2`) REFERENCES `interests` (`interest_id`),
+  ADD CONSTRAINT `fk_students_interest_id_3` FOREIGN KEY (`interest_3`) REFERENCES `interests` (`interest_id`),
   ADD CONSTRAINT `fk_students_program_id` FOREIGN KEY (`program_id`) REFERENCES `programs` (`program_id`),
-  ADD CONSTRAINT `fk_students_university_id` FOREIGN KEY (`university_id`) REFERENCES `universities` (`university_id`),
   ADD CONSTRAINT `fk_students_user_status_id` FOREIGN KEY (`current_user_status`) REFERENCES `student_statuses` (`user_status_id`);
 
 --
