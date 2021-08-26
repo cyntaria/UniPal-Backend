@@ -7,21 +7,21 @@ describe("Healthcheck", () => {
         request(app).get("/api/v1/health", null)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(function (res) {
-                const success = res.body.headers.success;
+            .expect(function(res) {
+                const error = res.body.headers.error;
                 const uptime = res.body.body.uptime;
                 const health = res.body.body.health;
                 res.body = {};
-                res.body.success = success;
+                res.body.error = error;
                 res.body.up = uptime > 0;
                 res.body.health = health;
             })
             .expect(200, {
                 health: 'OK',
-                success: 1,
+                error: 0,
                 up: true
             })
-            .end(function (err) {
+            .end(function(err) {
                 if (err) return done(err);
                 return done();
             });
