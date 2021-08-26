@@ -4,6 +4,18 @@ const expect = require('chai').expect;
 const app = require('../src/server');
 
 describe("Healthcheck", () => {
+    let originalDateNow;
+    const now = Date.now();
+
+    beforeEach(() => {
+        originalDateNow = Date.now;
+        Date.now = () => { return now; };
+    });
+  
+    afterEach(() => {
+        Date.now = originalDateNow;
+    });
+
     it("returns OK, uptime and timestamp, if server is healthy", async() => {
         const res = await request(app).get("/api/v1/health", null);
 
@@ -23,5 +35,9 @@ describe("Healthcheck", () => {
         // uptime check
         const uptime = Number.parseFloat(resBody.uptime);
         expect(uptime).to.be.gt(0);
+
+        // timestamp check
+        const timestamp = new Date(now).toJSON();
+        expect(resBody.timestamp).to.be.equal(timestamp);
     });
 });
