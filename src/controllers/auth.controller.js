@@ -12,7 +12,7 @@ class AuthController {
 
     login = async(req, res, next) => {
         checkValidation(req);
-        const response = await AuthRepository.login(req.body.email, req.body.password);
+        const response = await AuthRepository.login(req.body.erp, req.body.password);
         res.send(response);
     };
 

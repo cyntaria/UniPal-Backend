@@ -9,7 +9,7 @@ class StudentController {
     };
 
     getStudentById = async(req, res, next) => {
-        const response = await StudentRepository.findOne({ student_erp: req.params.id });
+        const response = await StudentRepository.findOne({erp: req.params.erp});
         res.send(response);
     };
 
@@ -21,12 +21,12 @@ class StudentController {
 
     updateStudent = async(req, res, next) => {
         checkValidation(req);
-        const response = await StudentRepository.update(req.body, {student_erp: req.params.id});
+        const response = await StudentRepository.update(req.body, {erp: req.params.erp});
         res.send(response);
     };
 
     deleteStudent = async(req, res, next) => {
-        const response = await StudentRepository.delete(req.params.id);
+        const response = await StudentRepository.delete(req.params.erp);
         res.send(response);
     };
 }

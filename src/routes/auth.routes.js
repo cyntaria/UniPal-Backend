@@ -8,12 +8,12 @@ const { validateLogin, resetPWSchema, changePWSchema, validateRefresh } = requir
 
 router.post('/register', createStudentSchema, awaitHandlerFactory(authController.register)); // localhost:3000/api/v1/auth/register
 router.post('/login', validateLogin, awaitHandlerFactory(authController.login)); // localhost:3000/api/v1/auth/login
-router.post('/token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/token
+router.post('/refresh-token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/refresh-token
 
 // For sending the new password after OTP verification success
-router.post('/password/reset', resetPWSchema, awaitHandlerFactory(authController.resetPassword)); // localhost:3000/api/v1/auth/password/reset
+router.post('/reset-password', resetPWSchema, awaitHandlerFactory(authController.resetPassword)); // localhost:3000/api/v1/auth/reset-password
 
 // For changing password from the profile page, in case old password is known
-router.post('/password/change', changePWSchema, awaitHandlerFactory(authController.changePassword)); // localhost:3000/api/v1/auth/password/change
+router.post('/change-password', changePWSchema, awaitHandlerFactory(authController.changePassword)); // localhost:3000/api/v1/auth/password/change-password
 
 module.exports = router;

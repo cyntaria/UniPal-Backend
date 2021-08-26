@@ -34,7 +34,7 @@ class StudentModel {
     create = async({ erp, first_name, last_name, gender, contact, email, birthday, password,
         profile_picture_url, graduation_year, uni_email, hobby_1, hobby_2, hobby_3,
         interest_1, interest_2, interest_3, program_id, campus_id, current_user_status,
-        favourite_campus_hangout_spot, favourite_campus_activity, is_active, role = Roles.ApiUser }) => {
+        favourite_campus_hangout_spot, favourite_campus_activity, is_active = '1', role = Roles.ApiUser }) => {
         const sql = `INSERT INTO ${tables.Students}
         (erp, first_name, last_name, gender, contact, email, birthday, password,
             profile_picture_url, graduation_year, uni_email, hobby_1, hobby_2, hobby_3,

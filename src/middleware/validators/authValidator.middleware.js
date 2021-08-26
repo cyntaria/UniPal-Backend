@@ -1,26 +1,18 @@
 const { body } = require('express-validator');
-const EmailValidator = require('deep-email-validator');
 
-// TODO: verify schema
 exports.changePWSchema = [
-    body('email')
+    body('erp')
         .trim()
         .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .custom(async(email) => {
-            const {valid} = await EmailValidator.validate(email);
-            return valid;
-        })
-        .withMessage('Email unrecognized')
-        .normalizeEmail(),
-    body('password')
+        .withMessage('Student ERP is required')
+        .isLength({ min: 5, max: 5 })
+        .withMessage('ERP must be 5 digits'),
+    body('old_password')
         .trim()
         .exists()
-        .withMessage('Password field is required')
+        .withMessage('Old password is required')
         .notEmpty()
-        .withMessage('Password must be filled'),
+        .withMessage('Old password must be filled'),
     body('new_password')
         .trim()
         .exists()
@@ -32,18 +24,12 @@ exports.changePWSchema = [
 ];
 
 exports.resetPWSchema = [
-    body('email')
+    body('erp')
         .trim()
         .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .custom(async(email) => {
-            const {valid} = await EmailValidator.validate(email);
-            return valid;
-        })
-        .withMessage('Email unrecognized')
-        .normalizeEmail(),
+        .withMessage('Student ERP is required')
+        .isLength({ min: 5, max: 5 })
+        .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
         .exists()
@@ -53,18 +39,12 @@ exports.resetPWSchema = [
 ];
 
 exports.validateLogin = [
-    body('email')
+    body('erp')
         .trim()
         .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .custom(async(email) => {
-            const {valid} = await EmailValidator.validate(email);
-            return valid;
-        })
-        .withMessage('Email unrecognized')
-        .normalizeEmail(),
+        .withMessage('Student ERP is required')
+        .isLength({ min: 5, max: 5 })
+        .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
         .exists()
@@ -74,18 +54,12 @@ exports.validateLogin = [
 ];
 
 exports.validateRefresh = [
-    body('email')
+    body('erp')
         .trim()
         .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .custom(async(email) => {
-            const {valid} = await EmailValidator.validate(email);
-            return valid;
-        })
-        .withMessage('Email unrecognized')
-        .normalizeEmail(),
+        .withMessage('Student ERP is required')
+        .isLength({ min: 5, max: 5 })
+        .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
         .exists()

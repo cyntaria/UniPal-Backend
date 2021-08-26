@@ -59,7 +59,8 @@ exports.createStudentSchema = [
         .trim()
         .exists()
         .withMessage('Password is required')
-        .notEmpty(),
+        .notEmpty()
+        .withMessage('Password must be filled'),
     body('profile_picture_url')
         .trim()
         .exists()
@@ -136,14 +137,18 @@ exports.createStudentSchema = [
         .trim()
         .exists()
         .withMessage('Favourite Campus Hangout Spot is required')
+        .notEmpty()
+        .withMessage('Favourite Campus Hangout Spot must be filled')
         .isLength({max: 45})
-        .withMessage('Should be less than 45 characters'),
+        .withMessage('Should be less than 45 chars'),
     body('favourite_campus_activity')
         .trim()
         .exists()
         .withMessage('Favourite Campus Activity is required')
+        .notEmpty()
+        .withMessage('Favourite Campus Activity must be filled')
         .isLength({max: 45})
-        .withMessage('Should be less than 45 characters'),
+        .withMessage('Should be less than 45 chars'),
     body('current_status')
         .trim()
         .exists()
@@ -164,22 +169,27 @@ exports.createStudentSchema = [
 
 exports.updateStudentSchema = [
     body('first_name')
+        .optional()
         .trim()
         .isLength({ min: 2 })
         .withMessage('Must be at least 2 chars long'),
     body('last_name')
+        .optional()
         .trim()
         .isLength({ min: 2 })
         .withMessage('Must be at least 2 chars long'),
     body('gender')
+        .optional()
         .trim()
         .isIn([...Object.values(Genders)])
         .withMessage('Invalid Gender'),
     body('contact')
+        .optional()
         .trim()
         .isMobilePhone('en-PK', {strictMode: true})
         .withMessage('Must be a valid Pakistan mobile number along with country code'),
     body('email')
+        .optional()
         .trim()
         .isEmail()
         .withMessage('Must be a valid email')
@@ -190,18 +200,22 @@ exports.updateStudentSchema = [
         .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('birthday')
+        .optional()
         .trim()
         .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
         .withMessage('Birthday must be a valid date of format \'YYYY-MM-DD\''),
     body('profile_picture_url')
+        .optional()
         .trim()
         .isURL()
         .withMessage('Must be a valid url'),
     body('graduation_year')
+        .optional()
         .trim()
         .matches(yearRegex)
         .withMessage('Graduation year must be a valid year'),
     body('uni_email')
+        .optional()
         .trim()
         .isEmail()
         .withMessage('Must be a valid email')
@@ -212,46 +226,61 @@ exports.updateStudentSchema = [
         .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('hobby_1')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('hobby_2')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('hobby_3')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('interest_1')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('interest_2')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('interest_3')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('campus_id')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid CampusID found'),
     body('program_id')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid ProgramID found'),
     body('favourite_campus_hangout_spot')
+        .optional()
         .trim()
+        .notEmpty()
+        .withMessage('Favourite Campus Hangout Spot must be filled')
         .isLength({max: 45})
-        .withMessage('Should be less than 45 characters'),
+        .withMessage('Should be less than 45 chars'),
     body('favourite_campus_activity')
+        .optional()
         .trim()
+        .notEmpty()
+        .withMessage('Favourite Campus Activity must be filled')
         .isLength({max: 45})
-        .withMessage('Should be less than 45 characters'),
+        .withMessage('Should be less than 45 chars'),
     body('current_status')
+        .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid StudentStatusID found'),
