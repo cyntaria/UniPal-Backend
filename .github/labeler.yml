@@ -54,4 +54,4 @@ documentation:
 - any: ['README.md']
 
 tests:
-- any: ['test/**/*.spec.js']
+- any: ['test/**/*.spec.js','**/*.test.js']
