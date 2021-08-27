@@ -1,18 +1,15 @@
 const { body } = require('express-validator');
 const { Roles } = require('../../utils/enums/roles.utils');
 const { Genders } = require('../../utils/enums/genders.utils');
-const { yearRegex } = require('../../utils/common.utils');
+const { yearRegex, ERPRegex } = require('../../utils/common.utils');
 const EmailValidator = require('deep-email-validator');
 
 exports.createStudentSchema = [
     body('erp')
         .trim()
         .exists()
-        .withMessage('Student ERP is required')
-        .isLength({ min: 5, max: 5 })
-        .withMessage('ERP must be 5 digits')
-        .isString()
-        .withMessage('ERP must be a string'),
+        .matches(ERPRegex)
+        .withMessage('ERP must be 5 digits'),
     body('first_name')
         .trim()
         .exists()

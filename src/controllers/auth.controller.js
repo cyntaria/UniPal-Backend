@@ -7,7 +7,7 @@ class AuthController {
     register = async(req, res, next) => {
         checkValidation(req);
         const response = await AuthRepository.register(req.body);
-        res.send(response);
+        res.status(201).send(response);
     };
 
     login = async(req, res, next) => {

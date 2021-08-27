@@ -8,7 +8,7 @@
     "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
-    "test": "mocha ./test/* --exit",
+    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config ./test/* --exit",
     "lint": "eslint src/",
     "fixlint": "eslint src/ --fix"
   },
@@ -38,6 +38,7 @@
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.3.2",
     "nodemon": "^2.0.7",
+    "sinon": "^11.1.2",
     "supertest": "^6.1.3"
   },
   "directories": {
