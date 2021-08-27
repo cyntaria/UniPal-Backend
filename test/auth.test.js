@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
 const expect = require('chai').expect;
-// const { auth } = require('../src/middleware/auth.middleware');
-const { app } = require('./testConfig');
+
+// importing this file causes the stub to take effect
+const { stubbedAuthMiddleware } = require('./testConfig');
 
 describe("Authentication API", () => {
     const API = "/api/v1/auth";
@@ -11,6 +12,10 @@ describe("Authentication API", () => {
     const newERP = '17999';
     const newEmail = 'test@gmail.com';
     let student;
+
+    beforeEach(() => {
+        this.app = require('../src/server').setup();
+    });
 
     beforeEach(() => {
         student = {
@@ -41,6 +46,10 @@ describe("Authentication API", () => {
         };
     });
 
+    after(() => {
+        stubbedAuthMiddleware.restore();
+    });
+
     describe("POST /auth/register", () => {
         it("Scenario 1: Register request is successful", async() => {
             // given
@@ -48,7 +57,7 @@ describe("Authentication API", () => {
             student.email = newEmail;
 
             // when
-            let res = await request(app).post(`${API}/register`, null).send(student);
+            let res = await request(this.app).post(`${API}/register`).send(student);
     
             // then
             expect(res.status).to.be.equal(201);
@@ -57,9 +66,12 @@ describe("Authentication API", () => {
             expect(resBody).to.include.keys('erp', 'token');
             expect(resBody.erp).to.be.equal(student.erp);
 
+            // Use these two lines to remove the stub effect
+            // decache('../src/server');
+            // const app = require('../src/server').setup();
+
             // clean up
-            // auth.callsFake((roles) => (req, res, next) => next());
-            res = await request(app).delete(`/api/v1/students/${student.erp}`);
+            res = await request(this.app).delete(`/api/v1/students/${student.erp}`);
             expect(res.status).to.be.equal(200);
         });
 
@@ -69,7 +81,7 @@ describe("Authentication API", () => {
             student.email = existingEmail;
 
             // when
-            const res = await request(app).post(`${API}/register`, null).send(student);
+            const res = await request(this.app).post(`${API}/register`).send(student);
     
             // then
             expect(res.status).to.be.equal(409);
@@ -82,7 +94,7 @@ describe("Authentication API", () => {
             student.erp = 'abdfe';
 
             // when
-            const res = await request(app).post(`${API}/register`, null).send(student);
+            const res = await request(this.app).post(`${API}/register`).send(student);
     
             // then
             expect(res.status).to.be.equal(422);
