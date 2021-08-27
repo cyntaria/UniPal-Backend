@@ -8,7 +8,7 @@
     "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
-    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config ./test/* --exit",
+    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config ./test/* --timeout 60000 --exit",
     "lint": "eslint src/",
     "fixlint": "eslint src/ --fix"
   },
