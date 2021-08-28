@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
 const expect = require('chai').expect;
-const app = require('../src/index'); // we are interested in health of our main express instance
+const app = require('../../src/index'); // we are interested in health of our main express instance
 
 describe("Healthcheck", () => {
     let originalDateNow;

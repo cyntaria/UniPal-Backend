@@ -54,14 +54,12 @@ class AuthRepository {
         let message = "";
         let responseBody = "";
         if (is_register){ // if registered first
-            const { erp } = student;
             message = "Registered"; // set msg to registered
-            responseBody = { erp, token };
         } else {
-            student.password = undefined;
             message = "Authenticated";
-            responseBody = { ...student, token };
         }
+        student.password = undefined;
+        responseBody = { ...student, token };
         return successResponse(responseBody, message);
     };
 
