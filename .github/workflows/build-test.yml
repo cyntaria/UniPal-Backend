@@ -40,10 +40,10 @@ jobs:
       uses: calxus/mysql-deploy-action@v1
       with:
         DATABASE_PORT: '3306'
-        DATABASE_HOST: $DB_HOST
-        DATABASE_NAME: $DB_DATABASE
-        DATABASE_USERNAME: $DB_USER
-        DATABASE_PASSWORD: $DB_PASS
+        DATABASE_HOST: ${{ env.DB_HOST }}
+        DATABASE_NAME: ${{ env.DB_DATABASE }}
+        DATABASE_USERNAME: ${{ env.DB_USER }}
+        DATABASE_PASSWORD: ${{ env.DB_PASS }}
         DATABASE_SCRIPT: './backups/unipal_test_db.sql'
     - name: Running tests
       run: npm test
