@@ -47,7 +47,7 @@ class AuthRepository {
         // student matched!
         const secretKey = Config.SECRET_JWT;
         const token = jwt.sign({ erp }, secretKey, {
-            expiresIn: '3d'
+            expiresIn: Config.EXPIRY_JWT
         });
 
         let message = "";
@@ -89,7 +89,7 @@ class AuthRepository {
                     
                     // student matched! Now sign
                     token = jwt.sign({ erp }, secretKey, {
-                        expiresIn: '3d'
+                        expiresIn: Config.EXPIRY_JWT
                     });
                 } else if (err.name === 'JsonWebTokenError') {
                     throw new TokenVerificationException("Invalid Token");
