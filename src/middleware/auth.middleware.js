@@ -1,6 +1,7 @@
 const {
     TokenMissingException,
     TokenVerificationException,
+    TokenExpiredException,
     UnauthorizedException
 } = require('../utils/exceptions/auth.exception');
 const StudentModel = require('../models/student.model');
@@ -21,7 +22,15 @@ const auth = (...roles) => {
             const secretKey = Config.SECRET_JWT;
 
             // Verify Token
-            const decoded = jwt.verify(token, secretKey);
+            const decoded = jwt.verify(token, secretKey, (err, decoded) => {
+                if (err) {
+                    if (err.name === 'TokenExpiredError') {
+                        throw new TokenExpiredException();
+                    } else if (err.name === 'JsonWebTokenError') {
+                        throw new TokenVerificationException();
+                    }
+                }
+            });
             const student = await StudentModel.findOne({ erp: decoded.erp });
 
             if (!student) {

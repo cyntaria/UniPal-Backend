@@ -76,16 +76,28 @@ class AuthRepository {
             throw new InvalidCredentialsException('Incorrect password');
         }
 
-        // student matched!
+        let token;
+        
+        // Check old token
         const secretKey = Config.SECRET_JWT;
-        const decoded = jwt.verify(old_token, secretKey);
-        
-        if (erp !== decoded.erp){
-            throw new TokenVerificationException();
-        }
-        
-        const token = jwt.sign({ erp }, secretKey, {
-            expiresIn: '3d'
+        jwt.verify(old_token, secretKey, (err, decoded) => {
+            if (err) {
+                if (err.name === 'TokenExpiredError') { // only sign a new token if old expired
+                    const {erp: decoded_erp} = jwt.decode(old_token);
+                    if (erp !== decoded_erp){
+                        throw new TokenVerificationException();
+                    }
+                    
+                    // student matched! Now sign
+                    token = jwt.sign({ erp }, secretKey, {
+                        expiresIn: '3d'
+                    });
+                } else if (err.name === 'JsonWebTokenError') {
+                    throw new TokenVerificationException("Invalid Token");
+                }
+            } else {
+                token = old_token; // return same token if valid and not expired
+            }
         });
 
         return successResponse({ token }, "Refreshed");
