@@ -29,17 +29,17 @@ jobs:
     - name: Code linting
       run: npm run lint
     - name: Setup MySQL
-      # env:
-      #   DB_PORT: 3306
-      #   DB_SCRIPT: './backups/unipal_test_db.sql'
-      #   DB_HOST: ${{ secrets.DB_HOST }}
-      #   DB_USER: ${{ secrets.DB_USER }}
-      #   DB_PASS: ${{ secrets.DB_PASS }}
-      #   DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
+      env:
+        DB_PORT: 3306
+        DB_SCRIPT: './backups/unipal_test_db.sql'
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
       run: |
         sudo /etc/init.d/mysql start
-        mysql -u root -proot -e "CREATE DATABASE unipal_test_db"
-        mysql --host=localhost --port=3306 --database=unipal_test_db --user=root --password=root < './backups/unipal_test_db.sql'
+        mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
+        mysql --host=$DB_HOST --port=$DB_PORT --database=$DB_DATABASE --user=$DB_USER --password=$DB_PASS < $DB_SCRIPT
     - name: Running tests
       run: npm test
       env:
