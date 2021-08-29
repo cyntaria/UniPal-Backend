@@ -37,17 +37,17 @@ jobs:
         echo $CONFIG_VARS > .env
         source .env 
     - name: Setup MySQL
+      env:
+        DB_PORT: '3306'
+        DB_HOST: $DB_HOST
+        DB_USER: $DB_USER
+        DB_PASS: $DB_PASS
+        DB_DATABASE: $DB_DATABASE
+        DB_SCRIPT: './backups/unipal_test_db.sql'
       run: |
         sudo /etc/init.d/mysql start
         mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
-        mysql --host="$DB_HOST" --port="3306" --database="$DB_DATABASE" --user="$DB_USER" --password="$DB_PASS" < "./backups/unipal_test_db.sql"
-      # env:
-      #   DB_PORT: '3306'
-      #   DB_HOST: $DB_HOST
-      #   DB_USER: $DB_USER
-      #   DB_PASS: $DB_PASS
-      #   DB_DATABASE: $DB_DATABASE
-      #   DB_SCRIPT: './backups/unipal_test_db.sql'
+        mysql --host="$DB_HOST" --port="$DB_PORT" --database="$DB_DATABASE" --user="$DB_USER" --password="$DB_PASS" < "$DB_SCRIPT"
     - name: Running tests
       run: npm test
       env:
