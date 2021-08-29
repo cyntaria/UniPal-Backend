@@ -28,21 +28,13 @@ jobs:
       run: npm install
     - name: Code linting
       run: npm run lint
-    - name: Load config vars into .env
-      env:
-        CONFIG_VARS: ${{ secrets.CONFIG_VARS }}
-      # Load env variable from config to a .env file and also load them in the CI environment
-      # These can be accessed from the CI environment using $ENV_VAR_NAME
-      run: |
-        echo $CONFIG_VARS > .env
-        source .env 
     - name: Setup MySQL
       env:
-        DB_PORT: '3306'
-        DB_HOST: $DB_HOST
-        DB_USER: $DB_USER
-        DB_PASS: $DB_PASS
-        DB_DATABASE: $DB_DATABASE
+        DB_PORT: 3306
+        DB_HOST: ${{ secrets.$DB_HOST }}
+        DB_USER: ${{ secrets.$DB_USER }}
+        DB_PASS: ${{ secrets.$DB_PASS }}
+        DB_DATABASE: ${{ secrets.$DB_TEST_DATABASE }}
         DB_SCRIPT: './backups/unipal_test_db.sql'
       run: |
         sudo /etc/init.d/mysql start
@@ -53,10 +45,10 @@ jobs:
       env:
         CI: true
         PORT: 3000
-        DB_HOST: $DB_HOST
-        DB_USER: $DB_USER
-        DB_PASS: $DB_PASS
-        DB_DATABASE: $DB_DATABASE
+        DB_HOST: ${{ secrets.$DB_HOST }}
+        DB_USER: ${{ secrets.$DB_USER }}
+        DB_PASS: ${{ secrets.$DB_PASS }}
+        DB_DATABASE: ${{ secrets.$DB_TEST_DATABASE }}
         SECRET_JWT: ${{ secrets.SECRET_JWT }}
         # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
         # SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
