@@ -31,11 +31,11 @@ jobs:
     - name: Setup MySQL
       env:
         DB_PORT: 3306
+        DB_SCRIPT: './backups/unipal_test_db.sql'
         DB_HOST: ${{ secrets.$DB_HOST }}
         DB_USER: ${{ secrets.$DB_USER }}
         DB_PASS: ${{ secrets.$DB_PASS }}
         DB_DATABASE: ${{ secrets.$DB_TEST_DATABASE }}
-        DB_SCRIPT: './backups/unipal_test_db.sql'
       run: |
         sudo /etc/init.d/mysql start
         mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
