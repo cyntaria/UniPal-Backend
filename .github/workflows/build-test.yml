@@ -38,8 +38,8 @@ jobs:
       #   DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
       run: |
         sudo /etc/init.d/mysql start
-        mysql -u root -e "CREATE DATABASE unipal_test_db"
-        mysql --host=localhost --port=3306 --database=unipal_test_db --user=root < './backups/unipal_test_db.sql'
+        mysql -u root -proot -e "CREATE DATABASE unipal_test_db"
+        mysql --host=localhost --port=3306 --database=unipal_test_db --user=root --password=root < './backups/unipal_test_db.sql'
     - name: Running tests
       run: npm test
       env:
