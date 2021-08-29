@@ -23,7 +23,7 @@ describe("Authentication API", () => {
         stubbedAuthMiddleware.restore();
     });
 
-    describe("POST /auth/register", () => {
+    context("POST /auth/register", () => {
         let studentBody;
 
         beforeEach(() => {
@@ -111,10 +111,10 @@ describe("Authentication API", () => {
         });
     });
 
-    describe("POST /auth/login", () => {
+    context("POST /auth/login", () => {
         it("Scenario 1: Login request is successful", async() => {
             // given
-            studentBody = {
+            const studentBody = {
                 erp: existingERP,
                 first_name: "Abdur Rafay",
                 last_name: "Saleem",
@@ -139,7 +139,7 @@ describe("Authentication API", () => {
                 is_active: 1,
                 role: "api_user"
             };
-            data = {
+            const data = {
                 erp: existingERP,
                 password: '123'
             };
@@ -158,7 +158,7 @@ describe("Authentication API", () => {
 
         it("Scenario 2: Login request is unsuccessful due to missing student", async() => {
             // given
-            data = {
+            const data = {
                 erp: 19999, // <-- no account registered on this erp
                 password: '123'
             };
@@ -174,7 +174,7 @@ describe("Authentication API", () => {
 
         it("Scenario 3: Login request is incorrect", async() => {
             // given
-            data = {
+            const data = {
                 email: existingEmail, // <-- email is an unrecognized parameter
                 password: '123'
             };
@@ -191,14 +191,14 @@ describe("Authentication API", () => {
         });
     });
 
-    describe("POST /auth/refresh-token", () => {
+    context("POST /auth/refresh-token", () => {
         it("Scenario 1: Refresh token is successful and return a new token", async() => {
             // given
             const secretKey = Config.SECRET_JWT;
             const old_token = jwt.sign({ erp: existingERP }, secretKey, {
                 expiresIn: "1" // <-- immediately expire the token (in 1ms)
             });
-            data = {
+            const data = {
                 erp: existingERP,
                 password: '123',
                 old_token: old_token
@@ -221,7 +221,7 @@ describe("Authentication API", () => {
             // given
             const secretKey = Config.SECRET_JWT;
             const old_token = jwt.sign({ erp: existingERP }, secretKey); // <-- unexpired token
-            data = {
+            const data = {
                 erp: existingERP,
                 password: '123',
                 old_token: old_token
@@ -239,7 +239,7 @@ describe("Authentication API", () => {
 
         it("Scenario 3: Refresh token is unsuccessful due to unregisted erp", async() => {
             // given
-            data = {
+            const data = {
                 erp: 19999, // <-- no account registered on this erp
                 password: '123',
                 old_token: "e.e.e" // <-- token doesn't matter if erp is unregistered
@@ -258,7 +258,7 @@ describe("Authentication API", () => {
 
         it("Scenario 4: Refresh token is unsuccessful due to incorrect password", async() => {
             // given
-            data = {
+            const data = {
                 erp: existingERP,
                 password: 'incOrr3ct', // <-- incorrect password
                 old_token: "e.e.e" // <-- token doesn't matter if password is incorrect
@@ -280,7 +280,7 @@ describe("Authentication API", () => {
             // signed for a different erp
 
             // given
-            data = {
+            const data = {
                 erp: existingERP,
                 password: '123',
                 old_token: "e.e.e" // <-- incorrect token
@@ -299,8 +299,8 @@ describe("Authentication API", () => {
 
         it("Scenario 6: Refresh token request is incorrect", async() => {
             // given
-            data = {
-                email: existingEmail,
+            const data = {
+                erp: existingERP,
                 password: '123',
                 token: "e.e.e" // <-- a valid parameter name should be 'old_token'
             };
@@ -314,6 +314,93 @@ describe("Authentication API", () => {
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
             expect(incorrectParams).to.include('old_token');
+        });
+    });
+
+    context("PATCH /auth/change-password", () => {
+        const old_password = '123';
+        const new_password = '256';
+
+        it("Scenario 1: Change password is successful", async() => {
+            // given
+            let app = this.app;
+            const data = {
+                erp: existingERP,
+                old_password,
+                new_password
+            };
+
+            // when
+            let res = await request(app).patch(`${API}/change-password`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.body.rows_matched).to.be.equal(1);
+            expect(res.body.body.rows_changed).to.be.equal(1);
+
+            // clean up to old state
+            data.old_password = new_password;
+            data.new_password = old_password;
+            res = await request(app).patch(`${API}/change-password`).send(data);
+            expect(res.status).to.be.equal(200);
+        });
+
+        it("Scenario 2: Change password is unsuccessful due to unregisted erp", async() => {
+            // given
+            const data = {
+                erp: 19999, // <-- no account registered on this erp
+                old_password,
+                new_password
+            };
+
+            // when
+            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(401);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+            expect(resHeaders.message).to.be.equal('ERP not registered');
+        });
+
+        it("Scenario 3: Change password is unsuccessful due to incorrect old password", async() => {
+            // given
+            const data = {
+                erp: existingERP,
+                old_password: 'incOrr3ct', // <-- incorrect password
+                new_password
+            };
+
+            // when
+            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(401);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+            expect(resHeaders.message).to.be.equal('Incorrect old password');
+        });
+
+        it("Scenario 6: Change password request is incorrect", async() => {
+            // given
+            const data = {
+                erp: existingERP,
+                password: '123', // <-- a valid parameter name should be 'old_password'
+                new_password
+            };
+
+            // when
+            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('old_password');
         });
     });
 });
