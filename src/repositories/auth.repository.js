@@ -7,7 +7,6 @@ const {
     TokenVerificationException
 } = require('../utils/exceptions/auth.exception');
 const {
-    NotFoundException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
@@ -108,7 +107,7 @@ class AuthRepository {
         const student = await StudentModel.findOne({ erp });
 
         if (!student) {
-            throw new NotFoundException('Student not found');
+            throw new InvalidCredentialsException('ERP not registered');
         }
 
         const isMatch = await bcrypt.compare(old_password, student.password);
@@ -132,13 +131,18 @@ class AuthRepository {
         if (!result) {
             throw new UnexpectedException('Something went wrong');
         }
-
         const { affectedRows, changedRows, info } = result;
 
-        if (!affectedRows) throw new NotFoundException('Student not found');
+        if (!affectedRows) throw new InvalidCredentialsException('ERP not registered');
         else if (affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
         
-        return successResponse(info, 'Password changed successfully');
+        const responseBody = {
+            rows_matched: affectedRows,
+            rows_changed: changedRows,
+            info
+        };
+
+        return successResponse(responseBody, 'Password changed successfully');
     }
 }
 
