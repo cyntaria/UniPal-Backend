@@ -1,11 +1,11 @@
 const { body } = require('express-validator');
+const { ERPRegex } = require('../../utils/common.utils');
 
 exports.changePWSchema = [
     body('erp')
         .trim()
         .exists()
-        .withMessage('Student ERP is required')
-        .isLength({ min: 5, max: 5 })
+        .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
     body('old_password')
         .trim()
@@ -27,8 +27,7 @@ exports.resetPWSchema = [
     body('erp')
         .trim()
         .exists()
-        .withMessage('Student ERP is required')
-        .isLength({ min: 5, max: 5 })
+        .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
@@ -42,8 +41,7 @@ exports.validateLogin = [
     body('erp')
         .trim()
         .exists()
-        .withMessage('Student ERP is required')
-        .isLength({ min: 5, max: 5 })
+        .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
@@ -57,8 +55,7 @@ exports.validateRefresh = [
     body('erp')
         .trim()
         .exists()
-        .withMessage('Student ERP is required')
-        .isLength({ min: 5, max: 5 })
+        .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
     body('password')
         .trim()
@@ -66,7 +63,7 @@ exports.validateRefresh = [
         .withMessage('Password is required')
         .notEmpty()
         .withMessage('Password must be filled'),
-    body('oldToken')
+    body('old_token')
         .trim()
         .exists()
         .withMessage('Old token is required for refreshing')

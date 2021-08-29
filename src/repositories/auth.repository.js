@@ -64,7 +64,7 @@ class AuthRepository {
     };
 
     refreshToken = async(body) => {
-        const { erp, password: pass, oldToken } = body;
+        const { erp, password: pass, old_token } = body;
         const student = await StudentModel.findOne({ erp });
         if (!student) {
             throw new InvalidCredentialsException('ERP not registered');
@@ -78,9 +78,9 @@ class AuthRepository {
 
         // student matched!
         const secretKey = Config.SECRET_JWT;
-        const { erp: decoded_erp } = jwt.decode(oldToken);
+        const decoded = jwt.verify(old_token, secretKey);
         
-        if (erp !== decoded_erp){
+        if (erp !== decoded.erp){
             throw new TokenVerificationException();
         }
         
