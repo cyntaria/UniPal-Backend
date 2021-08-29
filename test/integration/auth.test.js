@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
 const expect = require('chai').expect;
+const jwt = require('jsonwebtoken');
+const {sleep} = require('../../src/utils/common.utils');
+const {Config} = require('../../src/configs/config');
 
 // importing this file causes the stub to take effect
 const { stubbedAuthMiddleware } = require('../testConfig');
@@ -64,7 +67,7 @@ describe("Authentication API", () => {
             expect(res.status).to.be.equal(201);
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
-            expect(resBody).to.include.keys('token');
+            expect(resBody.token).to.exist;
             delete resBody.token;
             delete studentBody.password; // omit token and password
             expect(resBody).to.be.eql(studentBody); // deep compare two objects using 'eql'
@@ -185,6 +188,132 @@ describe("Authentication API", () => {
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
             expect(incorrectParams).to.include('erp');
+        });
+    });
+
+    describe("POST /auth/refresh-token", () => {
+        it("Scenario 1: Refresh token is successful and return a new token", async() => {
+            // given
+            const secretKey = Config.SECRET_JWT;
+            const old_token = jwt.sign({ erp: existingERP }, secretKey, {
+                expiresIn: "1" // <-- immediately expire the token (in 1ms)
+            });
+            data = {
+                erp: existingERP,
+                password: '123',
+                old_token: old_token
+            };
+
+            // wait for token to expire (in 1ms)
+            await sleep(1);
+
+            // when
+            let res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.body.token).to.exist;
+            expect(res.body.body.token).to.be.not.equal(old_token);
+        });
+
+        it("Scenario 2: Refresh token is successful and returns same token", async() => {
+            // given
+            const secretKey = Config.SECRET_JWT;
+            const old_token = jwt.sign({ erp: existingERP }, secretKey); // <-- unexpired token
+            data = {
+                erp: existingERP,
+                password: '123',
+                old_token: old_token
+            };
+
+            // when
+            let res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.body.token).to.exist;
+            expect(res.body.body.token).to.be.equal(old_token);
+        });
+
+        it("Scenario 3: Refresh token is unsuccessful due to unregisted erp", async() => {
+            // given
+            data = {
+                erp: 19999, // <-- no account registered on this erp
+                password: '123',
+                old_token: "e.e.e" // <-- token doesn't matter if erp is unregistered
+            };
+
+            // when
+            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(401);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+            expect(resHeaders.message).to.be.equal('ERP not registered');
+        });
+
+        it("Scenario 4: Refresh token is unsuccessful due to incorrect password", async() => {
+            // given
+            data = {
+                erp: existingERP,
+                password: 'incOrr3ct', // <-- incorrect password
+                old_token: "e.e.e" // <-- token doesn't matter if password is incorrect
+            };
+
+            // when
+            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(401);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+            expect(resHeaders.message).to.be.equal('Incorrect password');
+        });
+
+        it("Scenario 5: Refresh token is unsuccessful due to incorrect old token", async() => {
+            // This test performs the same if the token has a valid format, but is
+            // signed for a different erp
+
+            // given
+            data = {
+                erp: existingERP,
+                password: '123',
+                old_token: "e.e.e" // <-- incorrect token
+            };
+
+            // when
+            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(401);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('TokenVerificationException');
+            expect(resHeaders.message).to.be.equal('Invalid Token');
+        });
+
+        it("Scenario 6: Refresh token request is incorrect", async() => {
+            // given
+            data = {
+                email: existingEmail,
+                password: '123',
+                token: "e.e.e" // <-- a valid parameter name should be 'old_token'
+            };
+
+            // when
+            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+    
+            // then
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('old_token');
         });
     });
 });

@@ -45,6 +45,10 @@ exports.hashPassword = async(body) => {
     }
 };
 
+exports.sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
+
 exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
 exports.ERPRegex = new RegExp(/^[0-9]{5}$/);
 exports.timeRegex = new RegExp(/^([01][0-9]|2[0-3]):[0-5][0-9]$/);
