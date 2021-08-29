@@ -10,10 +10,11 @@ router.post('/register', createStudentSchema, awaitHandlerFactory(authController
 router.post('/login', validateLogin, awaitHandlerFactory(authController.login)); // localhost:3000/api/v1/auth/login
 router.post('/refresh-token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/refresh-token
 
+// For changing password from the profile page, in case old password is known
+router.patch('/change-password', changePWSchema, awaitHandlerFactory(authController.changePassword)); // localhost:3000/api/v1/auth/password/change-password
+
 // For sending the new password after OTP verification success
 router.post('/reset-password', resetPWSchema, awaitHandlerFactory(authController.resetPassword)); // localhost:3000/api/v1/auth/reset-password
 
-// For changing password from the profile page, in case old password is known
-router.post('/change-password', changePWSchema, awaitHandlerFactory(authController.changePassword)); // localhost:3000/api/v1/auth/password/change-password
 
 module.exports = router;
