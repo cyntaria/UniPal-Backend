@@ -36,6 +36,15 @@ jobs:
       run: |
         echo $CONFIG_VARS > .env
         source .env 
+    - name: MySQL Deploy Action
+      uses: calxus/mysql-deploy-action@v1
+      with:
+        DATABASE_PORT: '3306'
+        DATABASE_HOST: $DB_HOST
+        DATABASE_NAME: $DB_DATABASE
+        DATABASE_USERNAME: $DB_USER
+        DATABASE_PASSWORD: $DB_PASS
+        DATABASE_SCRIPT: './backups/unipal_test_db.sql'
     - name: Running tests
       run: npm test
       env:
@@ -45,6 +54,6 @@ jobs:
         DB_USER: $DB_USER
         DB_PASS: $DB_PASS
         DB_DATABASE: $DB_DATABASE
+        SECRET_JWT: ${{ secrets.SECRET_JWT }}
         # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
         # SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
-        SECRET_JWT: ${{ secrets.SECRET_JWT }}
