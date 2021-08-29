@@ -30,14 +30,25 @@ class StudentModel {
         return result[0];
     }
 
-    // TODO: Check params for schema
-    create = async({ full_name, email, password, role = Roles.User, contact, address }) => {
+    // 24 fields
+    create = async({ erp, first_name, last_name, gender, contact, email, birthday, password,
+        profile_picture_url, graduation_year, uni_email, hobby_1, hobby_2, hobby_3,
+        interest_1, interest_2, interest_3, program_id, campus_id, current_status,
+        favourite_campus_hangout_spot, favourite_campus_activity, is_active = '1', role = Roles.ApiUser }) => {
         const sql = `INSERT INTO ${tables.Students}
-        (full_name, email, password, role, contact, address) VALUES (?,?,?,?,?,?)`;
+        (erp, first_name, last_name, gender, contact, email, birthday, password,
+            profile_picture_url, graduation_year, uni_email, hobby_1, hobby_2, hobby_3,
+            interest_1, interest_2, interest_3, program_id, campus_id, current_status,
+            favourite_campus_hangout_spot, favourite_campus_activity, is_active, role)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-        const result = await DBService.query(sql, [full_name, email, password, role, contact, address]);
+        const result = await DBService.query(sql, [erp, first_name, last_name, gender,
+            contact, email, birthday, password, profile_picture_url, graduation_year,
+            uni_email, hobby_1, hobby_2, hobby_3, interest_1, interest_2, interest_3,
+            program_id, campus_id, current_status,
+            favourite_campus_hangout_spot, favourite_campus_activity, is_active, role]);
         const created_student = !result ? 0 : {
-            student_erp: result.insertId,
+            erp: erp,
             affected_rows: result.affectedRows
         };
 
@@ -55,10 +66,10 @@ class StudentModel {
         return result;
     }
 
-    delete = async(id) => {
+    delete = async(erp) => {
         const sql = `DELETE FROM ${tables.Students}
-        WHERE student_erp = ?`;
-        const result = await DBService.query(sql, [id]);
+        WHERE erp = ?`;
+        const result = await DBService.query(sql, [erp]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

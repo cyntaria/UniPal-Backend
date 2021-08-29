@@ -7,7 +7,6 @@ const {
     TokenVerificationException
 } = require('../utils/exceptions/auth.exception');
 const {
-    NotFoundException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
@@ -30,13 +29,13 @@ class AuthRepository {
             throw new RegistrationFailedException();
         }
 
-        return this.login(body.email, pass, true);
+        return this.login(body.erp, pass, true);
     };
 
-    login = async(email, pass, is_register = false) => {
-        const student = await StudentModel.findOne({ email });
+    login = async(erp, pass, is_register = false) => {
+        const student = await StudentModel.findOne({ erp });
         if (!student) {
-            throw new InvalidCredentialsException('Email not registered');
+            throw new InvalidCredentialsException('ERP not registered');
         }
 
         const isMatch = await bcrypt.compare(pass, student.password);
@@ -47,29 +46,27 @@ class AuthRepository {
 
         // student matched!
         const secretKey = Config.SECRET_JWT;
-        const token = jwt.sign({ student_erp: student.student_erp.toString() }, secretKey, {
-            expiresIn: '24h'
+        const token = jwt.sign({ erp }, secretKey, {
+            expiresIn: Config.EXPIRY_JWT
         });
 
         let message = "";
         let responseBody = "";
         if (is_register){ // if registered first
-            const { student_erp } = student;
             message = "Registered"; // set msg to registered
-            responseBody = { student_erp, token };
         } else {
-            student.password = undefined;
             message = "Authenticated";
-            responseBody = { ...student, token };
         }
+        student.password = undefined;
+        responseBody = { ...student, token };
         return successResponse(responseBody, message);
     };
 
     refreshToken = async(body) => {
-        const { email, password: pass, oldToken } = body;
-        const student = await StudentModel.findOne({ email });
+        const { erp, password: pass, old_token } = body;
+        const student = await StudentModel.findOne({ erp });
         if (!student) {
-            throw new InvalidCredentialsException('Email not registered');
+            throw new InvalidCredentialsException('ERP not registered');
         }
 
         const isMatch = await bcrypt.compare(pass, student.password);
@@ -78,36 +75,48 @@ class AuthRepository {
             throw new InvalidCredentialsException('Incorrect password');
         }
 
-        // student matched!
+        let token;
+        
+        // Check old token
         const secretKey = Config.SECRET_JWT;
-        const { student_erp } = jwt.decode(oldToken);
-        
-        if (student.student_erp.toString() !== student_erp){
-            throw new TokenVerificationException();
-        }
-        
-        const token = jwt.sign({ student_erp: student.student_erp.toString() }, secretKey, {
-            expiresIn: '24h'
+        jwt.verify(old_token, secretKey, (err, decoded) => {
+            if (err) {
+                if (err.name === 'TokenExpiredError') { // only sign a new token if old expired
+                    const {erp: decoded_erp} = jwt.decode(old_token);
+                    if (erp !== decoded_erp){
+                        throw new TokenVerificationException();
+                    }
+                    
+                    // student matched! Now sign
+                    token = jwt.sign({ erp }, secretKey, {
+                        expiresIn: Config.EXPIRY_JWT
+                    });
+                } else if (err.name === 'JsonWebTokenError') {
+                    throw new TokenVerificationException("Invalid Token");
+                }
+            } else {
+                token = old_token; // return same token if valid and not expired
+            }
         });
 
         return successResponse({ token }, "Refreshed");
     };
 
     changePassword = async(body) => {
-        const { email, password, new_password } = body;
-        const student = await StudentModel.findOne({ email: email });
+        const { erp, old_password, new_password } = body;
+        const student = await StudentModel.findOne({ erp });
 
         if (!student) {
-            throw new NotFoundException('Student not found');
+            throw new InvalidCredentialsException('ERP not registered');
         }
 
-        const isMatch = await bcrypt.compare(password, student.password);
+        const isMatch = await bcrypt.compare(old_password, student.password);
 
         if (!isMatch) {
             throw new InvalidCredentialsException('Incorrect old password');
         }
 
-        let responseBody = { email: email, password: new_password };
+        let responseBody = { erp, password: new_password };
 
         return this.resetPassword(responseBody);
     };
@@ -115,20 +124,25 @@ class AuthRepository {
     resetPassword = async(body) => {
         await hashPassword(body);
 
-        const { password, email } = body;
+        const { password, erp } = body;
 
-        const result = await StudentModel.update({password}, {email});
+        const result = await StudentModel.update({password}, {erp});
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
         }
-
         const { affectedRows, changedRows, info } = result;
 
-        if (!affectedRows) throw new NotFoundException('Student not found');
+        if (!affectedRows) throw new InvalidCredentialsException('ERP not registered');
         else if (affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
         
-        return successResponse(info, 'Password changed successfully');
+        const responseBody = {
+            rows_matched: affectedRows,
+            rows_changed: changedRows,
+            info
+        };
+
+        return successResponse(responseBody, 'Password changed successfully');
     }
 }
 

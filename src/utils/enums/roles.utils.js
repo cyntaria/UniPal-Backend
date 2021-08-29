@@ -1,5 +1,5 @@
 module.exports.Roles = {
     Admin: 'admin',
-    User: 'user',
+    ApiUser: 'api_user',
     Moderator: 'moderator'
 };

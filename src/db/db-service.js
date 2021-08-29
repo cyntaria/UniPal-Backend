@@ -46,6 +46,8 @@ class DBService {
                 }
                 resolve(result);
             };
+            // console.log(`[SQL] ${sql}`);
+            // console.log(`[VALUES] ${values}`);
             this.dbInstance.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);

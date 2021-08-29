@@ -2,12 +2,18 @@
 
 [![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/)
 
+### :memo: Documentation
+
+The documentation was generated using Postman and is divided into collections at the following URLs:
+
+- Auth - https://documenter.getpostman.com/view/13348269/TzzHnZDS
+
 ### :wrench: Tech
 
 This example uses a number of open source projects to work properly:
 
 * [node.js]
-* [Express]
+* [express]
 * [bcryptjs]
 * [cors]
 * [cross-env]
@@ -17,7 +23,12 @@ This example uses a number of open source projects to work properly:
 * [jsonwebtoken]
 * [mysql2]
 * [@babel/eslint-parser]
+* [@babel/core]
 * [mocha]
+* [chai]
+* [supertest]
+* [sinon]
+* [decache]
 * [eslint-config-strongloop]
 
 ### :dvd: Installation
@@ -46,9 +57,10 @@ vscode .env
 
 # Create different .env.{NODE_ENV} file for each environment and override only your
 # required variables. The missing ones will be loaded from .env by default.
-# For example if you want dev and production environments:
+# For example if you want dev, production and test environments:
 cp .env .env.dev
 cp .env.dev .env.production
+cp .evn.dev .env.test
 
 # When the NODE_ENV variable is set while running, the correct .env loads automatically.
 # e.g. Setting NODE_ENV=production is going to load the .env.production file
@@ -114,4 +126,8 @@ NodeJS Starter Template © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.
    [mysql2]: <https://github.com/sidorares/node-mysql2#readme>
    [@babel/eslint-parser]: <https://github.com/babel/babel>
    [mocha]: <https://github.com/mochajs/mocha>
+   [chai]: <https://github.com/chaijs/chai>
+   [supertest]: <https://github.com/visionmedia/supertest>
+   [sinon]: <https://github.com/sinonjs/sinon>
+   [decache]: <https://github.com/dwyl/decache>
    [eslint-config-strongloop]: <https://github.com/strongloop/eslint-config-strongloop>

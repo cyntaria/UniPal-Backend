@@ -63,8 +63,8 @@ class StudentRepository {
         return successResponse(info, 'Student updated successfully');
     };
 
-    delete = async(id) => {
-        const result = await StudentModel.delete(id);
+    delete = async(erp) => {
+        const result = await StudentModel.delete(erp);
         if (!result) {
             throw new NotFoundException('Student not found');
         }

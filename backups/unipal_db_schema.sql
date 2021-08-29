@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2021 at 04:19 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.5
+-- Generation Time: Aug 27, 2021 at 02:33 PM
+-- Server version: 10.4.20-MariaDB
+-- PHP Version: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -93,7 +93,7 @@ CREATE TABLE `activity_types` (
 CREATE TABLE `campuses` (
   `campus_id` int(10) UNSIGNED NOT NULL,
   `campus` varchar(45) NOT NULL,
-  `location` point NOT NULL
+  `location_url` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -280,13 +280,13 @@ CREATE TABLE `saved_activities` (
 --
 
 CREATE TABLE `students` (
-  `student_erp` varchar(5) NOT NULL,
+  `erp` varchar(5) NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
   `gender` enum('male','female') NOT NULL,
   `contact` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `birthday` datetime NOT NULL,
+  `birthday` date NOT NULL,
   `password` text NOT NULL,
   `profile_picture_url` text NOT NULL,
   `graduation_year` year(4) NOT NULL,
@@ -301,7 +301,7 @@ CREATE TABLE `students` (
   `campus_id` int(10) UNSIGNED NOT NULL,
   `favourite_campus_hangout_spot` varchar(45) NOT NULL,
   `favourite_campus_activity` varchar(45) NOT NULL,
-  `current_user_status` int(10) UNSIGNED NOT NULL,
+  `current_status` int(10) UNSIGNED NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `role` enum('admin','api_user','moderator') NOT NULL DEFAULT 'api_user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -313,8 +313,8 @@ CREATE TABLE `students` (
 --
 
 CREATE TABLE `student_statuses` (
-  `user_status_id` int(10) UNSIGNED NOT NULL,
-  `user_status` varchar(45) NOT NULL
+  `student_status_id` int(10) UNSIGNED NOT NULL,
+  `student_status` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -461,8 +461,7 @@ ALTER TABLE `activity_types`
 -- Indexes for table `campuses`
 --
 ALTER TABLE `campuses`
-  ADD PRIMARY KEY (`campus_id`),
-  ADD SPATIAL KEY `SPATIAL_LOCATION_idx` (`location`);
+  ADD PRIMARY KEY (`campus_id`);
 
 --
 -- Indexes for table `campus_spots`
@@ -577,7 +576,7 @@ ALTER TABLE `saved_activities`
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
-  ADD PRIMARY KEY (`student_erp`),
+  ADD PRIMARY KEY (`erp`),
   ADD UNIQUE KEY `email` (`email`),
   ADD KEY `fk_students_campus_id_idx` (`campus_id`),
   ADD KEY `fk_students_hobby_id_1_idx` (`hobby_1`),
@@ -587,13 +586,13 @@ ALTER TABLE `students`
   ADD KEY `fk_students_interest_id_2_idx` (`interest_2`),
   ADD KEY `fk_students_interest_id_3_idx` (`interest_3`),
   ADD KEY `fk_students_program_id_idx` (`program_id`),
-  ADD KEY `fk_students_user_status_id_idx` (`current_user_status`);
+  ADD KEY `fk_students_student_status_id_idx` (`current_status`) USING BTREE;
 
 --
 -- Indexes for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  ADD PRIMARY KEY (`user_status_id`);
+  ADD PRIMARY KEY (`student_status_id`);
 
 --
 -- Indexes for table `subjects`
@@ -730,7 +729,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  MODIFY `user_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `teachers`
@@ -773,14 +772,14 @@ ALTER TABLE `activities`
   ADD CONSTRAINT `fk_activities_activity_status_id` FOREIGN KEY (`activity_status`) REFERENCES `activity_statuses` (`activity_status_id`),
   ADD CONSTRAINT `fk_activities_activity_type_id` FOREIGN KEY (`activity_type`) REFERENCES `activity_types` (`activity_type_id`),
   ADD CONSTRAINT `fk_activities_campus_spot_id` FOREIGN KEY (`fixed_spot`) REFERENCES `campus_spots` (`campus_spot_id`),
-  ADD CONSTRAINT `fk_activities_student_erp` FOREIGN KEY (`organizer_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_activities_student_erp` FOREIGN KEY (`organizer_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `activity_attendees`
 --
 ALTER TABLE `activity_attendees`
   ADD CONSTRAINT `fk_activity_attendees_activity_id` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`activity_id`),
-  ADD CONSTRAINT `fk_activity_attendees_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_activity_attendees_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `campus_spots`
@@ -809,15 +808,15 @@ ALTER TABLE `classrooms`
 -- Constraints for table `friends`
 --
 ALTER TABLE `friends`
-  ADD CONSTRAINT `fk_friends_friend_erp` FOREIGN KEY (`friend_erp`) REFERENCES `students` (`student_erp`),
-  ADD CONSTRAINT `fk_friends_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_friends_friend_erp` FOREIGN KEY (`friend_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friends_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `friend_requests`
 --
 ALTER TABLE `friend_requests`
-  ADD CONSTRAINT `fk_friend_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`student_erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_friend_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `hangout_requests`
@@ -825,14 +824,14 @@ ALTER TABLE `friend_requests`
 ALTER TABLE `hangout_requests`
   ADD CONSTRAINT `fk_hangout_requests_activity_type_id` FOREIGN KEY (`purpose`) REFERENCES `activity_types` (`activity_type_id`),
   ADD CONSTRAINT `fk_hangout_requests_campus_spot_id` FOREIGN KEY (`meetup_spot`) REFERENCES `campus_spots` (`campus_spot_id`),
-  ADD CONSTRAINT `fk_hangout_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`student_erp`),
-  ADD CONSTRAINT `fk_hangout_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_hangout_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_hangout_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
-  ADD CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `post_reactions`
@@ -840,7 +839,7 @@ ALTER TABLE `posts`
 ALTER TABLE `post_reactions`
   ADD CONSTRAINT `fk_post_reactions_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`),
   ADD CONSTRAINT `fk_post_reactions_reaction_type_id` FOREIGN KEY (`reaction_type_id`) REFERENCES `reaction_types` (`reaction_type_id`),
-  ADD CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `post_uploads`
@@ -853,7 +852,7 @@ ALTER TABLE `post_uploads`
 --
 ALTER TABLE `saved_activities`
   ADD CONSTRAINT `fk_saved_activities_activity_id` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`activity_id`),
-  ADD CONSTRAINT `fk_saved_activities_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_saved_activities_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `students`
@@ -867,13 +866,13 @@ ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_interest_id_2` FOREIGN KEY (`interest_2`) REFERENCES `interests` (`interest_id`),
   ADD CONSTRAINT `fk_students_interest_id_3` FOREIGN KEY (`interest_3`) REFERENCES `interests` (`interest_id`),
   ADD CONSTRAINT `fk_students_program_id` FOREIGN KEY (`program_id`) REFERENCES `programs` (`program_id`),
-  ADD CONSTRAINT `fk_students_user_status_id` FOREIGN KEY (`current_user_status`) REFERENCES `student_statuses` (`user_status_id`);
+  ADD CONSTRAINT `fk_students_student_status_id` FOREIGN KEY (`current_status`) REFERENCES `student_statuses` (`student_status_id`);
 
 --
 -- Constraints for table `teacher_reviews`
 --
 ALTER TABLE `teacher_reviews`
-  ADD CONSTRAINT `fk_teacher_reviews_student_erp` FOREIGN KEY (`reviewed_by_erp`) REFERENCES `students` (`student_erp`),
+  ADD CONSTRAINT `fk_teacher_reviews_student_erp` FOREIGN KEY (`reviewed_by_erp`) REFERENCES `students` (`erp`),
   ADD CONSTRAINT `fk_teacher_reviews_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   ADD CONSTRAINT `fk_teacher_reviews_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`);
 
@@ -881,7 +880,7 @@ ALTER TABLE `teacher_reviews`
 -- Constraints for table `timetables`
 --
 ALTER TABLE `timetables`
-  ADD CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`);
+  ADD CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `timetable_classes`
@@ -894,14 +893,14 @@ ALTER TABLE `timetable_classes`
 -- Constraints for table `timetable_share_rooms`
 --
 ALTER TABLE `timetable_share_rooms`
-  ADD CONSTRAINT `fk_timetable_share_rooms_student_erp` FOREIGN KEY (`owner_erp`) REFERENCES `students` (`student_erp`),
+  ADD CONSTRAINT `fk_timetable_share_rooms_student_erp` FOREIGN KEY (`owner_erp`) REFERENCES `students` (`erp`),
   ADD CONSTRAINT `fk_timetable_share_rooms_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`);
 
 --
 -- Constraints for table `tsr_members`
 --
 ALTER TABLE `tsr_members`
-  ADD CONSTRAINT `fk_tsr_members_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`student_erp`),
+  ADD CONSTRAINT `fk_tsr_members_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`),
   ADD CONSTRAINT `fk_tsr_members_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`),
   ADD CONSTRAINT `fk_tsr_members_tsr_id` FOREIGN KEY (`tsr_id`) REFERENCES `timetable_share_rooms` (`tsr_id`);
 COMMIT;

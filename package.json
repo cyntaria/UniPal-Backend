@@ -2,13 +2,13 @@
   "name": "nodejs-starter-template",
   "version": "1.0.0",
   "description": "[![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/)",
-  "main": "src/server.js",
+  "main": "src/index.js",
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
-    "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=envs",
+    "start": "node -r dotenv-flow/config src/index.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
-    "test": "mocha ./test/* --exit",
+    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config ./test/**/*.test.js --timeout 6000 --exit",
     "lint": "eslint src/",
     "fixlint": "eslint src/ --fix"
   },
@@ -33,10 +33,13 @@
     "@babel/core": "^7.15.0",
     "@babel/eslint-parser": "^7.15.0",
     "axios": "^0.21.1",
+    "chai": "^4.3.4",
+    "decache": "^4.6.0",
     "eslint": "^7.25.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.3.2",
     "nodemon": "^2.0.7",
+    "sinon": "^11.1.2",
     "supertest": "^6.1.3"
   },
   "directories": {
