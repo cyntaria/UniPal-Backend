@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2021 at 02:33 PM
+-- Generation Time: Aug 30, 2021 at 07:27 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -198,6 +198,18 @@ CREATE TABLE `hobbies` (
 CREATE TABLE `interests` (
   `interest_id` int(10) UNSIGNED NOT NULL,
   `interest` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `otp_codes`
+--
+
+CREATE TABLE `otp_codes` (
+  `erp` varchar(5) NOT NULL,
+  `OTP` text NOT NULL,
+  `expiration_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -530,6 +542,12 @@ ALTER TABLE `interests`
   ADD PRIMARY KEY (`interest_id`);
 
 --
+-- Indexes for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD KEY `fk_otp_codes_student_erp` (`erp`);
+
+--
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
@@ -826,6 +844,12 @@ ALTER TABLE `hangout_requests`
   ADD CONSTRAINT `fk_hangout_requests_campus_spot_id` FOREIGN KEY (`meetup_spot`) REFERENCES `campus_spots` (`campus_spot_id`),
   ADD CONSTRAINT `fk_hangout_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
   ADD CONSTRAINT `fk_hangout_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
+
+--
+-- Constraints for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD CONSTRAINT `fk_otp_codes_student_erp` FOREIGN KEY (`erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `posts`
