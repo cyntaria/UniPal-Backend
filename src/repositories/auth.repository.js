@@ -1,10 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const otpGenerator = require('otp-generator');
 
 const {
     RegistrationFailedException,
     InvalidCredentialsException,
-    TokenVerificationException
+    TokenVerificationException,
+    OTPExpiredException,
+    OTPGenerationException,
+    OTPVerificationException
 } = require('../utils/exceptions/auth.exception');
 const {
     UpdateFailedException,
@@ -12,9 +16,11 @@ const {
 } = require('../utils/exceptions/database.exception');
 const { hashPassword } = require('../utils/common.utils');
 const { successResponse } = require('../utils/responses.utils');
+const { sendOTPEmail } = require('../utils/sendgrid.utils');
 const { Config } = require('../configs/config');
 
 const StudentModel = require('../models/student.model');
+const OTPModel = require('../models/otp.model');
 
 class AuthRepository {
 
@@ -121,6 +127,79 @@ class AuthRepository {
         return this.resetPassword(responseBody);
     };
 
+    forgotPassword = async(body) => {
+        let student = await StudentModel.findOne(body); // body contains "erp" : ...
+        
+        if (!student) {
+            throw new InvalidCredentialsException('ERP not registered');
+        }
+        
+        await this.#removeExpiredOTP(student.erp);
+
+        const OTP = await this.#generateOTP(student.erp);
+
+        await sendOTPEmail(student, OTP);
+
+        return successResponse({}, 'OTP generated and sent via email');
+    }
+
+    #generateOTP = async(erp) => {
+        const OTP = `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
+
+        const OTPHash = await bcrypt.hash(OTP, 8);
+
+        let expiration_datetime = new Date();
+        expiration_datetime.setHours(expiration_datetime.getHours() + 1);
+
+        const body = {erp, OTP: OTPHash, expiration_datetime};
+        const result = await OTPModel.create(body);
+
+        if (!result) throw new OTPGenerationException();
+
+        return OTP;
+    }
+
+    #removeExpiredOTP = async(erp) => {
+        const result = await OTPModel.findOne({erp});
+
+        if (result) { // if found, delete
+            const affectedRows = await OTPModel.delete({erp});
+
+            if (!affectedRows) {
+                throw new OTPGenerationException('Expired OTP could not be deleted');
+            }
+        }
+    }
+
+    verifyOTP = async(body) => {
+        const {otp, erp} = body;
+        let result = await OTPModel.findOne({erp});
+
+        if (!result) {
+            throw new OTPVerificationException();
+        }
+
+        const {expiration_datetime, OTP: OTPHash} = result;
+
+        if (expiration_datetime < new Date()) {
+            throw new OTPExpiredException();
+        }
+
+        const isMatch = await bcrypt.compare(otp, OTPHash);
+
+        if (!isMatch) {
+            throw new OTPVerificationException();
+        }
+
+        result = await OTPModel.delete({erp});
+
+        if (!result) {
+            throw new OTPVerificationException('Old OTP failed to be deleted');
+        }
+
+        return successResponse({}, 'OTP verified succesfully');
+    }
+
     resetPassword = async(body) => {
         await hashPassword(body);
 
@@ -134,7 +213,7 @@ class AuthRepository {
         const { affectedRows, changedRows, info } = result;
 
         if (!affectedRows) throw new InvalidCredentialsException('ERP not registered');
-        else if (affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('Password reset failed');
         
         const responseBody = {
             rows_matched: affectedRows,
@@ -142,7 +221,7 @@ class AuthRepository {
             info
         };
 
-        return successResponse(responseBody, 'Password changed successfully');
+        return successResponse(responseBody, 'Password reset successfully');
     }
 }
 
