@@ -30,6 +30,8 @@ This example uses a number of open source projects to work properly:
 * [sinon]
 * [decache]
 * [eslint-config-strongloop]
+* [@sendgrid/mail]
+* [otp-generator]
 
 ### :dvd: Installation
 #### 1. Getting Started
@@ -90,16 +92,13 @@ npm run production
 If you want to run the github testing and PR labelling workflows in the CI then:
 
 Create the following repository secrets:
-  * CONFIG_VARS: value should be the following .env file variables
-   ```
-   DB_HOST= db_localhost
-   DB_USER= db_username
-   DB_PASS= db_password
-   DB_DATABASE= db_name
-   ```
+  * DB_HOST: your_db_host
+  * DB_USER: your_db_user (If using CI mysql service set this to 'root')
+  * DB_PASS: your_db_password (If using CI mysql service set this to 'root')
+  * DB_TEST_DATABASE: your_test_database_name
   * SENDGRID_API_KEY: value should be your .env file variable => sendgrid_api_key
-  * SENDGRID_SENDER: value should be all your .env file variable => from_email
-  * SECRET_JWT: value should be all your .env file variables => your_secret
+  * SENDGRID_SENDER: value should be your .env file variable => from_email
+  * SECRET_JWT: value should be your .env file variable => your_secret
 
 ### :closed_book: Important Notes
 
@@ -131,3 +130,5 @@ NodeJS Starter Template © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.
    [sinon]: <https://github.com/sinonjs/sinon>
    [decache]: <https://github.com/dwyl/decache>
    [eslint-config-strongloop]: <https://github.com/strongloop/eslint-config-strongloop>
+   [@sendgrid/mail]: <https://github.com/sendgrid/sendgrid-nodejs>
+   [otp-generator]: <https://github.com/Maheshkumar-Kakade/otp-generator#readme>
