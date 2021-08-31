@@ -134,32 +134,34 @@ class AuthRepository {
             throw new InvalidCredentialsException('ERP not registered');
         }
         
-        await this.#removeExpiredOTP(student.erp);
+        await this.removeExpiredOTP(student.erp);
 
-        const OTP = await this.generateOTP(student.erp);
+        const OTP = this.generateOTP();
+
+        await this.saveOTP(student.erp, OTP, Config.EXPIRY_HOURS_OTP);
 
         await sendOTPEmail(student, OTP);
 
         return successResponse({}, 'OTP generated and sent via email');
     }
 
-    generateOTP = async(erp) => {
-        const OTP = `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
+    generateOTP = () => {
+        return `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
+    }
 
+    saveOTP = async(erp, OTP, expiry_hours) => {
         const OTPHash = await bcrypt.hash(OTP, 8);
 
         let expiration_datetime = new Date();
-        expiration_datetime.setHours(expiration_datetime.getHours() + 1);
+        expiration_datetime.setHours(expiration_datetime.getHours() + expiry_hours);
 
         const body = {erp, OTP: OTPHash, expiration_datetime};
         const result = await OTPModel.create(body);
 
-        if (!result) throw new OTPGenerationException();
-
-        return OTP;
+        if (!result || !result.affected_rows) throw new OTPGenerationException();
     }
 
-    #removeExpiredOTP = async(erp) => {
+    removeExpiredOTP = async(erp) => {
         const result = await OTPModel.findOne({erp});
 
         if (result) { // if found, delete
@@ -180,8 +182,11 @@ class AuthRepository {
         }
 
         const {expiration_datetime, OTP: OTPHash} = result;
-
-        if (expiration_datetime < new Date()) {
+        
+        const expiryDatetime = new Date(expiration_datetime);
+        const currentDatetime = new Date();
+        
+        if (expiryDatetime < currentDatetime) {
             throw new OTPExpiredException();
         }
 

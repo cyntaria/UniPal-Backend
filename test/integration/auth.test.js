@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
+const sinon = require('sinon');
+const decache = require('decache');
 const expect = require('chai').expect;
 const jwt = require('jsonwebtoken');
 const {sleep} = require('../../src/utils/common.utils');
@@ -13,6 +15,7 @@ describe("Authentication API", () => {
     const existingERP = '17855';
     const existingEmail = 'arafaysaleem@gmail.com';
     const newERP = '17999';
+    const unregisteredERP = '19999';
     const newEmail = 'test@gmail.com';
 
     beforeEach(() => {
@@ -159,7 +162,7 @@ describe("Authentication API", () => {
         it("Scenario 2: Login request is unsuccessful due to missing student", async() => {
             // given
             const data = {
-                erp: 19999, // <-- no account registered on this erp
+                erp: unregisteredERP, // <-- no account registered on this erp
                 password: '123'
             };
 
@@ -240,7 +243,7 @@ describe("Authentication API", () => {
         it("Scenario 3: Refresh token is unsuccessful due to unregisted erp", async() => {
             // given
             const data = {
-                erp: 19999, // <-- no account registered on this erp
+                erp: unregisteredERP, // <-- no account registered on this erp
                 password: '123',
                 old_token: "e.e.e" // <-- token doesn't matter if erp is unregistered
             };
@@ -343,14 +346,13 @@ describe("Authentication API", () => {
             data.old_password = new_password;
             data.new_password = old_password;
             res = await request(app).patch(`${API}/change-password`).send(data);
-            console.error(res.headers);
             expect(res.status).to.be.equal(200);
         });
 
         it("Scenario 2: Change password is unsuccessful due to unregisted erp", async() => {
             // given
             const data = {
-                erp: 19999, // <-- no account registered on this erp
+                erp: unregisteredERP, // <-- no account registered on this erp
                 old_password,
                 new_password
             };
@@ -404,4 +406,246 @@ describe("Authentication API", () => {
             expect(incorrectParams).to.include('old_password');
         });
     });
+
+    context("ENDPOINT /auth/forgot/", () => {
+        const otp = '1234';
+
+        context("POST /send-otp", () => {
+            let generateOTPStub, sendOTPEmailStub;
+            let app;
+
+            before(() => {
+                decache('../../src/server');
+                const sendgrid = require('../../src/utils/sendgrid.utils');
+                sendOTPEmailStub = sinon.stub(sendgrid, 'sendOTPEmail').callsFake((_, __) => {});
+                const authRepository = require('../../src/repositories/auth.repository');
+                generateOTPStub = sinon.stub(authRepository, 'generateOTP').callsFake(() => otp);
+                app = require('../../src/server').setup();
+            });
+
+            after(() => {
+                sendOTPEmailStub.restore();
+                generateOTPStub.restore();
+            });
+
+            it("Scenario 1: Forgot password is successful", async() => {
+                // given
+                const data = {
+                    erp: existingERP
+                };
+    
+                // when
+                let res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(200);
+                expect(res.body.headers.error).to.be.equal(0);
+                expect(res.body.headers.message).to.be.equal('OTP generated and sent via email');
+                expect(generateOTPStub.calledOnce).to.be.true;
+                expect(sendOTPEmailStub.calledOnce).to.be.true;
+            });
+    
+            it("Scenario 2: Forgot password is unsuccessful due to unregisted erp", async() => {
+                // given
+                const data = {
+                    erp: unregisteredERP // <-- no account registered on this erp
+                };
+    
+                // when
+                const res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(401);
+                const resHeaders = res.body.headers;
+                expect(resHeaders.error).to.be.equal(1);
+                expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+                expect(resHeaders.message).to.be.equal('ERP not registered');
+            });
+    
+            it("Scenario 3: Forgot password request is incorrect", async() => {
+                // given
+                const data = {
+                    esrp: existingERP // <-- a valid parameter name should be 'erp'
+                };
+    
+                // when
+                const res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(422);
+                expect(res.body.headers.error).to.be.equal(1);
+                expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+                const incorrectParams = res.body.headers.data.map(o => (o.param));
+                expect(incorrectParams).to.include('erp');
+            });
+        });
+    
+        context("POST /verify-otp", () => {
+
+            it("Scenario 1: Verify OTP is successful", async() => {
+                // given
+                const data = {
+                    erp: existingERP,
+                    otp
+                };
+    
+                // when
+                let res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(200);
+                expect(res.body.headers.error).to.be.equal(0);
+                expect(res.body.headers.message).to.be.equal('OTP verified succesfully');
+            });
+    
+            it("Scenario 2: Verify OTP is unsuccessful due to invalid otp", async() => {
+                // given
+                const authRepository = require('../../src/repositories/auth.repository');
+                await authRepository.saveOTP(existingERP, otp, 1);
+                
+                const data = {
+                    erp: existingERP,
+                    otp: 5678 // <-- Invalid OTP code, should be '1234'
+                };
+    
+                // when
+                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(401);
+                const resHeaders = res.body.headers;
+                expect(resHeaders.error).to.be.equal(1);
+                expect(resHeaders.code).to.be.equal('OTPVerificationException');
+                expect(resHeaders.message).to.be.equal('OTP verification failed');
+
+                // clean up
+                await authRepository.removeExpiredOTP(existingERP);
+            });
+    
+            it("Scenario 3: Verify OTP is unsuccessful due to unknown erp", async() => {
+                // given
+                const data = {
+                    erp: unregisteredERP, // <-- no account registered on this erp
+                    otp: otp
+                };
+    
+                // when
+                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(401);
+                const resHeaders = res.body.headers;
+                expect(resHeaders.error).to.be.equal(1);
+                expect(resHeaders.code).to.be.equal('OTPVerificationException');
+                expect(resHeaders.message).to.be.equal('No OTP found for this ERP');
+            });
+
+            it("Scenario 4: Verify OTP is unsuccessful due to expired otp", async() => {
+                // given
+                const authRepository = require('../../src/repositories/auth.repository');
+                await authRepository.saveOTP(existingERP, otp, -1); // create expired otp
+                
+                const data = {
+                    erp: existingERP,
+                    otp: otp
+                };
+    
+                // when
+                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(401);
+                const resHeaders = res.body.headers;
+                expect(resHeaders.error).to.be.equal(1);
+                expect(resHeaders.code).to.be.equal('OTPExpiredException');
+
+                // clean up
+                await authRepository.removeExpiredOTP(existingERP);
+            });
+
+            it("Scenario 5: Verify OTP request is incorrect", async() => {
+                // given
+                const data = {
+                    erp: existingERP,
+                    otp: '12345678' // <-- otp should be 4 digits in length
+                };
+    
+                // when
+                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(422);
+                expect(res.body.headers.error).to.be.equal(1);
+                expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+                const incorrectParams = res.body.headers.data.map(o => (o.param));
+                expect(incorrectParams).to.include('otp');
+            });
+        });
+
+        context("POST /reset-password", () => {
+
+            it("Scenario 1: Reset Password is successful", async() => {
+                // given
+                const app = this.app;
+                const old_password = '123';
+                const new_password = '256';
+                const data = {
+                    erp: existingERP,
+                    new_password
+                };
+    
+                // when
+                let res = await request(app).patch(`${API}/forgot/reset-password`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(200);
+                expect(res.body.headers.error).to.be.equal(0);
+                expect(res.body.headers.message).to.be.equal('Password reset successfully');
+                expect(res.body.body.rows_matched).to.be.equal(1);
+                expect(res.body.body.rows_changed).to.be.equal(1);
+
+                // clean up to old state
+                data.new_password = old_password;
+                res = await request(app).patch(`${API}/forgot/reset-password`).send(data);
+                expect(res.status).to.be.equal(200);
+            });
+    
+            it("Scenario 2: Reset Password is unsuccessful due to unknown erp", async() => {
+                // given
+                const data = {
+                    erp: unregisteredERP, // <-- no account registered on this erp
+                    new_password: '---' // <-- doesnn't matter since if erp is unregistered
+                };
+    
+                // when
+                const res = await request(this.app).patch(`${API}/forgot/reset-password`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(401);
+                const resHeaders = res.body.headers;
+                expect(resHeaders.error).to.be.equal(1);
+                expect(resHeaders.code).to.be.equal('InvalidCredentialsException');
+                expect(resHeaders.message).to.be.equal('ERP not registered');
+            });
+
+            it("Scenario 3: Reset Password request is incorrect", async() => {
+                // given
+                const data = {
+                    erp: existingERP,
+                    password: '12345678' // <-- correct paramter name should be 'new_password'
+                };
+    
+                // when
+                const res = await request(this.app).patch(`${API}/forgot/reset-password`).send(data);
+        
+                // then
+                expect(res.status).to.be.equal(422);
+                expect(res.body.headers.error).to.be.equal(1);
+                expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+                const incorrectParams = res.body.headers.data.map(o => (o.param));
+                expect(incorrectParams).to.include('new_password');
+            });
+        });
+    });
+
 });
