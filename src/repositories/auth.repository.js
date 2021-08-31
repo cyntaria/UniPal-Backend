@@ -136,14 +136,14 @@ class AuthRepository {
         
         await this.#removeExpiredOTP(student.erp);
 
-        const OTP = await this.#generateOTP(student.erp);
+        const OTP = await this.generateOTP(student.erp);
 
         await sendOTPEmail(student, OTP);
 
         return successResponse({}, 'OTP generated and sent via email');
     }
 
-    #generateOTP = async(erp) => {
+    generateOTP = async(erp) => {
         const OTP = `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
 
         const OTPHash = await bcrypt.hash(OTP, 8);
