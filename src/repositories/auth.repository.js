@@ -122,7 +122,7 @@ class AuthRepository {
             throw new InvalidCredentialsException('Incorrect old password');
         }
 
-        let responseBody = { erp, password: new_password };
+        let responseBody = { erp, new_password };
 
         return this.resetPassword(responseBody);
     };
