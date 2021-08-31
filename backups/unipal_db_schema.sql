@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2021 at 07:27 PM
+-- Generation Time: Aug 31, 2021 at 10:26 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -545,7 +545,7 @@ ALTER TABLE `interests`
 -- Indexes for table `otp_codes`
 --
 ALTER TABLE `otp_codes`
-  ADD KEY `fk_otp_codes_student_erp` (`erp`);
+  ADD PRIMARY KEY (`erp`);
 
 --
 -- Indexes for table `posts`
