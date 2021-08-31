@@ -8,7 +8,7 @@ const StudentModel = require('../models/student.model');
 const jwt = require('jsonwebtoken');
 const { Config } = require('../configs/config');
 
-const auth = (...roles) => {
+exports.auth = (...roles) => {
     return async function(req, res, next) {
         try {
             const authHeader = req.headers.authorization;
@@ -56,5 +56,3 @@ const auth = (...roles) => {
         }
     };
 };
-
-module.exports = { auth };

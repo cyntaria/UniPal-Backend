@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const { ERPRegex } = require('../../utils/common.utils');
+const { ERPRegex, OTPRegex } = require('../../utils/common.utils');
 
 exports.changePWSchema = [
     body('erp')
@@ -23,18 +23,42 @@ exports.changePWSchema = [
         .withMessage('New password can\'t be the same as the old password')
 ];
 
+exports.forgotPWSchema = [
+    body('erp')
+        .trim()
+        .exists()
+        .matches(ERPRegex)
+        .withMessage('ERP must be 5 digits')
+];
+
+exports.verifyOTPSchema = [
+    body('erp')
+        .trim()
+        .exists()
+        .matches(ERPRegex)
+        .withMessage('ERP must be 5 digits'),
+    body('otp')
+        .trim()
+        .exists()
+        .withMessage('otp is required')
+        .matches(OTPRegex)
+        .withMessage('otp must be 4 digits')
+        .isString()
+        .withMessage('otp must be a string')
+];
+
 exports.resetPWSchema = [
     body('erp')
         .trim()
         .exists()
         .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
-    body('password')
+    body('new_password')
         .trim()
         .exists()
-        .withMessage('Password is required')
+        .withMessage('New password is required')
         .notEmpty()
-        .withMessage('Password must be filled')
+        .withMessage('New password must be filled')
 ];
 
 exports.validateLogin = [
