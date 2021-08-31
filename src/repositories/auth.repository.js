@@ -176,7 +176,7 @@ class AuthRepository {
         let result = await OTPModel.findOne({erp});
 
         if (!result) {
-            throw new OTPVerificationException();
+            throw new OTPVerificationException("No OTP found for this ERP");
         }
 
         const {expiration_datetime, OTP: OTPHash} = result;
@@ -203,9 +203,9 @@ class AuthRepository {
     resetPassword = async(body) => {
         await hashPassword(body);
 
-        const { password, erp } = body;
+        const { new_password, erp } = body;
 
-        const result = await StudentModel.update({password}, {erp});
+        const result = await StudentModel.update({password: new_password}, {erp});
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');

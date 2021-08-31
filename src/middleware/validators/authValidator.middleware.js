@@ -53,12 +53,12 @@ exports.resetPWSchema = [
         .exists()
         .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
-    body('password')
+    body('new_password')
         .trim()
         .exists()
-        .withMessage('Password is required')
+        .withMessage('New password is required')
         .notEmpty()
-        .withMessage('Password must be filled')
+        .withMessage('New password must be filled')
 ];
 
 exports.validateLogin = [
