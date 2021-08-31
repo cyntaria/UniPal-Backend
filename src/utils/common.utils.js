@@ -39,9 +39,9 @@ exports.multipleFilterSet = (object) => {
     };
 };
 
-exports.hashPassword = async(body) => {
-    if (body.password) {
-        body.password = await bcrypt.hash(body.password, 8);
+exports.hashPassword = async(password) => {
+    if (password) {
+        return await bcrypt.hash(password, 8);
     }
 };
 

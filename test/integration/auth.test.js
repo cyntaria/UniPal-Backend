@@ -343,6 +343,7 @@ describe("Authentication API", () => {
             data.old_password = new_password;
             data.new_password = old_password;
             res = await request(app).patch(`${API}/change-password`).send(data);
+            console.error(res.headers);
             expect(res.status).to.be.equal(200);
         });
 

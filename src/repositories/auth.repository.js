@@ -27,7 +27,7 @@ class AuthRepository {
     register = async(body) => {
         const pass = body.password;
 
-        await hashPassword(body);
+        body.password = await hashPassword(body.password);
 
         const result = await StudentModel.create(body);
 
@@ -201,7 +201,7 @@ class AuthRepository {
     }
 
     resetPassword = async(body) => {
-        await hashPassword(body);
+        body.new_password = await hashPassword(body.new_password);
 
         const { new_password, erp } = body;
 
