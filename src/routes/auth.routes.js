@@ -18,16 +18,16 @@ router.post('/login', validateLogin, awaitHandlerFactory(authController.login));
 router.post('/refresh-token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/refresh-token
 
 // / For requesting otp for password reset
-router.post('/forgot-password', forgotPWSchema, awaitHandlerFactory(authController.forgotPassword)); // localhost:3000/api/v1/authforgot-password
+router.post('/forgot/send-otp', forgotPWSchema, awaitHandlerFactory(authController.forgotPassword)); // localhost:3000/api/v1/auth/forgot/send-otp
 
 // / For verifying the sent otp against the one in the database
-router.post('/verify-otp', verifyOTPSchema, awaitHandlerFactory(authController.verifyOTP)); // localhost:3000/api/v1/auth/verify-otp
+router.post('/forgot/verify-otp', verifyOTPSchema, awaitHandlerFactory(authController.verifyOTP)); // localhost:3000/api/v1/auth/forgot/verify-otp
 
 // For changing password from the profile page, in case old password is known
 router.patch('/change-password', changePWSchema, awaitHandlerFactory(authController.changePassword)); // localhost:3000/api/v1/auth/password/change-password
 
 // For sending the new password after OTP verification success
-router.patch('/reset-password', resetPWSchema, awaitHandlerFactory(authController.resetPassword)); // localhost:3000/api/v1/auth/reset-password
+router.patch('/forgot/reset-password', resetPWSchema, awaitHandlerFactory(authController.resetPassword)); // localhost:3000/api/v1/auth/forgot/reset-password
 
 
 module.exports = router;
