@@ -18,7 +18,7 @@ router.post('/login', validateLogin, awaitHandlerFactory(authController.login));
 router.post('/refresh-token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/refresh-token
 
 // / For requesting otp for password reset
-router.post('/forgot/send-otp', forgotPWSchema, awaitHandlerFactory(authController.forgotPassword)); // localhost:3000/api/v1/auth/forgot/send-otp
+router.post('/forgot/send-otp', forgotPWSchema, awaitHandlerFactory(authController.sendOTP)); // localhost:3000/api/v1/auth/forgot/send-otp
 
 // / For verifying the sent otp against the one in the database
 router.post('/forgot/verify-otp', verifyOTPSchema, awaitHandlerFactory(authController.verifyOTP)); // localhost:3000/api/v1/auth/forgot/verify-otp

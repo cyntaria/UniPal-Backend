@@ -127,7 +127,7 @@ class AuthRepository {
         return this.resetPassword(responseBody);
     };
 
-    forgotPassword = async(body) => {
+    sendOTP = async(body) => {
         let student = await StudentModel.findOne(body); // body contains "erp" : ...
         
         if (!student) {
