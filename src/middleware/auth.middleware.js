@@ -22,16 +22,17 @@ exports.auth = (...roles) => {
             const secretKey = Config.SECRET_JWT;
 
             // Verify Token
-            const decoded = jwt.verify(token, secretKey, (err, decoded) => {
+            let decoded_erp;
+            jwt.verify(token, secretKey, (err, decoded) => {
                 if (err) {
                     if (err.name === 'TokenExpiredError') {
                         throw new TokenExpiredException();
                     } else if (err.name === 'JsonWebTokenError') {
                         throw new TokenVerificationException();
                     }
-                }
+                } else decoded_erp = decoded.erp;
             });
-            const student = await StudentModel.findOne({ erp: decoded.erp });
+            const student = await StudentModel.findOne({ erp: decoded_erp });
 
             if (!student) {
                 throw new TokenVerificationException();

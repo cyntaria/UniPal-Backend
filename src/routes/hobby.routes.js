@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth.middleware');
+const {auth} = require('../middleware/auth.middleware');
 const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middleware');
 
 const hobbyController = require('../controllers/hobby.controller');
