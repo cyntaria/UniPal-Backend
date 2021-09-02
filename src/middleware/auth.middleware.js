@@ -2,7 +2,7 @@ const {
     TokenMissingException,
     TokenVerificationException,
     TokenExpiredException,
-    UnauthorizedException
+    ForbiddenException
 } = require('../utils/exceptions/auth.exception');
 const StudentModel = require('../models/student.model');
 const jwt = require('jsonwebtoken');
@@ -44,7 +44,7 @@ exports.auth = (...roles) => {
             // if the student role don't have the permission to do this action.
             // the student will get this error
             if (/*! ownerAuthorized || */(roles.length && !roles.includes(student.role))) {
-                throw new UnauthorizedException();
+                throw new ForbiddenException();
             }
 
             // if the student has permissions
@@ -52,7 +52,6 @@ exports.auth = (...roles) => {
             next();
 
         } catch (e) {
-            e.status = 401;
             next(e);
         }
     };

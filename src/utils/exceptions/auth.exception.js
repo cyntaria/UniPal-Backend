@@ -13,9 +13,9 @@ class AuthException extends Error {
     }
 }
 
-class UnauthorizedException extends AuthException {
+class ForbiddenException extends AuthException {
     constructor(message = 'User unauthorized for action', data){
-        super(message, data);
+        super(message, data, ErrorStatusCodes.ForbiddenException);
     }
 }
 
@@ -72,7 +72,7 @@ module.exports = {
     InvalidCredentialsException,
     TokenVerificationException,
     TokenExpiredException,
-    UnauthorizedException,
+    ForbiddenException: ForbiddenException,
     RegistrationFailedException,
     OTPExpiredException,
     OTPGenerationException,
