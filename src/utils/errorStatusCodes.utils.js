@@ -4,7 +4,7 @@ module.exports.ErrorStatusCodes = {
     DuplicateEntryException: 409,
     TokenMissingException: 401,
     InternalServerException: 500,
-    UnauthorizedException: 401,
+    ForbiddenException: 403,
     UnexpectedException: 404,
     CreateFailedException: 500,
     UpdateFailedException: 500,

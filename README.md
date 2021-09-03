@@ -7,6 +7,7 @@
 The documentation was generated using Postman and is divided into collections at the following URLs:
 
 - Auth - https://documenter.getpostman.com/view/13348269/TzzHnZDS
+- Hobbies - https://documenter.getpostman.com/view/13348269/U16dT95z
 
 ### :wrench: Tech
 

@@ -2,7 +2,7 @@ const {
     TokenMissingException,
     TokenVerificationException,
     TokenExpiredException,
-    UnauthorizedException
+    ForbiddenException
 } = require('../utils/exceptions/auth.exception');
 const StudentModel = require('../models/student.model');
 const jwt = require('jsonwebtoken');
@@ -22,16 +22,17 @@ exports.auth = (...roles) => {
             const secretKey = Config.SECRET_JWT;
 
             // Verify Token
-            const decoded = jwt.verify(token, secretKey, (err, decoded) => {
+            let decoded_erp;
+            jwt.verify(token, secretKey, (err, decoded) => {
                 if (err) {
                     if (err.name === 'TokenExpiredError') {
                         throw new TokenExpiredException();
                     } else if (err.name === 'JsonWebTokenError') {
                         throw new TokenVerificationException();
                     }
-                }
+                } else decoded_erp = decoded.erp;
             });
-            const student = await StudentModel.findOne({ erp: decoded.erp });
+            const student = await StudentModel.findOne({ erp: decoded_erp });
 
             if (!student) {
                 throw new TokenVerificationException();
@@ -43,7 +44,7 @@ exports.auth = (...roles) => {
             // if the student role don't have the permission to do this action.
             // the student will get this error
             if (/*! ownerAuthorized || */(roles.length && !roles.includes(student.role))) {
-                throw new UnauthorizedException();
+                throw new ForbiddenException();
             }
 
             // if the student has permissions
@@ -51,7 +52,6 @@ exports.auth = (...roles) => {
             next();
 
         } catch (e) {
-            e.status = 401;
             next(e);
         }
     };
