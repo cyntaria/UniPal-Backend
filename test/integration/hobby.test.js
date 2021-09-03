@@ -57,7 +57,7 @@ describe("Hobbies API", () => {
             modelStub.restore();
         });
 
-        it("Scenario 3: Get all hobbies request is forbidden", async() => {
+        it("Scenario 3: Get all hobbies request is unauthorized", async() => {
             // act
             let res = await request(this.app).get(`${API}`);
     
@@ -100,7 +100,7 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('Hobby not found');
         });
 
-        it("Scenario 3: Get a hobby request is forbidden", async() => {
+        it("Scenario 3: Get a hobby request is unauthorized", async() => {
             // act
             let res = await request(this.app).get(`${API}/${existingHobby.hobby_id}`);
     
@@ -171,7 +171,7 @@ describe("Hobbies API", () => {
             expect(incorrectParams).to.include('hobby');
         });
 
-        it("Scenario 3: Create a hobby request is forbidden due to unauthorized token", async() => {
+        it("Scenario 3: Create a hobby request is forbidden", async() => {
             // arrange
             const data = { hobby };
 
@@ -188,7 +188,7 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Create a hobby request is forbidden due to missing token", async() => {
+        it("Scenario 4: Create a hobby request is unauthorized", async() => {
             // arrange
             const data = { hobby };
 
@@ -284,7 +284,7 @@ describe("Hobbies API", () => {
             expect(incorrectParams).to.include('hobby');
         });
 
-        it("Scenario 3: Update a hobby request is forbidden due to unauthorized token", async() => {
+        it("Scenario 3: Update a hobby request is forbidden", async() => {
             // arrange
             const data = { hobby: newHobby };
 
@@ -301,7 +301,7 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Update a hobby request is forbidden due to missing token", async() => {
+        it("Scenario 4: Update a hobby request is unauthorized", async() => {
             // arrange
             const data = { hobby: newHobby };
 
@@ -309,6 +309,85 @@ describe("Hobbies API", () => {
             const res = await request(this.app)
                 .patch(`${API}/${existingHobby.hobby_id}`)
                 .send(data);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
+    context("DELETE /hobbies", () => {
+        const hobby = 'cycling';
+        
+        it("Scenario 1: Delete a hobby request is successful", async() => {
+            // prepare
+            const data = { hobby };
+            const app = this.app;
+
+            // create dummy
+            let res = await request(app)
+                .post(`${API}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+            expect(res.status).to.be.equal(201);
+
+            // arrange
+            const newId = res.body.body.hobby_id;
+
+            // act
+            res = await request(app)
+                .delete(`${API}/${newId}`)
+                .auth(adminToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.headers.message).to.be.equal('Hobby has been deleted');
+
+            // affirm
+            res = await request(app)
+                .get(`${API}/${newId}`)
+                .auth(userToken, { type: 'bearer' });
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+        });
+
+        it("Scenario 2: Delete a hobby request is unsuccessful", async() => {
+            // arrange
+            const unknownHobbyId = 2000;
+
+            // act
+            const res = await request(this.app)
+                .delete(`${API}/${unknownHobbyId}`)
+                .auth(adminToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Hobby not found');
+        });
+
+        it("Scenario 3: Delete a hobby request is forbidden", async() => {
+            // act
+            const res = await request(this.app)
+                .delete(`${API}/${existingHobby.hobby_id}`)
+                .auth(userToken, { type: 'bearer' }); // <-- api_user token instead of admin token
+            
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
+
+        it("Scenario 4: Delete a hobby request is unauthorized", async() => {
+            // act
+            const res = await request(this.app)
+                .delete(`${API}/${existingHobby.hobby_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
