@@ -6,13 +6,13 @@ const decache = require('decache');
 const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
-describe("Hobbies API", () => {
-    const API = "/api/v1/hobbies";
+describe("Interests API", () => {
+    const API = "/api/v1/interests";
     const adminERP = '15030';
     const userERP = '17855';
-    const existingHobby = {
-        hobby_id: 1,
-        hobby: 'painting'
+    const existingInterest = {
+        interest_id: 1,
+        interest: 'sports'
     };
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
@@ -21,9 +21,9 @@ describe("Hobbies API", () => {
         this.app = require('../../src/server').setup();
     });
 
-    context("GET /hobbies", () => {
+    context("GET /interests", () => {
 
-        it("Scenario 1: Get all hobbies request successful", async() => {
+        it("Scenario 1: Get all interests request successful", async() => {
             // act
             let res = await request(this.app)
                 .get(`${API}`)
@@ -34,14 +34,14 @@ describe("Hobbies API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            expect(resBody[0]).to.include.keys(['hobby_id', 'hobby']); // deep compare two objects using 'eql'
+            expect(resBody[0]).to.include.keys(['interest_id', 'interest']); // deep compare two objects using 'eql'
         });
 
-        it("Scenario 2: Get all hobbies request unsuccessful", async() => {
+        it("Scenario 2: Get all interests request unsuccessful", async() => {
             // arrange
             decache('../../src/server');
-            const HobbyModel = require('../../src/models/hobby.model');
-            const modelStub = sinon.stub(HobbyModel, 'findAll').callsFake(() => []); // return empty hobby list
+            const InterestModel = require('../../src/models/interest.model');
+            const modelStub = sinon.stub(InterestModel, 'findAll').callsFake(() => []); // return empty interest list
             const app = require('../../src/server').setup();
 
             // act
@@ -53,11 +53,11 @@ describe("Hobbies API", () => {
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hobbies not found');
+            expect(res.body.headers.message).to.be.equal('Interests not found');
             modelStub.restore();
         });
 
-        it("Scenario 3: Get all hobbies request is unauthorized", async() => {
+        it("Scenario 3: Get all interests request is unauthorized", async() => {
             // act
             let res = await request(this.app).get(`${API}`);
     
@@ -69,40 +69,40 @@ describe("Hobbies API", () => {
         });
     });
 
-    context("GET /hobbies/:id", () => {
-        it("Scenario 1: Get a hobby request successful", async() => {
+    context("GET /interests/:id", () => {
+        it("Scenario 1: Get a interest request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${API}/${existingHobby.hobby_id}`)
+                .get(`${API}/${existingInterest.interest_id}`)
                 .auth(userToken, { type: 'bearer' });
 
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
-            expect(resBody).to.include.keys(['hobby_id', 'hobby']);
-            expect(resBody.hobby_id).to.be.eql(existingHobby.hobby_id); // should match initially sent id
+            expect(resBody).to.include.keys(['interest_id', 'interest']);
+            expect(resBody.interest_id).to.be.eql(existingInterest.interest_id); // should match initially sent id
         });
 
-        it("Scenario 2: Get a hobby request is unsuccessful", async() => {
+        it("Scenario 2: Get a interest request is unsuccessful", async() => {
             // arrange
-            const unknownHobbyId = 2000;
+            const unknownInterestId = 2000;
 
             // act
             const res = await request(this.app)
-                .get(`${API}/${unknownHobbyId}`)
+                .get(`${API}/${unknownInterestId}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hobby not found');
+            expect(res.body.headers.message).to.be.equal('Interest not found');
         });
 
-        it("Scenario 3: Get a hobby request is unauthorized", async() => {
+        it("Scenario 3: Get a interest request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${API}/${existingHobby.hobby_id}`);
+            let res = await request(this.app).get(`${API}/${existingInterest.interest_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -112,12 +112,12 @@ describe("Hobbies API", () => {
         });
     });
 
-    context("POST /hobbies", () => {
-        const hobby = 'cycling';
+    context("POST /interests", () => {
+        const interest = 'gaming';
         
-        it("Scenario 1: Create a hobby request is successful", async() => {
+        it("Scenario 1: Create a interest request is successful", async() => {
             // arrange
-            const data = { hobby };
+            const data = { interest };
             const app = this.app;
 
             // act
@@ -129,9 +129,9 @@ describe("Hobbies API", () => {
             // assert
             expect(res.status).to.be.equal(201);
             expect(res.body.headers.error).to.be.equal(0);
-            expect(res.body.body).to.include.keys(['hobby_id', 'affected_rows']);
+            expect(res.body.body).to.include.keys(['interest_id', 'affected_rows']);
             expect(res.body.body.affected_rows).to.be.equal(1);
-            const newId = res.body.body.hobby_id;
+            const newId = res.body.body.interest_id;
 
             // affirm
             res = await request(app)
@@ -140,8 +140,8 @@ describe("Hobbies API", () => {
 
             expect(res.status).to.be.equal(200);
             expect(res.body.body).to.be.eql({
-                hobby_id: newId,
-                hobby: hobby
+                interest_id: newId,
+                interest: interest
             });
 
             // cleanup
@@ -151,10 +151,10 @@ describe("Hobbies API", () => {
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Create a hobby request is incorrect", async() => {
+        it("Scenario 2: Create a interest request is incorrect", async() => {
             // arrange
             const data = {
-                hobbies: hobby // <-- a valid parameter name should be 'hobby'
+                interests: interest // <-- a valid parameter name should be 'interest'
             };
 
             // act
@@ -168,12 +168,12 @@ describe("Hobbies API", () => {
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
-            expect(incorrectParams).to.include('hobby');
+            expect(incorrectParams).to.include('interest');
         });
 
-        it("Scenario 3: Create a hobby request is forbidden", async() => {
+        it("Scenario 3: Create a interest request is forbidden", async() => {
             // arrange
-            const data = { hobby };
+            const data = { interest };
 
             // act
             const res = await request(this.app)
@@ -188,9 +188,9 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Create a hobby request is unauthorized", async() => {
+        it("Scenario 4: Create a interest request is unauthorized", async() => {
             // arrange
-            const data = { hobby };
+            const data = { interest };
 
             // act
             const res = await request(this.app)
@@ -205,17 +205,17 @@ describe("Hobbies API", () => {
         });
     });
 
-    context("PATCH /hobbies/:id", () => {
-        const newHobby = 'content writing';
+    context("PATCH /interests/:id", () => {
+        const newInterest = 'gaming';
         
-        it("Scenario 1: Update a hobby request is successful", async() => {
+        it("Scenario 1: Update a interest request is successful", async() => {
             // arrange
-            const data = { hobby: newHobby };
+            const data = { interest: newInterest };
             const app = this.app;
 
             // act
             let res = await request(app)
-                .patch(`${API}/${existingHobby.hobby_id}`)
+                .patch(`${API}/${existingInterest.interest_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -228,32 +228,32 @@ describe("Hobbies API", () => {
             
             // affirm
             res = await request(app)
-                .get(`${API}/${existingHobby.hobby_id}`)
+                .get(`${API}/${existingInterest.interest_id}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
             expect(res.body.body).to.be.eql({
-                hobby_id: existingHobby.hobby_id,
-                hobby: newHobby
+                interest_id: existingInterest.interest_id,
+                interest: newInterest
             });
             
             // cleanup
-            data.hobby = existingHobby.hobby;
+            data.interest = existingInterest.interest;
             res = await request(app)
-                .patch(`${API}/${existingHobby.hobby_id}`)
+                .patch(`${API}/${existingInterest.interest_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Update a hobby request is unsuccessful", async() => {
+        it("Scenario 2: Update a interest request is unsuccessful", async() => {
             // arrange
-            const data = { hobby: newHobby };
-            const unknownHobbyId = 2000;
+            const data = { interest: newInterest };
+            const unknownInterestId = 2000;
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${unknownHobbyId}`)
+                .patch(`${API}/${unknownInterestId}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -261,18 +261,18 @@ describe("Hobbies API", () => {
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hobby not found');
+            expect(res.body.headers.message).to.be.equal('Interest not found');
         });
 
-        it("Scenario 3: Update a hobby request is incorrect", async() => {
+        it("Scenario 3: Update a interest request is incorrect", async() => {
             // arrange
             const data = {
-                hobbies: newHobby // <-- a valid parameter name should be 'hobby'
+                interests: newInterest // <-- a valid parameter name should be 'interest'
             };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingHobby.hobby_id}`)
+                .patch(`${API}/${existingInterest.interest_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -281,16 +281,16 @@ describe("Hobbies API", () => {
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
-            expect(incorrectParams).to.include('hobby');
+            expect(incorrectParams).to.include('interest');
         });
 
-        it("Scenario 3: Update a hobby request is forbidden", async() => {
+        it("Scenario 3: Update a interest request is forbidden", async() => {
             // arrange
-            const data = { hobby: newHobby };
+            const data = { interest: newInterest };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingHobby.hobby_id}`)
+                .patch(`${API}/${existingInterest.interest_id}`)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -301,13 +301,13 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Update a hobby request is unauthorized", async() => {
+        it("Scenario 4: Update a interest request is unauthorized", async() => {
             // arrange
-            const data = { hobby: newHobby };
+            const data = { interest: newInterest };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingHobby.hobby_id}`)
+                .patch(`${API}/${existingInterest.interest_id}`)
                 .send(data);
     
             // assert
@@ -318,12 +318,12 @@ describe("Hobbies API", () => {
         });
     });
 
-    context("DELETE /hobbies", () => {
-        const hobby = 'cycling';
+    context("DELETE /interests", () => {
+        const interest = 'gaming';
         
-        it("Scenario 1: Delete a hobby request is successful", async() => {
+        it("Scenario 1: Delete a interest request is successful", async() => {
             // prepare
-            const data = { hobby };
+            const data = { interest };
             const app = this.app;
 
             // create dummy
@@ -334,7 +334,7 @@ describe("Hobbies API", () => {
             expect(res.status).to.be.equal(201);
 
             // arrange
-            const newId = res.body.body.hobby_id;
+            const newId = res.body.body.interest_id;
 
             // act
             res = await request(app)
@@ -344,7 +344,7 @@ describe("Hobbies API", () => {
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
-            expect(res.body.headers.message).to.be.equal('Hobby has been deleted');
+            expect(res.body.headers.message).to.be.equal('Interest has been deleted');
             expect(res.body.body.rows_removed).to.be.equal(1);
 
             // affirm
@@ -356,26 +356,26 @@ describe("Hobbies API", () => {
             expect(res.body.headers.code).to.be.equal('NotFoundException');
         });
 
-        it("Scenario 2: Delete a hobby request is unsuccessful", async() => {
+        it("Scenario 2: Delete a interest request is unsuccessful", async() => {
             // arrange
-            const unknownHobbyId = 2000;
+            const unknownInterestId = 2000;
 
             // act
             const res = await request(this.app)
-                .delete(`${API}/${unknownHobbyId}`)
+                .delete(`${API}/${unknownInterestId}`)
                 .auth(adminToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hobby not found');
+            expect(res.body.headers.message).to.be.equal('Interest not found');
         });
 
-        it("Scenario 3: Delete a hobby request is forbidden", async() => {
+        it("Scenario 3: Delete a interest request is forbidden", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingHobby.hobby_id}`)
+                .delete(`${API}/${existingInterest.interest_id}`)
                 .auth(userToken, { type: 'bearer' }); // <-- api_user token instead of admin token
             
             // assert
@@ -385,10 +385,10 @@ describe("Hobbies API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Delete a hobby request is unauthorized", async() => {
+        it("Scenario 4: Delete a interest request is unauthorized", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingHobby.hobby_id}`);
+                .delete(`${API}/${existingInterest.interest_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
