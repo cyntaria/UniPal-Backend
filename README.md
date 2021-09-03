@@ -8,31 +8,7 @@ The documentation was generated using Postman and is divided into collections at
 
 - Auth - https://documenter.getpostman.com/view/13348269/TzzHnZDS
 - Hobbies - https://documenter.getpostman.com/view/13348269/U16dT95z
-
-### :wrench: Tech
-
-This example uses a number of open source projects to work properly:
-
-* [node.js]
-* [express]
-* [bcryptjs]
-* [cors]
-* [cross-env]
-* [deep-email-validator]
-* [dotenv-flow]
-* [express-validator]
-* [jsonwebtoken]
-* [mysql2]
-* [@babel/eslint-parser]
-* [@babel/core]
-* [mocha]
-* [chai]
-* [supertest]
-* [sinon]
-* [decache]
-* [eslint-config-strongloop]
-* [@sendgrid/mail]
-* [otp-generator]
+- Interests - https://documenter.getpostman.com/view/13348269/U16evoaD
 
 ### :dvd: Installation
 #### 1. Getting Started
@@ -108,6 +84,31 @@ Create the following repository secrets:
 
 **Enjoy :)**
 
+### :wrench: Tech
+
+This example uses a number of open source projects to work properly:
+
+* [node.js]
+* [express]
+* [bcryptjs]
+* [cors]
+* [cross-env]
+* [deep-email-validator]
+* [dotenv-flow]
+* [express-validator]
+* [jsonwebtoken]
+* [mysql2]
+* [@babel/eslint-parser]
+* [@babel/core]
+* [mocha]
+* [chai]
+* [supertest]
+* [sinon]
+* [decache]
+* [eslint-config-strongloop]
+* [@sendgrid/mail]
+* [otp-generator]
+
 ### :bookmark_tabs: License
 NodeJS Starter Template © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.0 
 
@@ -125,6 +126,7 @@ NodeJS Starter Template © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.
    [jsonwebtoken]: <https://github.com/auth0/node-jsonwebtoken#readme>
    [mysql2]: <https://github.com/sidorares/node-mysql2#readme>
    [@babel/eslint-parser]: <https://github.com/babel/babel>
+   [@babel/core]: <https://github.com/babel/babel>
    [mocha]: <https://github.com/mochajs/mocha>
    [chai]: <https://github.com/chaijs/chai>
    [supertest]: <https://github.com/visionmedia/supertest>
