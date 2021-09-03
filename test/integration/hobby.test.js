@@ -345,6 +345,7 @@ describe("Hobbies API", () => {
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
             expect(res.body.headers.message).to.be.equal('Hobby has been deleted');
+            expect(res.body.body.rows_removed).to.be.equal(1);
 
             // affirm
             res = await request(app)
