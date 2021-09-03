@@ -63,7 +63,11 @@ class InterestRepository {
             throw new NotFoundException('Interest not found');
         }
 
-        return successResponse({}, 'Interest has been deleted');
+        const responseBody = {
+            rows_removed: result
+        };
+
+        return successResponse(responseBody, 'Interest has been deleted');
     };
 }
 

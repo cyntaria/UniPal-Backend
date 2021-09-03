@@ -63,7 +63,11 @@ class HobbyRepository {
             throw new NotFoundException('Hobby not found');
         }
 
-        return successResponse({}, 'Hobby has been deleted');
+        const responseBody = {
+            rows_removed: result
+        };
+
+        return successResponse(responseBody, 'Hobby has been deleted');
     };
 }
 
