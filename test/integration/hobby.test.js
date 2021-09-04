@@ -14,6 +14,7 @@ describe("Hobbies API", () => {
         hobby_id: 1,
         hobby: 'painting'
     };
+    const unknownHobbyId = 2000;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
 
@@ -85,9 +86,6 @@ describe("Hobbies API", () => {
         });
 
         it("Scenario 2: Get a hobby request is unsuccessful", async() => {
-            // arrange
-            const unknownHobbyId = 2000;
-
             // act
             const res = await request(this.app)
                 .get(`${API}/${unknownHobbyId}`)
@@ -249,7 +247,6 @@ describe("Hobbies API", () => {
         it("Scenario 2: Update a hobby request is unsuccessful", async() => {
             // arrange
             const data = { hobby: newHobby };
-            const unknownHobbyId = 2000;
 
             // act
             const res = await request(this.app)
@@ -357,9 +354,6 @@ describe("Hobbies API", () => {
         });
 
         it("Scenario 2: Delete a hobby request is unsuccessful", async() => {
-            // arrange
-            const unknownHobbyId = 2000;
-
             // act
             const res = await request(this.app)
                 .delete(`${API}/${unknownHobbyId}`)

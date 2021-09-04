@@ -14,6 +14,7 @@ describe("Student Statuses API", () => {
         student_status_id: 1,
         student_status: 'Looking for a friend'
     };
+    const unknownStudentStatusId = 2000;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
 
@@ -85,9 +86,6 @@ describe("Student Statuses API", () => {
         });
 
         it("Scenario 2: Get a student status request is unsuccessful", async() => {
-            // arrange
-            const unknownStudentStatusId = 2000;
-
             // act
             const res = await request(this.app)
                 .get(`${API}/${unknownStudentStatusId}`)
@@ -249,7 +247,6 @@ describe("Student Statuses API", () => {
         it("Scenario 2: Update a student status request is unsuccessful", async() => {
             // arrange
             const data = { student_status: newStudentStatus };
-            const unknownStudentStatusId = 2000;
 
             // act
             const res = await request(this.app)
@@ -357,9 +354,6 @@ describe("Student Statuses API", () => {
         });
 
         it("Scenario 2: Delete a student status request is unsuccessful", async() => {
-            // arrange
-            const unknownStudentStatusId = 2000;
-
             // act
             const res = await request(this.app)
                 .delete(`${API}/${unknownStudentStatusId}`)

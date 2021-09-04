@@ -14,6 +14,7 @@ describe("Interests API", () => {
         interest_id: 1,
         interest: 'sports'
     };
+    const unknownInterestId = 2000;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
 
@@ -85,9 +86,6 @@ describe("Interests API", () => {
         });
 
         it("Scenario 2: Get a interest request is unsuccessful", async() => {
-            // arrange
-            const unknownInterestId = 2000;
-
             // act
             const res = await request(this.app)
                 .get(`${API}/${unknownInterestId}`)
@@ -249,7 +247,6 @@ describe("Interests API", () => {
         it("Scenario 2: Update a interest request is unsuccessful", async() => {
             // arrange
             const data = { interest: newInterest };
-            const unknownInterestId = 2000;
 
             // act
             const res = await request(this.app)
@@ -357,9 +354,6 @@ describe("Interests API", () => {
         });
 
         it("Scenario 2: Delete a interest request is unsuccessful", async() => {
-            // arrange
-            const unknownInterestId = 2000;
-
             // act
             const res = await request(this.app)
                 .delete(`${API}/${unknownInterestId}`)
