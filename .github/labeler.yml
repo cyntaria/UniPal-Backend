@@ -48,7 +48,7 @@ CI/CD:
 - any: ['.github/**/*']
 
 backups:
-- any: ['*.sql','*.zip','encrypted_cfgs']
+- any: ['backups/**/*.sql','backups/**/*.zip','backups/**/encrypted_cfgs']
 
 documentation:
 - any: ['README.md']
