@@ -16,7 +16,7 @@ class RoutesLoader {
         app.use(`/api/${version}/interests`, interestRouter);
         app.use(`/api/${version}/campuses`, campusRouter);
         app.use(`/api/${version}/programs`, programRouter);
-        app.use(`/api/${version}/student_statuses`, studentStatusRouter);
+        app.use(`/api/${version}/student-statuses`, studentStatusRouter);
         app.use(`/api/${version}/health`, healthCheckRouter);
     }
 }

@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
 describe("Student Statuses API", () => {
-    const API = "/api/v1/student_statuses";
+    const API = "/api/v1/student-statuses";
     const adminERP = '15030';
     const userERP = '17855';
     const existingStudentStatus = {
@@ -22,7 +22,7 @@ describe("Student Statuses API", () => {
         this.app = require('../../src/server').setup();
     });
 
-    context("GET /student_statuses", () => {
+    context("GET /student-statuses", () => {
 
         it("Scenario 1: Get all student statuses request successful", async() => {
             // act
@@ -70,7 +70,7 @@ describe("Student Statuses API", () => {
         });
     });
 
-    context("GET /student_statuses/:id", () => {
+    context("GET /student-statuses/:id", () => {
         it("Scenario 1: Get a student status request successful", async() => {
             // act
             let res = await request(this.app)
@@ -110,7 +110,7 @@ describe("Student Statuses API", () => {
         });
     });
 
-    context("POST /student_statuses", () => {
+    context("POST /student-statuses", () => {
         const student_status = 'Looking for help';
         
         it("Scenario 1: Create a student status request is successful", async() => {
@@ -203,7 +203,7 @@ describe("Student Statuses API", () => {
         });
     });
 
-    context("PATCH /student_statuses/:id", () => {
+    context("PATCH /student-statuses/:id", () => {
         const newStudentStatus = 'Looking for help';
         
         it("Scenario 1: Update a student status request is successful", async() => {
@@ -315,7 +315,7 @@ describe("Student Statuses API", () => {
         });
     });
 
-    context("DELETE /student_statuses", () => {
+    context("DELETE /student-statuses", () => {
         const student_status = 'Looking for help';
         
         it("Scenario 1: Delete a student status request is successful", async() => {
