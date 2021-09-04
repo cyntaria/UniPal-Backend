@@ -28,12 +28,12 @@ class CampusModel {
         return result[0];
     }
 
-    create = async({ campus }) => {
+    create = async({ campus, location_url }) => {
         const sql = `INSERT INTO ${tables.Campuses}
-        (campus) 
-        VALUES (?)`;
+        (campus, location_url) 
+        VALUES (?,?)`;
 
-        const result = await DBService.query(sql, [campus]);
+        const result = await DBService.query(sql, [campus, location_url]);
         const created_campus = !result ? 0 : {
             campus_id: result.insertId,
             affected_rows: result.affectedRows

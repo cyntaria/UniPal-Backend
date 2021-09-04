@@ -3,7 +3,6 @@ const { failureResponse } = require('../utils/responses.utils');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
 function errorMiddleware(err, req, res, next) {
-    // TODO: Add better code checking for JWT errors
     if (err.status === 500 || !err.message) {
         if (!err.isOperational) err = new InternalServerException('Internal server error');
     }
