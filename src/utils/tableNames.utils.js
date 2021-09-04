@@ -3,5 +3,6 @@ exports.tables = {
     OtpCodes: 'otp_codes',
     Hobbies: 'hobbies',
     Interests: 'interests',
-    Campuses: 'campuses'
+    Campuses: 'campuses',
+    Programs: 'programs'
 };
