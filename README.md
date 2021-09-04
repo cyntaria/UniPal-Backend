@@ -9,6 +9,7 @@ The documentation was generated using Postman and is divided into collections at
 - Auth - https://documenter.getpostman.com/view/13348269/TzzHnZDS
 - Hobbies - https://documenter.getpostman.com/view/13348269/U16dT95z
 - Interests - https://documenter.getpostman.com/view/13348269/U16evoaD
+- Campuses - https://documenter.getpostman.com/view/13348269/U16gNmMg
 
 ### :dvd: Installation
 #### 1. Getting Started
