@@ -4,5 +4,6 @@ exports.tables = {
     Hobbies: 'hobbies',
     Interests: 'interests',
     Campuses: 'campuses',
-    Programs: 'programs'
+    Programs: 'programs',
+    StudentStatuses: 'student_statuses'
 };

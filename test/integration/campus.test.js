@@ -15,6 +15,7 @@ describe("Campuses API", () => {
         campus: 'MAIN',
         location_url: 'https://maps.app.goo.gl/LvH61VeZZVfyggHw6'
     };
+    const unknownCampusId = 2000;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
 
@@ -86,9 +87,6 @@ describe("Campuses API", () => {
         });
 
         it("Scenario 2: Get a campus request is unsuccessful", async() => {
-            // arrange
-            const unknownCampusId = 2000;
-
             // act
             const res = await request(this.app)
                 .get(`${API}/${unknownCampusId}`)
@@ -254,7 +252,6 @@ describe("Campuses API", () => {
         it("Scenario 2: Update a campus request is unsuccessful", async() => {
             // arrange
             const data = { campus: newCampus };
-            const unknownCampusId = 2000;
 
             // act
             const res = await request(this.app)
@@ -363,9 +360,6 @@ describe("Campuses API", () => {
         });
 
         it("Scenario 2: Delete a campus request is unsuccessful", async() => {
-            // arrange
-            const unknownCampusId = 2000;
-
             // act
             const res = await request(this.app)
                 .delete(`${API}/${unknownCampusId}`)

@@ -5,6 +5,7 @@ const hobbyRouter = require('../routes/hobby.routes');
 const interestRouter = require('../routes/interest.routes');
 const campusRouter = require('../routes/campus.routes');
 const programRouter = require('../routes/program.routes');
+const studentStatusRouter = require('../routes/studentStatus.routes');
 const healthCheckRouter = require('../routes/healthCheck.routes');
 
 class RoutesLoader {
@@ -15,6 +16,7 @@ class RoutesLoader {
         app.use(`/api/${version}/interests`, interestRouter);
         app.use(`/api/${version}/campuses`, campusRouter);
         app.use(`/api/${version}/programs`, programRouter);
+        app.use(`/api/${version}/student-statuses`, studentStatusRouter);
         app.use(`/api/${version}/health`, healthCheckRouter);
     }
 }

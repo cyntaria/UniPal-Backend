@@ -14,6 +14,7 @@ describe("Programs API", () => {
         program_id: 1,
         program: 'BSCS'
     };
+    const unknownProgramId = 2000;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
 
@@ -85,9 +86,6 @@ describe("Programs API", () => {
         });
 
         it("Scenario 2: Get a program request is unsuccessful", async() => {
-            // arrange
-            const unknownProgramId = 2000;
-
             // act
             const res = await request(this.app)
                 .get(`${API}/${unknownProgramId}`)
@@ -249,7 +247,6 @@ describe("Programs API", () => {
         it("Scenario 2: Update a program request is unsuccessful", async() => {
             // arrange
             const data = { program: newProgram };
-            const unknownProgramId = 2000;
 
             // act
             const res = await request(this.app)
@@ -357,9 +354,6 @@ describe("Programs API", () => {
         });
 
         it("Scenario 2: Delete a program request is unsuccessful", async() => {
-            // arrange
-            const unknownProgramId = 2000;
-
             // act
             const res = await request(this.app)
                 .delete(`${API}/${unknownProgramId}`)
