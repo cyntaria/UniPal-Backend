@@ -1,7 +1,8 @@
 const { Config } = require("../../configs/config");
+const { ErrorStatusCodes } = require('../errorStatusCodes.utils');
 
 class ValidationException extends Error {
-    constructor(message, data, status = 422) {
+    constructor(message, data, status = ErrorStatusCodes.ValidationFailed) {
         super(message);
         if (Config.NODE_ENV === "dev") this.message = "Validation Error: " + message;
         else this.message = message;

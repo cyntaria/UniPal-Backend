@@ -3,6 +3,7 @@ const {
     DuplicateEntryException,
     ForeignKeyViolationException
 } = require('../utils/exceptions/database.exception');
+const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
 class DBService {
@@ -53,8 +54,8 @@ class DBService {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {
                 err.status = HttpStatusCodes[err.code];
-                if (err.status === 409) throw new DuplicateEntryException(err.message);
-                if (err.status === 512) throw new ForeignKeyViolationException(err.message);
+                if (err.status === ErrorStatusCodes.DuplicateEntry) throw new DuplicateEntryException(err.message);
+                if (err.status === ErrorStatusCodes.ForeignKeyViolation) throw new ForeignKeyViolationException(err.message);
             }
 
             console.log(`[DBError] ${err}`);

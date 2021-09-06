@@ -2,7 +2,7 @@ const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 const { Config } = require("../../configs/config");
 
 class DatabaseException extends Error {
-    constructor(message, data, isOperational = false, status = 404) {
+    constructor(message, data, isOperational = false, status = ErrorStatusCodes.NotFound) {
         super(message);
         if (Config.NODE_ENV === "dev") this.message = "Database Error: " + message;
         else this.message = message;
@@ -22,25 +22,25 @@ class NotFoundException extends DatabaseException {
 
 class DuplicateEntryException extends DatabaseException {
     constructor(message, data){
-        super(message, data, true, ErrorStatusCodes.DuplicateEntryException);
+        super(message, data, true, ErrorStatusCodes.DuplicateEntry);
     }
 }
 
 class ForeignKeyViolationException extends DatabaseException {
     constructor(message, data){
-        super(message, data, true, ErrorStatusCodes.ForeignKeyViolationException);
+        super(message, data, true, ErrorStatusCodes.ForeignKeyViolation);
     }
 }
 
 class UpdateFailedException extends DatabaseException {
     constructor(message, data){
-        super(message, data, true, ErrorStatusCodes.UpdateFailedException);
+        super(message, data, true, ErrorStatusCodes.InternalServerError);
     }
 }
 
 class CreateFailedException extends DatabaseException {
     constructor(message, data){
-        super(message, data, true, ErrorStatusCodes.CreateFailedException);
+        super(message, data, true, ErrorStatusCodes.InternalServerError);
     }
 }
 

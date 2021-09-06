@@ -1,18 +1,10 @@
 module.exports.ErrorStatusCodes = {
-    InvalidPropertiesException: 400,
-    NotFoundException: 404,
-    DuplicateEntryException: 409,
-    TokenMissingException: 401,
-    InternalServerException: 500,
-    ForbiddenException: 403,
-    UnexpectedException: 404,
-    CreateFailedException: 500,
-    UpdateFailedException: 500,
-    InvalidCredentialsException: 401,
-    RegistrationFailedException: 500,
-    InvalidEndpointException: 404,
-    TokenVerificationException: 401,
-    ForeignKeyViolationException: 512,
-    UnimplementedException: 404,
-    HealthCheckFailedException: 503
+    ValidationFailed: 422,
+    NotFound: 404,
+    DuplicateEntry: 409,
+    InternalServerError: 500,
+    Unauthorized: 401,
+    Forbidden: 403,
+    ForeignKeyViolation: 512,
+    HealthCheckFailed: 503
 };
