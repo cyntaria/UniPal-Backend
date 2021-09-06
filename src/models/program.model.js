@@ -29,11 +29,12 @@ class ProgramModel {
     }
 
     create = async({ program }) => {
-        const sql = `INSERT INTO ${tables.Programs}
-        (program) 
-        VALUES (?)`;
+        const valueSet = { program };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const result = await DBService.query(sql, [program]);
+        const sql = `INSERT INTO ${tables.Programs} SET ${columnSet}`;
+
+        const result = await DBService.query(sql, [...values]);
         const created_program = !result ? 0 : {
             program_id: result.insertId,
             affected_rows: result.affectedRows

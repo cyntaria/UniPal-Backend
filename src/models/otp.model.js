@@ -29,10 +29,12 @@ class OTPModel {
     }
 
     create = async({ erp, OTP, expiration_datetime }) => {
-        const sql = `INSERT INTO ${tables.OtpCodes}
-        (erp, OTP, expiration_datetime) VALUES (?,?,?)`;
+        const valueSet = { erp, OTP, expiration_datetime };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const result = await DBService.query(sql, [erp, OTP, expiration_datetime]);
+        const sql = `INSERT INTO ${tables.OtpCodes} SET ${columnSet}`;
+
+        const result = await DBService.query(sql, [...values]);
         const created_OTP = !result ? 0 : {
             affected_rows: result.affectedRows
         };

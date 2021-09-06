@@ -2,7 +2,7 @@ const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 const { Config } = require("../../configs/config");
 
 class AuthException extends Error {
-    constructor(message, data, status = 401) {
+    constructor(message, data, status = ErrorStatusCodes.Unauthorized) {
         super(message);
         if (Config.NODE_ENV === "dev") this.message = "Auth Error: " + message;
         else this.message = message;
@@ -15,7 +15,7 @@ class AuthException extends Error {
 
 class ForbiddenException extends AuthException {
     constructor(message = 'User unauthorized for action', data){
-        super(message, data, ErrorStatusCodes.ForbiddenException);
+        super(message, data, ErrorStatusCodes.Forbidden);
     }
 }
 
@@ -63,7 +63,7 @@ class InvalidCredentialsException extends AuthException {
 
 class RegistrationFailedException extends AuthException {
     constructor(message = "User failed to be registered", data){
-        super(message, data, ErrorStatusCodes.RegistrationFailedException);
+        super(message, data, ErrorStatusCodes.InternalServerError);
     }
 }
 

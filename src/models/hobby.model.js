@@ -28,11 +28,12 @@ class HobbyModel {
     }
 
     create = async({ hobby }) => {
-        const sql = `INSERT INTO ${tables.Hobbies}
-        (hobby) 
-        VALUES (?)`;
+        const valueSet = { hobby };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const result = await DBService.query(sql, [hobby]);
+        const sql = `INSERT INTO ${tables.Hobbies} SET ${columnSet}`;
+
+        const result = await DBService.query(sql, [...values]);
         const created_hobby = !result ? 0 : {
             hobby_id: result.insertId,
             affected_rows: result.affectedRows
