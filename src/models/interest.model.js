@@ -29,11 +29,12 @@ class InterestModel {
     }
 
     create = async({ interest }) => {
-        const sql = `INSERT INTO ${tables.Interests}
-        (interest) 
-        VALUES (?)`;
+        const valueSet = { interest };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const result = await DBService.query(sql, [interest]);
+        const sql = `INSERT INTO ${tables.Interests} SET ${columnSet}`;
+
+        const result = await DBService.query(sql, [...values]);
         const created_interest = !result ? 0 : {
             interest_id: result.insertId,
             affected_rows: result.affectedRows

@@ -29,11 +29,12 @@ class StudentStatusModel {
     }
 
     create = async({ student_status }) => {
-        const sql = `INSERT INTO ${tables.StudentStatuses}
-        (student_status) 
-        VALUES (?)`;
+        const valueSet = { student_status };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const result = await DBService.query(sql, [student_status]);
+        const sql = `INSERT INTO ${tables.StudentStatuses} SET ${columnSet}`;
+
+        const result = await DBService.query(sql, [...values]);
         const created_student_status = !result ? 0 : {
             student_status_id: result.insertId,
             affected_rows: result.affectedRows
