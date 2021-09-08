@@ -60,7 +60,13 @@ class StudentRepository {
         if (!affectedRows) throw new NotFoundException('Student not found');
         else if (affectedRows && !changedRows) throw new UpdateFailedException('Student update failed');
         
-        return successResponse(info, 'Student updated successfully');
+        const responseBody = {
+            rows_matched: affectedRows,
+            rows_changed: changedRows,
+            info
+        };
+
+        return successResponse(responseBody, 'Student updated successfully');
     };
 
     delete = async(erp) => {
