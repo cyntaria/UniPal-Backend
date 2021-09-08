@@ -75,7 +75,11 @@ class StudentRepository {
             throw new NotFoundException('Student not found');
         }
 
-        return successResponse({}, 'Student has been deleted');
+        const responseBody = {
+            rows_removed: result
+        };
+
+        return successResponse(responseBody, 'Student has been deleted');
     };
 }
 
