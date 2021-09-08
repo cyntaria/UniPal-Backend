@@ -10,9 +10,9 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class StudentRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let studentList = await StudentModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        const hasFilters = Object.keys(filters).length !== 0;
+        let studentList = await StudentModel.findAll(hasFilters ? filters : {});
         if (!studentList.length) {
             throw new NotFoundException('Students not found');
         }
@@ -25,8 +25,8 @@ class StudentRepository {
         return successResponse(studentList);
     };
 
-    findOne = async(params) => {
-        const student = await StudentModel.findOne(params);
+    findOne = async(filters) => {
+        const student = await StudentModel.findOne(filters);
         if (!student) {
             throw new NotFoundException('Student not found');
         }

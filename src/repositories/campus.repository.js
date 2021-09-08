@@ -8,9 +8,9 @@ const {
 const { successResponse } = require('../utils/responses.utils');
 
 class CampusRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let campusList = await CampusModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        const hasFilters = Object.keys(filters).length !== 0;
+        let campusList = await CampusModel.findAll(hasFilters ? filters : {});
         if (!campusList.length) {
             throw new NotFoundException('Campuses not found');
         }
@@ -18,8 +18,8 @@ class CampusRepository {
         return successResponse(campusList, "Success");
     };
 
-    findOne = async(params) => {
-        const result = await CampusModel.findOne(params);
+    findOne = async(filters) => {
+        const result = await CampusModel.findOne(filters);
         if (!result) {
             throw new NotFoundException('Campus not found');
         }

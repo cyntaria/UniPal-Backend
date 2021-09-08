@@ -4,21 +4,21 @@ const { tables } = require('../utils/tableNames.utils');
 
 class OTPModel {
 
-    findAll = async(params = {}) => {
+    findAll = async(filters = {}) => {
         let sql = `SELECT * FROM ${tables.OtpCodes}`;
 
-        if (!Object.keys(params).length) {
+        if (!Object.keys(filters).length) {
             return await DBService.query(sql);
         }
 
-        const { filterSet, filterValues } = multipleFilterSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
     }
 
-    findOne = async(params) => {
-        const { filterSet, filterValues } = multipleFilterSet(params);
+    findOne = async(filters) => {
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `SELECT * FROM ${tables.OtpCodes}
         WHERE ${filterSet}`;
@@ -53,8 +53,8 @@ class OTPModel {
         return result;
     }
 
-    delete = async(params) => {
-        const { columnSet, values } = multipleColumnSet(params);
+    delete = async(filters) => {
+        const { columnSet, values } = multipleColumnSet(filters);
 
         const sql = `DELETE FROM ${tables.OtpCodes}
         WHERE ${columnSet}`;

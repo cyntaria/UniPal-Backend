@@ -3,21 +3,21 @@ const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils'
 const { tables } = require('../utils/tableNames.utils');
 class HobbyModel {
 
-    findAll = async(params = {}) => {
+    findAll = async(filters = {}) => {
         let sql = `SELECT * FROM ${tables.Hobbies}`;
 
-        if (!Object.keys(params).length) {
+        if (!Object.keys(filters).length) {
             return await DBService.query(sql);
         }
 
-        const { filterSet, filterValues } = multipleFilterSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
     }
 
-    findOne = async(params) => {
-        const { filterSet, filterValues } = multipleFilterSet(params);
+    findOne = async(filters) => {
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `SELECT * FROM ${tables.Hobbies}
         WHERE ${filterSet}`;
@@ -42,8 +42,8 @@ class HobbyModel {
         return created_hobby;
     }
 
-    update = async(params, id) => {
-        const { columnSet, values } = multipleColumnSet(params);
+    update = async(columns, id) => {
+        const { columnSet, values } = multipleColumnSet(columns);
 
         const sql = `UPDATE ${tables.Hobbies} SET ${columnSet} WHERE hobby_id = ?`;
 

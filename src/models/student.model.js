@@ -5,21 +5,21 @@ const { tables } = require('../utils/tableNames.utils');
 
 class StudentModel {
 
-    findAll = async(params = {}) => {
+    findAll = async(filters = {}) => {
         let sql = `SELECT * FROM ${tables.Students}`;
 
-        if (!Object.keys(params).length) {
+        if (!Object.keys(filters).length) {
             return await DBService.query(sql);
         }
 
-        const { filterSet, filterValues } = multipleFilterSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
     }
 
-    findOne = async(params) => {
-        const { filterSet, filterValues } = multipleFilterSet(params);
+    findOne = async(filters) => {
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `SELECT * FROM ${tables.Students}
         WHERE ${filterSet}`;
@@ -62,8 +62,8 @@ class StudentModel {
         return created_student;
     }
 
-    update = async(params, filters) => {
-        const { columnSet, values } = multipleColumnSet(params);
+    update = async(columns, filters) => {
+        const { columnSet, values } = multipleColumnSet(columns);
         const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `UPDATE ${tables.Students} SET ${columnSet} WHERE ${filterSet}`;
