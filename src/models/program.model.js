@@ -4,7 +4,7 @@ const { tables } = require('../utils/tableNames.utils');
 
 class ProgramModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.Programs}`;
 
         if (!Object.keys(filters).length) {

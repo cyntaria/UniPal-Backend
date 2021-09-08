@@ -9,8 +9,8 @@ const { successResponse } = require('../utils/responses.utils');
 
 class CampusRepository {
     findAll = async(filters = {}) => {
-        const hasFilters = Object.keys(filters).length !== 0;
-        let campusList = await CampusModel.findAll(hasFilters ? filters : {});
+        
+        let campusList = await CampusModel.findAll(filters);
         if (!campusList.length) {
             throw new NotFoundException('Campuses not found');
         }

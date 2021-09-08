@@ -3,7 +3,7 @@ const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils'
 const { tables } = require('../utils/tableNames.utils');
 class HobbyModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.Hobbies}`;
 
         if (!Object.keys(filters).length) {

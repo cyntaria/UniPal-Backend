@@ -4,7 +4,7 @@ const { tables } = require('../utils/tableNames.utils');
 
 class CampusModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.Campuses}`;
 
         if (!Object.keys(filters).length) {

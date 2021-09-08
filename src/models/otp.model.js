@@ -4,7 +4,7 @@ const { tables } = require('../utils/tableNames.utils');
 
 class OTPModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.OtpCodes}`;
 
         if (!Object.keys(filters).length) {

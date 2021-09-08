@@ -9,8 +9,8 @@ const { successResponse } = require('../utils/responses.utils');
 
 class StudentStatusRepository {
     findAll = async(filters = {}) => {
-        const hasFilters = Object.keys(filters).length !== 0;
-        let studentStatusList = await StudentStatusModel.findAll(hasFilters ? filters : {});
+        
+        let studentStatusList = await StudentStatusModel.findAll(filters);
         if (!studentStatusList.length) {
             throw new NotFoundException('Student statuses not found');
         }

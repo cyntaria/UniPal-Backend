@@ -5,7 +5,7 @@ const { tables } = require('../utils/tableNames.utils');
 
 class StudentModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.Students}`;
 
         if (!Object.keys(filters).length) {
@@ -62,13 +62,12 @@ class StudentModel {
         return created_student;
     }
 
-    update = async(columns, filters) => {
+    update = async(columns, erp) => {
         const { columnSet, values } = multipleColumnSet(columns);
-        const { filterSet, filterValues } = multipleFilterSet(filters);
 
-        const sql = `UPDATE ${tables.Students} SET ${columnSet} WHERE ${filterSet}`;
+        const sql = `UPDATE ${tables.Students} SET ${columnSet} WHERE erp = ?`;
 
-        const result = await DBService.query(sql, [...values, ...filterValues]);
+        const result = await DBService.query(sql, [...values, erp]);
 
         return result;
     }

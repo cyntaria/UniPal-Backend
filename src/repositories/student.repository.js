@@ -11,8 +11,8 @@ const {
 
 class StudentRepository {
     findAll = async(filters = {}) => {
-        const hasFilters = Object.keys(filters).length !== 0;
-        let studentList = await StudentModel.findAll(hasFilters ? filters : {});
+        
+        let studentList = await StudentModel.findAll(filters);
         if (!studentList.length) {
             throw new NotFoundException('Students not found');
         }
@@ -48,8 +48,8 @@ class StudentRepository {
         return successResponse(result, 'Student was created!');
     };
 
-    update = async(body, filters) => {
-        const result = await StudentModel.update(body, filters);
+    update = async(body, erp) => {
+        const result = await StudentModel.update(body, erp);
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');

@@ -4,7 +4,7 @@ const { tables } = require('../utils/tableNames.utils');
 
 class InterestModel {
 
-    findAll = async(filters = {}) => {
+    findAll = async(filters) => {
         let sql = `SELECT * FROM ${tables.Interests}`;
 
         if (!Object.keys(filters).length) {

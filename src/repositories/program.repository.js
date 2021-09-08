@@ -9,8 +9,8 @@ const { successResponse } = require('../utils/responses.utils');
 
 class ProgramRepository {
     findAll = async(filters = {}) => {
-        const hasFilters = Object.keys(filters).length !== 0;
-        let programList = await ProgramModel.findAll(hasFilters ? filters : {});
+        
+        let programList = await ProgramModel.findAll(filters);
         if (!programList.length) {
             throw new NotFoundException('Programs not found');
         }

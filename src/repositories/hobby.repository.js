@@ -9,8 +9,8 @@ const { successResponse } = require('../utils/responses.utils');
 
 class HobbyRepository {
     findAll = async(filters = {}) => {
-        const hasFilters = Object.keys(filters).length !== 0;
-        let hobbyList = await HobbyModel.findAll(hasFilters ? filters : {});
+        
+        let hobbyList = await HobbyModel.findAll(filters);
         if (!hobbyList.length) {
             throw new NotFoundException('Hobbies not found');
         }
