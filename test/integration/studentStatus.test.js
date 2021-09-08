@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
 describe("Student Statuses API", () => {
-    const API = "/api/v1/student-statuses";
+    const API = `/api/${Config.API_VERSION}`;
+    const baseRoute = API + "/student-statuses";
     const adminERP = '15030';
     const userERP = '17855';
     const existingStudentStatus = {
@@ -27,7 +28,7 @@ describe("Student Statuses API", () => {
         it("Scenario 1: Get all student statuses request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${API}`)
+                .get(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -47,7 +48,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(app)
-                .get(`${API}`)
+                .get(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -60,7 +61,7 @@ describe("Student Statuses API", () => {
 
         it("Scenario 3: Get all student statuses request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${API}`);
+            let res = await request(this.app).get(`${baseRoute}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -74,7 +75,7 @@ describe("Student Statuses API", () => {
         it("Scenario 1: Get a student status request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${API}/${existingStudentStatus.student_status_id}`)
+                .get(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(userToken, { type: 'bearer' });
 
             // assert
@@ -88,7 +89,7 @@ describe("Student Statuses API", () => {
         it("Scenario 2: Get a student status request is unsuccessful", async() => {
             // act
             const res = await request(this.app)
-                .get(`${API}/${unknownStudentStatusId}`)
+                .get(`${baseRoute}/${unknownStudentStatusId}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -100,7 +101,7 @@ describe("Student Statuses API", () => {
 
         it("Scenario 3: Get a student status request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${API}/${existingStudentStatus.student_status_id}`);
+            let res = await request(this.app).get(`${baseRoute}/${existingStudentStatus.student_status_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -120,7 +121,7 @@ describe("Student Statuses API", () => {
 
             // act
             let res = await request(app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -133,7 +134,7 @@ describe("Student Statuses API", () => {
 
             // affirm
             res = await request(app)
-                .get(`${API}/${newId}`)
+                .get(`${baseRoute}/${newId}`)
                 .auth(userToken, { type: 'bearer' });
 
             expect(res.status).to.be.equal(200);
@@ -144,7 +145,7 @@ describe("Student Statuses API", () => {
 
             // cleanup
             res = await request(app)
-                .delete(`${API}/${newId}`)
+                .delete(`${baseRoute}/${newId}`)
                 .auth(adminToken, { type: 'bearer' });
             expect(res.status).to.be.equal(200);
         });
@@ -157,7 +158,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -175,7 +176,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -192,7 +193,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .send(data);
     
             // assert
@@ -213,7 +214,7 @@ describe("Student Statuses API", () => {
 
             // act
             let res = await request(app)
-                .patch(`${API}/${existingStudentStatus.student_status_id}`)
+                .patch(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -226,7 +227,7 @@ describe("Student Statuses API", () => {
             
             // affirm
             res = await request(app)
-                .get(`${API}/${existingStudentStatus.student_status_id}`)
+                .get(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
@@ -238,7 +239,7 @@ describe("Student Statuses API", () => {
             // cleanup
             data.student_status = existingStudentStatus.student_status;
             res = await request(app)
-                .patch(`${API}/${existingStudentStatus.student_status_id}`)
+                .patch(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(200);
@@ -250,7 +251,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${unknownStudentStatusId}`)
+                .patch(`${baseRoute}/${unknownStudentStatusId}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -269,7 +270,7 @@ describe("Student Statuses API", () => {
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingStudentStatus.student_status_id}`)
+                .patch(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -281,13 +282,13 @@ describe("Student Statuses API", () => {
             expect(incorrectParams).to.include('student_status');
         });
 
-        it("Scenario 3: Update a student status request is forbidden", async() => {
+        it("Scenario 4: Update a student status request is forbidden", async() => {
             // arrange
             const data = { student_status: newStudentStatus };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingStudentStatus.student_status_id}`)
+                .patch(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -298,13 +299,13 @@ describe("Student Statuses API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Update a student status request is unauthorized", async() => {
+        it("Scenario 5: Update a student status request is unauthorized", async() => {
             // arrange
             const data = { student_status: newStudentStatus };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingStudentStatus.student_status_id}`)
+                .patch(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .send(data);
     
             // assert
@@ -325,7 +326,7 @@ describe("Student Statuses API", () => {
 
             // create dummy
             let res = await request(app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(201);
@@ -335,7 +336,7 @@ describe("Student Statuses API", () => {
 
             // act
             res = await request(app)
-                .delete(`${API}/${newId}`)
+                .delete(`${baseRoute}/${newId}`)
                 .auth(adminToken, { type: 'bearer' });
 
             // assert
@@ -346,7 +347,7 @@ describe("Student Statuses API", () => {
 
             // affirm
             res = await request(app)
-                .get(`${API}/${newId}`)
+                .get(`${baseRoute}/${newId}`)
                 .auth(userToken, { type: 'bearer' });
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
@@ -356,7 +357,7 @@ describe("Student Statuses API", () => {
         it("Scenario 2: Delete a student status request is unsuccessful", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${unknownStudentStatusId}`)
+                .delete(`${baseRoute}/${unknownStudentStatusId}`)
                 .auth(adminToken, { type: 'bearer' });
     
             // assert
@@ -369,7 +370,7 @@ describe("Student Statuses API", () => {
         it("Scenario 3: Delete a student status request is forbidden", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingStudentStatus.student_status_id}`)
+                .delete(`${baseRoute}/${existingStudentStatus.student_status_id}`)
                 .auth(userToken, { type: 'bearer' }); // <-- api_user token instead of admin token
             
             // assert
@@ -382,7 +383,7 @@ describe("Student Statuses API", () => {
         it("Scenario 4: Delete a student status request is unauthorized", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingStudentStatus.student_status_id}`);
+                .delete(`${baseRoute}/${existingStudentStatus.student_status_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);

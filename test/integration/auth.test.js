@@ -11,7 +11,8 @@ const {Config} = require('../../src/configs/config');
 const { stubbedAuthMiddleware } = require('../testConfig');
 
 describe("Authentication API", () => {
-    const API = "/api/v1/auth";
+    const API = `/api/${Config.API_VERSION}`;
+    const baseRoute = API + "/auth";
     const existingERP = '17855';
     const existingEmail = 'arafaysaleem@gmail.com';
     const newERP = '17999';
@@ -64,7 +65,7 @@ describe("Authentication API", () => {
             studentBody.email = newEmail;
 
             // act
-            let res = await request(this.app).post(`${API}/register`).send(studentBody);
+            let res = await request(this.app).post(`${baseRoute}/register`).send(studentBody);
     
             // assert
             expect(res.status).to.be.equal(201);
@@ -80,7 +81,7 @@ describe("Authentication API", () => {
             // const app = require('../../src/server').setup();
 
             // cleanup
-            res = await request(this.app).delete(`/api/v1/students/${studentBody.erp}`);
+            res = await request(this.app).delete(`/api/${Config.API_VERSION}/students/${studentBody.erp}`);
             expect(res.status).to.be.equal(200);
         });
 
@@ -90,7 +91,7 @@ describe("Authentication API", () => {
             studentBody.email = existingEmail;
 
             // act
-            const res = await request(this.app).post(`${API}/register`).send(studentBody);
+            const res = await request(this.app).post(`${baseRoute}/register`).send(studentBody);
     
             // assert
             expect(res.status).to.be.equal(409);
@@ -103,7 +104,7 @@ describe("Authentication API", () => {
             studentBody.erp = 'abdfe';
 
             // act
-            const res = await request(this.app).post(`${API}/register`).send(studentBody);
+            const res = await request(this.app).post(`${baseRoute}/register`).send(studentBody);
     
             // assert
             expect(res.status).to.be.equal(422);
@@ -148,7 +149,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            let res = await request(this.app).post(`${API}/login`).send(data);
+            let res = await request(this.app).post(`${baseRoute}/login`).send(data);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -167,7 +168,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/login`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/login`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -183,7 +184,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/login`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/login`).send(data);
     
             // assert
             expect(res.status).to.be.equal(422);
@@ -211,7 +212,7 @@ describe("Authentication API", () => {
             await sleep(1);
 
             // act
-            let res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            let res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -231,7 +232,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            let res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            let res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -249,7 +250,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -268,7 +269,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -290,7 +291,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -309,7 +310,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).post(`${API}/refresh-token`).send(data);
+            const res = await request(this.app).post(`${baseRoute}/refresh-token`).send(data);
     
             // assert
             expect(res.status).to.be.equal(422);
@@ -334,7 +335,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            let res = await request(app).patch(`${API}/change-password`).send(data);
+            let res = await request(app).patch(`${baseRoute}/change-password`).send(data);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -345,7 +346,7 @@ describe("Authentication API", () => {
             // cleanup
             data.old_password = new_password;
             data.new_password = old_password;
-            res = await request(app).patch(`${API}/change-password`).send(data);
+            res = await request(app).patch(`${baseRoute}/change-password`).send(data);
             expect(res.status).to.be.equal(200);
         });
 
@@ -358,7 +359,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+            const res = await request(this.app).patch(`${baseRoute}/change-password`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -377,7 +378,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+            const res = await request(this.app).patch(`${baseRoute}/change-password`).send(data);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -396,7 +397,7 @@ describe("Authentication API", () => {
             };
 
             // act
-            const res = await request(this.app).patch(`${API}/change-password`).send(data);
+            const res = await request(this.app).patch(`${baseRoute}/change-password`).send(data);
     
             // assert
             expect(res.status).to.be.equal(422);
@@ -435,7 +436,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                let res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+                let res = await request(app).post(`${baseRoute}/forgot/send-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(200);
@@ -452,7 +453,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+                const res = await request(app).post(`${baseRoute}/forgot/send-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(401);
@@ -469,7 +470,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(app).post(`${API}/forgot/send-otp`).send(data);
+                const res = await request(app).post(`${baseRoute}/forgot/send-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(422);
@@ -490,7 +491,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                let res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+                let res = await request(this.app).post(`${baseRoute}/forgot/verify-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(200);
@@ -509,7 +510,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+                const res = await request(this.app).post(`${baseRoute}/forgot/verify-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(401);
@@ -530,7 +531,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+                const res = await request(this.app).post(`${baseRoute}/forgot/verify-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(401);
@@ -551,7 +552,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+                const res = await request(this.app).post(`${baseRoute}/forgot/verify-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(401);
@@ -571,7 +572,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).post(`${API}/forgot/verify-otp`).send(data);
+                const res = await request(this.app).post(`${baseRoute}/forgot/verify-otp`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(422);
@@ -595,7 +596,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                let res = await request(app).patch(`${API}/forgot/reset-password`).send(data);
+                let res = await request(app).patch(`${baseRoute}/forgot/reset-password`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(200);
@@ -606,7 +607,7 @@ describe("Authentication API", () => {
 
                 // cleanup
                 data.new_password = old_password;
-                res = await request(app).patch(`${API}/forgot/reset-password`).send(data);
+                res = await request(app).patch(`${baseRoute}/forgot/reset-password`).send(data);
                 expect(res.status).to.be.equal(200);
             });
     
@@ -618,7 +619,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).patch(`${API}/forgot/reset-password`).send(data);
+                const res = await request(this.app).patch(`${baseRoute}/forgot/reset-password`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(401);
@@ -636,7 +637,7 @@ describe("Authentication API", () => {
                 };
     
                 // act
-                const res = await request(this.app).patch(`${API}/forgot/reset-password`).send(data);
+                const res = await request(this.app).patch(`${baseRoute}/forgot/reset-password`).send(data);
         
                 // assert
                 expect(res.status).to.be.equal(422);

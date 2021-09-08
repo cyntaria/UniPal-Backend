@@ -2,6 +2,7 @@
 const request = require("supertest");
 const expect = require('chai').expect;
 const app = require('../../src/index'); // we are interested in health of our main express instance
+const { Config } = require('../../src/configs/config');
 
 describe("Healthcheck", () => {
     let originalDateNow;
@@ -17,7 +18,7 @@ describe("Healthcheck", () => {
     });
 
     it("returns OK, uptime and timestamp, if server is healthy", async() => {
-        const res = await request(app).get("/api/v1/health", null);
+        const res = await request(app).get(`/api/${Config.API_VERSION}/health`, null);
 
         // status check
         expect(res.status).to.be.equal(200);

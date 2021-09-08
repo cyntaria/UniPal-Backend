@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
 describe("Campuses API", () => {
-    const API = "/api/v1/campuses";
+    const API = `/api/${Config.API_VERSION}`;
+    const baseRoute = API + "/campuses";
     const adminERP = '15030';
     const userERP = '17855';
     const existingCampus = {
@@ -28,7 +29,7 @@ describe("Campuses API", () => {
         it("Scenario 1: Get all campuses request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${API}`)
+                .get(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -48,7 +49,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(app)
-                .get(`${API}`)
+                .get(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -61,7 +62,7 @@ describe("Campuses API", () => {
 
         it("Scenario 3: Get all campuses request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${API}`);
+            let res = await request(this.app).get(`${baseRoute}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -75,7 +76,7 @@ describe("Campuses API", () => {
         it("Scenario 1: Get a campus request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${API}/${existingCampus.campus_id}`)
+                .get(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(userToken, { type: 'bearer' });
 
             // assert
@@ -89,7 +90,7 @@ describe("Campuses API", () => {
         it("Scenario 2: Get a campus request is unsuccessful", async() => {
             // act
             const res = await request(this.app)
-                .get(`${API}/${unknownCampusId}`)
+                .get(`${baseRoute}/${unknownCampusId}`)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -101,7 +102,7 @@ describe("Campuses API", () => {
 
         it("Scenario 3: Get a campus request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${API}/${existingCampus.campus_id}`);
+            let res = await request(this.app).get(`${baseRoute}/${existingCampus.campus_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -122,7 +123,7 @@ describe("Campuses API", () => {
 
             // act
             let res = await request(app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -135,7 +136,7 @@ describe("Campuses API", () => {
 
             // affirm
             res = await request(app)
-                .get(`${API}/${newId}`)
+                .get(`${baseRoute}/${newId}`)
                 .auth(userToken, { type: 'bearer' });
 
             expect(res.status).to.be.equal(200);
@@ -147,7 +148,7 @@ describe("Campuses API", () => {
 
             // cleanup
             res = await request(app)
-                .delete(`${API}/${newId}`)
+                .delete(`${baseRoute}/${newId}`)
                 .auth(adminToken, { type: 'bearer' });
             expect(res.status).to.be.equal(200);
         });
@@ -161,7 +162,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -179,7 +180,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -196,7 +197,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .send(data);
     
             // assert
@@ -217,7 +218,7 @@ describe("Campuses API", () => {
 
             // act
             let res = await request(app)
-                .patch(`${API}/${existingCampus.campus_id}`)
+                .patch(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -230,7 +231,7 @@ describe("Campuses API", () => {
             
             // affirm
             res = await request(app)
-                .get(`${API}/${existingCampus.campus_id}`)
+                .get(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
@@ -243,7 +244,7 @@ describe("Campuses API", () => {
             // cleanup
             data.campus = existingCampus.campus;
             res = await request(app)
-                .patch(`${API}/${existingCampus.campus_id}`)
+                .patch(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(200);
@@ -255,7 +256,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${unknownCampusId}`)
+                .patch(`${baseRoute}/${unknownCampusId}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -274,7 +275,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingCampus.campus_id}`)
+                .patch(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -286,13 +287,13 @@ describe("Campuses API", () => {
             expect(incorrectParams).to.include('Invalid updates!');
         });
 
-        it("Scenario 3: Update a campus request is forbidden", async() => {
+        it("Scenario 4: Update a campus request is forbidden", async() => {
             // arrange
             const data = { campus: newCampus };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingCampus.campus_id}`)
+                .patch(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -303,13 +304,13 @@ describe("Campuses API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Update a campus request is unauthorized", async() => {
+        it("Scenario 5: Update a campus request is unauthorized", async() => {
             // arrange
             const data = { campus: newCampus };
 
             // act
             const res = await request(this.app)
-                .patch(`${API}/${existingCampus.campus_id}`)
+                .patch(`${baseRoute}/${existingCampus.campus_id}`)
                 .send(data);
     
             // assert
@@ -331,7 +332,7 @@ describe("Campuses API", () => {
 
             // create dummy
             let res = await request(app)
-                .post(`${API}`)
+                .post(`${baseRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(201);
@@ -341,7 +342,7 @@ describe("Campuses API", () => {
 
             // act
             res = await request(app)
-                .delete(`${API}/${newId}`)
+                .delete(`${baseRoute}/${newId}`)
                 .auth(adminToken, { type: 'bearer' });
 
             // assert
@@ -352,7 +353,7 @@ describe("Campuses API", () => {
 
             // affirm
             res = await request(app)
-                .get(`${API}/${newId}`)
+                .get(`${baseRoute}/${newId}`)
                 .auth(userToken, { type: 'bearer' });
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
@@ -362,7 +363,7 @@ describe("Campuses API", () => {
         it("Scenario 2: Delete a campus request is unsuccessful", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${unknownCampusId}`)
+                .delete(`${baseRoute}/${unknownCampusId}`)
                 .auth(adminToken, { type: 'bearer' });
     
             // assert
@@ -375,7 +376,7 @@ describe("Campuses API", () => {
         it("Scenario 3: Delete a campus request is forbidden", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingCampus.campus_id}`)
+                .delete(`${baseRoute}/${existingCampus.campus_id}`)
                 .auth(userToken, { type: 'bearer' }); // <-- api_user token instead of admin token
             
             // assert
@@ -388,7 +389,7 @@ describe("Campuses API", () => {
         it("Scenario 4: Delete a campus request is unauthorized", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${API}/${existingCampus.campus_id}`);
+                .delete(`${baseRoute}/${existingCampus.campus_id}`);
     
             // assert
             expect(res.status).to.be.equal(401);
