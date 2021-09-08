@@ -10,8 +10,7 @@ class StudentController {
     };
 
     getStudentById = async(req, res, next) => {
-        checkValidation(req);
-        const response = await StudentRepository.findOne({erp: req.params.erp, ...req.query});
+        const response = await StudentRepository.findOne({erp: req.params.erp});
         res.send(response);
     };
 

@@ -315,7 +315,7 @@ exports.updateStudentSchema = [
         .withMessage('Invalid updates!')
 ];
 
-exports.getStudentQuerySchema = [
+exports.getStudentsQuerySchema = [
     query('first_name')
         .optional()
         .trim()
