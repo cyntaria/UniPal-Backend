@@ -29,7 +29,7 @@ describe("Campuses API", () => {
         it("Scenario 1: Get all campuses request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}`)
+                .get(baseRoute)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -49,7 +49,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(app)
-                .get(`${baseRoute}`)
+                .get(baseRoute)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -62,7 +62,7 @@ describe("Campuses API", () => {
 
         it("Scenario 3: Get all campuses request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${baseRoute}`);
+            let res = await request(this.app).get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -123,7 +123,7 @@ describe("Campuses API", () => {
 
             // act
             let res = await request(app)
-                .post(`${baseRoute}`)
+                .post(baseRoute)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -162,7 +162,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${baseRoute}`)
+                .post(baseRoute)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -180,7 +180,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${baseRoute}`)
+                .post(baseRoute)
                 .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
                 .send(data);
             
@@ -197,7 +197,7 @@ describe("Campuses API", () => {
 
             // act
             const res = await request(this.app)
-                .post(`${baseRoute}`)
+                .post(baseRoute)
                 .send(data);
     
             // assert
@@ -332,7 +332,7 @@ describe("Campuses API", () => {
 
             // create dummy
             let res = await request(app)
-                .post(`${baseRoute}`)
+                .post(baseRoute)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(201);

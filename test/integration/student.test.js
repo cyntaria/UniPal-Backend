@@ -49,7 +49,7 @@ describe("Students API", () => {
         it("Scenario 1: Get all students request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}`)
+                .get(baseRoute)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -83,7 +83,7 @@ describe("Students API", () => {
 
             // act
             const res = await request(app)
-                .get(`${baseRoute}`)
+                .get(baseRoute)
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -96,7 +96,7 @@ describe("Students API", () => {
 
         it("Scenario 4: Get all students request is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(`${baseRoute}`);
+            let res = await request(this.app).get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(401);
