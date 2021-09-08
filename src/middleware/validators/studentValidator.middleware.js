@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const { Roles } = require('../../utils/enums/roles.utils');
 const { Genders } = require('../../utils/enums/genders.utils');
 const { yearRegex, ERPRegex } = require('../../utils/common.utils');
@@ -15,13 +15,17 @@ exports.createStudentSchema = [
         .exists()
         .withMessage('First name is required')
         .isLength({ min: 2 })
-        .withMessage('Must be at least 2 chars long'),
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('First name should be all alphabets'),
     body('last_name')
         .trim()
         .exists()
         .withMessage('Last name is required')
         .isLength({ min: 2 })
-        .withMessage('Must be at least 2 chars long'),
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('Last name should be all alphabets'),
     body('gender')
         .trim()
         .exists()
@@ -169,12 +173,16 @@ exports.updateStudentSchema = [
         .optional()
         .trim()
         .isLength({ min: 2 })
-        .withMessage('Must be at least 2 chars long'),
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('First name should be all alphabets'),
     body('last_name')
         .optional()
         .trim()
         .isLength({ min: 2 })
-        .withMessage('Must be at least 2 chars long'),
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('Last name should be all alphabets'),
     body('gender')
         .optional()
         .trim()
@@ -305,4 +313,115 @@ exports.updateStudentSchema = [
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
+];
+
+exports.getStudentsQuerySchema = [
+    query('first_name')
+        .optional()
+        .trim()
+        .isLength({ min: 2 })
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('First name should be all alphabets'),
+    query('last_name')
+        .optional()
+        .trim()
+        .isLength({ min: 2 })
+        .withMessage('Must be at least 2 chars long')
+        .isAlpha('en-US', {ignore: ' '})
+        .withMessage('Last name should be all alphabets'),
+    query('gender')
+        .optional()
+        .trim()
+        .isIn([...Object.values(Genders)])
+        .withMessage('Invalid Gender'),
+    query('birthday')
+        .optional()
+        .trim()
+        .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
+        .withMessage('Birthday must be a valid date of format \'YYYY-MM-DD\''),
+    query('graduation_year')
+        .optional()
+        .trim()
+        .matches(yearRegex)
+        .withMessage('Graduation year must be a valid year'),
+    query('hobby_1')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid HobbyID found'),
+    query('hobby_2')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid HobbyID found'),
+    query('hobby_3')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid HobbyID found'),
+    query('interest_1')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid InterestID found'),
+    query('interest_2')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid InterestID found'),
+    query('interest_3')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid InterestID found'),
+    query('campus_id')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid CampusID found'),
+    query('program_id')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid ProgramID found'),
+    query('favourite_campus_hangout_spot')
+        .optional()
+        .trim()
+        .notEmpty()
+        .withMessage('Favourite Campus Hangout Spot must be filled')
+        .isLength({max: 45})
+        .withMessage('Should be less than 45 chars'),
+    query('favourite_campus_activity')
+        .optional()
+        .trim()
+        .notEmpty()
+        .withMessage('Favourite Campus Activity must be filled')
+        .isLength({max: 45})
+        .withMessage('Should be less than 45 chars'),
+    query('current_status')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid StudentStatusID found'),
+    query('is_active')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('role')
+        .optional()
+        .trim()
+        .isIn([...Object.values(Roles)])
+        .withMessage('Invalid Role type'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['first_name', 'last_name', 'gender', 'birthday',
+                'graduation_year', 'uni_email', 'hobby_1', 'hobby_2', 'hobby_3',
+                'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_user_status',
+                'favourite_campus_hangout_spot', 'favourite_campus_activity', 'role'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
 ];

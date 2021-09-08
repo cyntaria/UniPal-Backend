@@ -210,7 +210,7 @@ class AuthRepository {
 
         const { new_password, erp } = body;
 
-        const result = await StudentModel.update({password: new_password}, {erp});
+        const result = await StudentModel.update({password: new_password}, erp);
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');

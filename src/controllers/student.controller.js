@@ -4,7 +4,8 @@ const StudentRepository = require('../repositories/student.repository');
 
 class StudentController {
     getAllStudents = async(req, res, next) => {
-        const response = await StudentRepository.findAll();
+        checkValidation(req);
+        const response = await StudentRepository.findAll(req.query);
         res.send(response);
     };
 
@@ -21,7 +22,7 @@ class StudentController {
 
     updateStudent = async(req, res, next) => {
         checkValidation(req);
-        const response = await StudentRepository.update(req.body, {erp: req.params.erp});
+        const response = await StudentRepository.update(req.body, req.params.erp);
         res.send(response);
     };
 

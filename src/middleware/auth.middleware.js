@@ -8,7 +8,7 @@ const StudentModel = require('../models/student.model');
 const jwt = require('jsonwebtoken');
 const { Config } = require('../configs/config');
 
-exports.auth = (...roles) => {
+exports.auth = (...allowedRoles) => {
     return async function(req, res, next) {
         try {
             const authHeader = req.headers.authorization;
@@ -38,18 +38,41 @@ exports.auth = (...roles) => {
                 throw new TokenVerificationException();
             }
 
-            // check if the current student is the owner student
-            // const ownerAuthorized = req.params.erp == student.erp; //cant update self
-            // if the current student is not the owner and
             // if the student role don't have the permission to do this action.
             // the student will get this error
-            if (/*! ownerAuthorized || */(roles.length && !roles.includes(student.role))) {
+            if (allowedRoles.length && !allowedRoles.includes(student.role)) {
                 throw new ForbiddenException();
             }
 
             // if the student has permissions
             req.currentStudent = student;
             next();
+
+        } catch (e) {
+            next(e);
+        }
+    };
+};
+
+exports.ownerAuth = (...checkedRoles) => {
+    return async function(req, res, next) {
+        try {
+            const student = req.currentStudent;
+
+            if (!student) {
+                throw new TokenVerificationException();
+            }
+
+            // if the current student role has to be checked for ownership
+            const isChecked = checkedRoles.includes(student.role);
+
+            // check if the current student is the owner student
+            const isOwner = req.params.erp === student.erp; // can update self
+
+            // if check enabled and is not the owner
+            // the student will get this error
+            if (isChecked && !isOwner) throw new ForbiddenException();
+            else next();
 
         } catch (e) {
             next(e);

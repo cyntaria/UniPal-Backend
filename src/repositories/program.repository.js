@@ -8,9 +8,9 @@ const {
 const { successResponse } = require('../utils/responses.utils');
 
 class ProgramRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let programList = await ProgramModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        
+        let programList = await ProgramModel.findAll(filters);
         if (!programList.length) {
             throw new NotFoundException('Programs not found');
         }
@@ -18,8 +18,8 @@ class ProgramRepository {
         return successResponse(programList, "Success");
     };
 
-    findOne = async(params) => {
-        const result = await ProgramModel.findOne(params);
+    findOne = async(filters) => {
+        const result = await ProgramModel.findOne(filters);
         if (!result) {
             throw new NotFoundException('Program not found');
         }

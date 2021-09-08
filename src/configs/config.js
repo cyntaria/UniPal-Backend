@@ -1,4 +1,5 @@
 module.exports.Config = {
+    API_VERSION: 'v1',
     NODE_ENV: process.env.NODE_ENV || 'dev',
     PORT: process.env.PORT || 3331,
     DB_HOST: process.env.DB_HOST || 'localhost',

@@ -8,9 +8,9 @@ const {
 const { successResponse } = require('../utils/responses.utils');
 
 class HobbyRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let hobbyList = await HobbyModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        
+        let hobbyList = await HobbyModel.findAll(filters);
         if (!hobbyList.length) {
             throw new NotFoundException('Hobbies not found');
         }
@@ -18,8 +18,8 @@ class HobbyRepository {
         return successResponse(hobbyList, "Success");
     };
 
-    findOne = async(params) => {
-        const result = await HobbyModel.findOne(params);
+    findOne = async(filters) => {
+        const result = await HobbyModel.findOne(filters);
         if (!result) {
             throw new NotFoundException('Hobby not found');
         }

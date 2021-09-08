@@ -8,9 +8,9 @@ const {
 const { successResponse } = require('../utils/responses.utils');
 
 class InterestRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let interestList = await InterestModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        
+        let interestList = await InterestModel.findAll(filters);
         if (!interestList.length) {
             throw new NotFoundException('Interests not found');
         }
@@ -18,8 +18,8 @@ class InterestRepository {
         return successResponse(interestList, "Success");
     };
 
-    findOne = async(params) => {
-        const result = await InterestModel.findOne(params);
+    findOne = async(filters) => {
+        const result = await InterestModel.findOne(filters);
         if (!result) {
             throw new NotFoundException('Interest not found');
         }

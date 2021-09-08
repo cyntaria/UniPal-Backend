@@ -10,9 +10,9 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class StudentRepository {
-    findAll = async(params = {}) => {
-        const hasParams = Object.keys(params).length !== 0;
-        let studentList = await StudentModel.findAll(hasParams ? params : {});
+    findAll = async(filters = {}) => {
+        
+        let studentList = await StudentModel.findAll(filters);
         if (!studentList.length) {
             throw new NotFoundException('Students not found');
         }
@@ -25,8 +25,8 @@ class StudentRepository {
         return successResponse(studentList);
     };
 
-    findOne = async(params) => {
-        const student = await StudentModel.findOne(params);
+    findOne = async(filters) => {
+        const student = await StudentModel.findOne(filters);
         if (!student) {
             throw new NotFoundException('Student not found');
         }
@@ -48,8 +48,8 @@ class StudentRepository {
         return successResponse(result, 'Student was created!');
     };
 
-    update = async(body, filters) => {
-        const result = await StudentModel.update(body, filters);
+    update = async(body, erp) => {
+        const result = await StudentModel.update(body, erp);
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
@@ -60,7 +60,13 @@ class StudentRepository {
         if (!affectedRows) throw new NotFoundException('Student not found');
         else if (affectedRows && !changedRows) throw new UpdateFailedException('Student update failed');
         
-        return successResponse(info, 'Student updated successfully');
+        const responseBody = {
+            rows_matched: affectedRows,
+            rows_changed: changedRows,
+            info
+        };
+
+        return successResponse(responseBody, 'Student updated successfully');
     };
 
     delete = async(erp) => {
@@ -69,7 +75,11 @@ class StudentRepository {
             throw new NotFoundException('Student not found');
         }
 
-        return successResponse({}, 'Student has been deleted');
+        const responseBody = {
+            rows_removed: result
+        };
+
+        return successResponse(responseBody, 'Student has been deleted');
     };
 }
 
