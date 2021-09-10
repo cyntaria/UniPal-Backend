@@ -6,5 +6,6 @@ exports.tables = {
     Campuses: 'campuses',
     Programs: 'programs',
     StudentStatuses: 'student_statuses',
-    ActivityStatuses: 'activity_statuses'
+    ActivityStatuses: 'activity_statuses',
+    ActivityTypes: 'activity_types'
 };
