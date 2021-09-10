@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2021 at 12:10 AM
+-- Generation Time: Sep 10, 2021 at 01:31 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -72,6 +72,16 @@ CREATE TABLE `activity_statuses` (
   `activity_status_id` int(10) UNSIGNED NOT NULL,
   `activity_status` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `activity_statuses`
+--
+
+INSERT INTO `activity_statuses` (`activity_status_id`, `activity_status`) VALUES
+(1, 'Happening'),
+(2, 'Scheduled'),
+(3, 'Cancelled'),
+(4, 'Completed');
 
 -- --------------------------------------------------------
 
@@ -360,7 +370,7 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$CngDzMsLypW0RSPJrE262OzVI8GhPp5fk9OELydtpSvRV89k6wzZ2', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$brG4CP2ADs7tLs9USyRlRulhExNW22McwjNDjUZHAJhrn9hwnmE3W', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 -- --------------------------------------------------------
 
@@ -739,7 +749,7 @@ ALTER TABLE `activities`
 -- AUTO_INCREMENT for table `activity_statuses`
 --
 ALTER TABLE `activity_statuses`
-  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `activity_types`
@@ -751,7 +761,7 @@ ALTER TABLE `activity_types`
 -- AUTO_INCREMENT for table `campuses`
 --
 ALTER TABLE `campuses`
-  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `campus_spots`
@@ -769,13 +779,13 @@ ALTER TABLE `classrooms`
 -- AUTO_INCREMENT for table `hobbies`
 --
 ALTER TABLE `hobbies`
-  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
-  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -787,7 +797,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `reaction_types`
@@ -799,7 +809,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `teachers`
