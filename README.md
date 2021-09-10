@@ -13,6 +13,7 @@ The documentation was generated using Postman and is divided into collections at
 - Programs - https://documenter.getpostman.com/view/13348269/U16gNmRy
 - Student Statuses - https://documenter.getpostman.com/view/13348269/U16gNmWU
 - Students - https://documenter.getpostman.com/view/13348269/U16jLkDx
+- Activity Statuses - https://documenter.getpostman.com/view/13348269/U16kpjou
 
 ### :dvd: Installation
 #### 1. Getting Started

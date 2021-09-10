@@ -8,9 +8,14 @@
     "start": "node -r dotenv-flow/config src/index.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
-    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config ./test/**/*.test.js --timeout 6000 --exit",
+    "test": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha -r dotenv-flow/config",
     "lint": "eslint src/",
     "fixlint": "eslint src/ --fix"
+  },
+  "mocha": {
+    "exit": true,
+    "spec": "./test/**/*.test.js",
+    "timeout": "10000"
   },
   "keywords": [],
   "author": "Abdur Rafay Saleem",
