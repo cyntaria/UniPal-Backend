@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2021 at 01:13 PM
+-- Generation Time: Sep 10, 2021 at 05:59 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -93,6 +93,16 @@ CREATE TABLE `activity_types` (
   `activity_type_id` int(10) UNSIGNED NOT NULL,
   `activity_type` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `activity_types`
+--
+
+INSERT INTO `activity_types` (`activity_type_id`, `activity_type`) VALUES
+(1, 'Sports'),
+(4, 'Political'),
+(5, 'Food'),
+(6, 'Games');
 
 -- --------------------------------------------------------
 
@@ -755,7 +765,7 @@ ALTER TABLE `activity_statuses`
 -- AUTO_INCREMENT for table `activity_types`
 --
 ALTER TABLE `activity_types`
-  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `campuses`
