@@ -7,24 +7,18 @@ const jwt = require('jsonwebtoken');
 const {sleep} = require('../../src/utils/common.utils');
 const {Config} = require('../../src/configs/config');
 
-// importing this file causes the stub to take effect
-const { stubbedAuthMiddleware } = require('../testConfig');
-
 describe("Authentication API", () => {
     const API = `/api/${Config.API_VERSION}`;
     const baseRoute = API + "/auth";
     const existingERP = '17855';
     const existingEmail = 'arafaysaleem@gmail.com';
     const newERP = '17999';
+    const adminERP = '15030';
     const unregisteredERP = '19999';
     const newEmail = 'test@gmail.com';
 
     beforeEach(() => {
         this.app = require('../../src/server').setup();
-    });
-
-    after(() => {
-        stubbedAuthMiddleware.restore();
     });
 
     context("POST /auth/register", () => {
@@ -63,9 +57,10 @@ describe("Authentication API", () => {
             // arrange
             studentBody.erp = newERP;
             studentBody.email = newEmail;
+            const app = this.app;
 
             // act
-            let res = await request(this.app).post(`${baseRoute}/register`).send(studentBody);
+            let res = await request(app).post(`${baseRoute}/register`).send(studentBody);
     
             // assert
             expect(res.status).to.be.equal(201);
@@ -76,12 +71,12 @@ describe("Authentication API", () => {
             delete studentBody.password; // omit token and password
             expect(resBody).to.be.eql(studentBody); // deep compare two objects using 'eql'
 
-            // Use these two lines to remove the stub effect
-            // decache('../../src/server');
-            // const app = require('../../src/server').setup();
-
             // cleanup
-            res = await request(this.app).delete(`/api/${Config.API_VERSION}/students/${studentBody.erp}`);
+            const deleteRoute = `/api/${Config.API_VERSION}/students/${studentBody.erp}`;
+            const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
+            res = await request(app)
+                .delete(deleteRoute)
+                .auth(adminToken, { type: 'bearer' });
             expect(res.status).to.be.equal(200);
         });
 
