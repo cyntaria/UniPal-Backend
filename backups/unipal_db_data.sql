@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2021 at 01:13 PM
+-- Generation Time: Sep 10, 2021 at 05:59 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -30,6 +30,16 @@ INSERT INTO `activity_statuses` (`activity_status_id`, `activity_status`) VALUES
 (2, 'Scheduled'),
 (3, 'Cancelled'),
 (4, 'Completed');
+
+--
+-- Dumping data for table `activity_types`
+--
+
+INSERT INTO `activity_types` (`activity_type_id`, `activity_type`) VALUES
+(1, 'Sports'),
+(4, 'Political'),
+(5, 'Food'),
+(6, 'Games');
 
 --
 -- Dumping data for table `campuses`

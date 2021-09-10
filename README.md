@@ -14,6 +14,7 @@ The documentation was generated using Postman and is divided into collections at
 - Student Statuses - https://documenter.getpostman.com/view/13348269/U16gNmWU
 - Students - https://documenter.getpostman.com/view/13348269/U16jLkDx
 - Activity Statuses - https://documenter.getpostman.com/view/13348269/U16kpjou
+- Activity Types - https://documenter.getpostman.com/view/13348269/U16kq4gc
 
 ### :dvd: Installation
 #### 1. Getting Started
