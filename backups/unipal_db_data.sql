@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2021 at 05:59 PM
+-- Generation Time: Sep 13, 2021 at 09:32 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -37,7 +37,7 @@ INSERT INTO `activity_statuses` (`activity_status_id`, `activity_status`) VALUES
 
 INSERT INTO `activity_types` (`activity_type_id`, `activity_type`) VALUES
 (1, 'Sports'),
-(4, 'Political'),
+(4, 'Jamming'),
 (5, 'Food'),
 (6, 'Games');
 
@@ -48,6 +48,20 @@ INSERT INTO `activity_types` (`activity_type_id`, `activity_type`) VALUES
 INSERT INTO `campuses` (`campus_id`, `campus`, `location_url`) VALUES
 (1, 'MAIN', 'https://maps.app.goo.gl/LvH61VeZZVfyggHw6'),
 (2, 'CITY', 'https://maps.app.goo.gl/LvH61VeZZVfyggHw6');
+
+--
+-- Dumping data for table `campus_spots`
+--
+
+INSERT INTO `campus_spots` (`campus_spot_id`, `campus_spot`, `campus_id`) VALUES
+(2, 'Tabba 1st Floor (Lab Wing)', 1),
+(3, 'Tabba Ground Floor (Lab Wing)', 1),
+(4, 'Tabba Ground Floor (Offices Wing)', 1),
+(5, 'Tabba 1st Floor (Offices Wing)', 1),
+(6, 'Courtyard', 1),
+(7, 'Student Center (SC)', 1),
+(8, 'Auditorium', 1),
+(9, 'Auditorium', 2);
 
 --
 -- Dumping data for table `hobbies`

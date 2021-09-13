@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2021 at 05:59 PM
+-- Generation Time: Sep 13, 2021 at 09:29 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -100,7 +100,7 @@ CREATE TABLE `activity_types` (
 
 INSERT INTO `activity_types` (`activity_type_id`, `activity_type`) VALUES
 (1, 'Sports'),
-(4, 'Political'),
+(4, 'Jamming'),
 (5, 'Food'),
 (6, 'Games');
 
@@ -135,6 +135,20 @@ CREATE TABLE `campus_spots` (
   `campus_spot` varchar(45) NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `campus_spots`
+--
+
+INSERT INTO `campus_spots` (`campus_spot_id`, `campus_spot`, `campus_id`) VALUES
+(2, 'Tabba 1st Floor (Lab Wing)', 1),
+(3, 'Tabba Ground Floor (Lab Wing)', 1),
+(4, 'Tabba Ground Floor (Offices Wing)', 1),
+(5, 'Tabba 1st Floor (Offices Wing)', 1),
+(6, 'Courtyard', 1),
+(7, 'Student Center (SC)', 1),
+(8, 'Auditorium', 1),
+(9, 'Auditorium', 2);
 
 -- --------------------------------------------------------
 
@@ -777,7 +791,7 @@ ALTER TABLE `campuses`
 -- AUTO_INCREMENT for table `campus_spots`
 --
 ALTER TABLE `campus_spots`
-  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `classrooms`
