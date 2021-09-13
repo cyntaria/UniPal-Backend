@@ -38,7 +38,7 @@ class DatabaseService {
         });
     }
 
-    #getConnection() {
+    #getConnection = () => {
         this.dbPool.getConnection((err, connection) => {
             if (err){
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
