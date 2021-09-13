@@ -6,19 +6,21 @@ const {
 const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
-class DBService {
+class DatabaseService {
     init({ host, user, password, database, dateStrings }) {
-        this.dbInstance = mysql2.createPool({
-            host: host,
-            user: user,
-            password: password,
-            database: database,
-            dateStrings: dateStrings
-        });
+        if (!this.dbPool){
+            this.dbPool = mysql2.createPool({
+                host: host,
+                user: user,
+                password: password,
+                database: database,
+                dateStrings: dateStrings
+            });
+        }
     }
 
     checkConnection() {
-        this.dbInstance.getConnection((err, connection) => {
+        this.dbPool.getConnection((err, connection) => {
             if (err){
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
                     console.error('Database connection was closed.');
@@ -31,10 +33,27 @@ class DBService {
                 }
             }
             if (connection){
-                this.dbConnection = connection;
                 connection.release();
             }
-            return;
+        });
+    }
+
+    #getConnection() {
+        this.dbPool.getConnection((err, connection) => {
+            if (err){
+                if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+                    console.error('Database connection was closed.');
+                }
+                if (err.code === 'ER_CON_COUNT_ERROR') {
+                    console.error('Database has too many connections.');
+                }
+                if (err.code === 'ECONNREFUSED') {
+                    console.error('Database connection was refused.');
+                }
+            }
+            if (connection){
+                return connection;
+            }
         });
     }
     
@@ -49,7 +68,7 @@ class DBService {
             };
             // console.log(`[SQL] ${sql}`);
             // console.log(`[VALUES] ${values}`);
-            this.dbInstance.execute(sql, values, callback); // execute will internally call prepare and query
+            this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {
@@ -74,7 +93,8 @@ class DBService {
                 }
                 resolve(result);
             };
-            this.dbConnection.beginTransaction(callback);
+            const conn = this.#getConnection();
+            if (conn) conn.beginTransaction(callback);
         });
     }
 
@@ -87,7 +107,11 @@ class DBService {
                 }
                 resolve(result);
             };
-            this.dbConnection.rollback(callback);
+            const conn = this.#getConnection();
+            if (conn) {
+                conn.rollback(callback);
+                conn.release();
+            }
         });
     }
 
@@ -101,7 +125,11 @@ class DBService {
                 }
                 resolve(result);
             };
-            this.dbConnection.commit(callback);
+            const conn = this.#getConnection();
+            if (conn) {
+                conn.commit(callback);
+                conn.release();
+            }
         });
     }
 }
@@ -113,4 +141,4 @@ const HttpStatusCodes = Object.freeze({
     ER_NO_REFERENCED_ROW_2: 512
 });
 
-module.exports.DBService = new DBService();
+module.exports.DBService = new DatabaseService();
