@@ -6,6 +6,7 @@ module.exports.Config = {
     DB_USER: process.env.DB_USER || 'root',
     DB_PASS: process.env.DB_PASS || '',
     DB_DATABASE: process.env.DB_DATABASE || 'test',
+    DB_CONN_LIMIT: process.env.DB_CONN_LIMIT || 10,
     SECRET_JWT: process.env.SECRET_JWT || "*Un1p4L*",
     EXPIRY_JWT: '3d',
     EXPIRY_HOURS_OTP: 1,

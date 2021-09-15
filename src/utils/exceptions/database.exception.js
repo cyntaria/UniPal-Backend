@@ -51,6 +51,7 @@ class UnexpectedException extends DatabaseException {
 }
 
 module.exports = {
+    DatabaseException,
     NotFoundException,
     DuplicateEntryException,
     ForeignKeyViolationException,

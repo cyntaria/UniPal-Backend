@@ -1,19 +1,21 @@
 const mysql2 = require('mysql2');
 const {
     DuplicateEntryException,
-    ForeignKeyViolationException
+    ForeignKeyViolationException,
+    DatabaseException
 } = require('../utils/exceptions/database.exception');
 const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
 class DatabaseService {
-    init({ host, user, password, database, dateStrings }) {
+    init({ host, user, password, database, connLimit, dateStrings }) {
         if (!this.dbPool){
             this.dbPool = mysql2.createPool({
                 host: host,
                 user: user,
                 password: password,
                 database: database,
+                connectionLimit: connLimit,
                 dateStrings: dateStrings
             });
         }
@@ -23,36 +25,15 @@ class DatabaseService {
         this.dbPool.getConnection((err, connection) => {
             if (err){
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-                    console.error('Database connection was closed.');
-                }
-                if (err.code === 'ER_CON_COUNT_ERROR') {
-                    console.error('Database has too many connections.');
-                }
-                if (err.code === 'ECONNREFUSED') {
-                    console.error('Database connection was refused.');
+                    throw new DatabaseException('Database connection was closed.');
+                } else if (err.code === 'ER_CON_COUNT_ERROR') {
+                    throw new DatabaseException('Database has too many connections.');
+                } else if (err.code === 'ECONNREFUSED') {
+                    throw new DatabaseException('Database connection was refused.');
                 }
             }
             if (connection){
                 connection.release();
-            }
-        });
-    }
-
-    #getConnection = () => {
-        this.dbPool.getConnection((err, connection) => {
-            if (err){
-                if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-                    console.error('Database connection was closed.');
-                }
-                if (err.code === 'ER_CON_COUNT_ERROR') {
-                    console.error('Database has too many connections.');
-                }
-                if (err.code === 'ECONNREFUSED') {
-                    console.error('Database connection was refused.');
-                }
-            }
-            if (connection){
-                return connection;
             }
         });
     }
@@ -86,15 +67,28 @@ class DatabaseService {
 
     beginTransaction = async() => {
         return new Promise((resolve, reject) => {
-            const callback = (error, result) => {
-                if (error) {
-                    reject(error);
-                    return;
+            this.dbPool.getConnection((err, connection) => {
+                if (err){
+                    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+                        throw new DatabaseException('Database connection was closed.');
+                    } else if (err.code === 'ER_CON_COUNT_ERROR') {
+                        throw new DatabaseException('Database has too many connections.');
+                    } else if (err.code === 'ECONNREFUSED') {
+                        throw new DatabaseException('Database connection was refused.');
+                    }
                 }
-                resolve(result);
-            };
-            const conn = this.#getConnection();
-            if (conn) conn.beginTransaction(callback);
+                if (connection){
+                    const callback = (error, result) => {
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+                        resolve(result);
+                    };
+                    connection.beginTransaction(callback);
+                    this.dbConnection = connection;
+                }
+            });
         });
     }
 
@@ -107,11 +101,8 @@ class DatabaseService {
                 }
                 resolve(result);
             };
-            const conn = this.#getConnection();
-            if (conn) {
-                conn.rollback(callback);
-                conn.release();
-            }
+            this.dbConnection.rollback(callback);
+            this.dbConnection.release();
         });
     }
 
@@ -125,11 +116,8 @@ class DatabaseService {
                 }
                 resolve(result);
             };
-            const conn = this.#getConnection();
-            if (conn) {
-                conn.commit(callback);
-                conn.release();
-            }
+            this.dbConnection.commit(callback);
+            this.dbConnection.release();
         });
     }
 }
