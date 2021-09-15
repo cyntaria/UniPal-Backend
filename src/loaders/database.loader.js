@@ -10,6 +10,7 @@ class DatabaseLoader {
             user: Config.DB_USER,
             password: Config.DB_PASS,
             database: Config.DB_DATABASE,
+            connLimit: Config.DB_CONN_LIMIT,
             dateStrings: ['DATE', 'DATETIME']
         });
 
