@@ -9,5 +9,6 @@ exports.tables = {
     ActivityStatuses: 'activity_statuses',
     ActivityTypes: 'activity_types',
     CampusSpots: 'campus_spots',
-    Activities: 'activities'
+    Activities: 'activities',
+    ActivityAttendees: 'activity_attendees'
 };

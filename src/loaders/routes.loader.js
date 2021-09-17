@@ -8,6 +8,7 @@ const programRouter = require('../routes/program.routes');
 const studentStatusRouter = require('../routes/studentStatus.routes');
 const activityStatusRouter = require('../routes/activityStatus.routes');
 const activityTypeRouter = require('../routes/activityType.routes');
+const activityRouter = require('../routes/activity.routes');
 const campusSpotRouter = require('../routes/campusSpot.routes');
 const healthCheckRouter = require('../routes/healthCheck.routes');
 
@@ -22,6 +23,7 @@ class RoutesLoader {
         app.use(`/api/${version}/student-statuses`, studentStatusRouter);
         app.use(`/api/${version}/activity-statuses`, activityStatusRouter);
         app.use(`/api/${version}/activity-types`, activityTypeRouter);
+        app.use(`/api/${version}/activities`, activityRouter);
         app.use(`/api/${version}/campus-spots`, campusSpotRouter);
         app.use(`/api/${version}/health`, healthCheckRouter);
     }

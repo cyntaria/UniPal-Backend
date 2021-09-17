@@ -1,8 +1,8 @@
 const { body, query } = require('express-validator');
-const { ActivityLocation } = require('../utils/enums/activityLocation.utils');
-const { Privacy } = require('../utils/enums/privacy.utils');
-const { ActivityFrequency } = require('../utils/enums/activityFrequency.utils');
-const { ERPRegex, timeRegex } = require('../../utils/common.utils');
+const { ActivityLocation } = require('../../utils/enums/activityLocation.utils');
+const { Privacy } = require('../../utils/enums/privacy.utils');
+const { ActivityFrequency } = require('../../utils/enums/activityFrequency.utils');
+const { ERPRegex, timeRegex, datetimeRegex } = require('../../utils/common.utils');
 
 exports.createActivitySchema = [
     body('location')
@@ -58,10 +58,12 @@ exports.createActivitySchema = [
         .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
-    body(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
-        .custom((days, {req}) => {
-            const checkDaysUndefined = (day) => day === undefined;
-            if (days.every(checkDaysUndefined)) req.monday = 1; // if no day specified, default to monday
+    body()
+        .custom((body, {req}) => {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const checkDaysDefined = (day) => day in body;
+            if (!days.every(checkDaysDefined)) req.body.monday = 1; // if no day specified, default to monday
+            return true;
         }),
     body('month_number')
         .trim()
@@ -99,9 +101,8 @@ exports.createActivitySchema = [
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     body('campus_spot_id')
+        .optional()
         .trim()
-        .exists()
-        .withMessage('Campus spot id is required for the activity')
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     body('organizer_erp')
@@ -113,9 +114,9 @@ exports.createActivitySchema = [
     body('created_at')
         .trim()
         .exists()
-        .withMessage('Creation date is required')
-        .isDate({ format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-'] })
-        .withMessage('Creation date must follow this format \'YYYY-MM-DD\'')
+        .withMessage('Creation datetime is required')
+        .matches(datetimeRegex)
+        .withMessage('Creation datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
 ];
 
 exports.updateActivitySchema = [
@@ -317,3 +318,5 @@ exports.getActivitiesQuerySchema = [
         })
         .withMessage('Invalid query params!')
 ];
+
+exports.activityOwnerCheck = (body, erp) => body.organizer_erp === erp;

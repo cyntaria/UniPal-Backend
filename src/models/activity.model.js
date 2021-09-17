@@ -18,23 +18,29 @@ class ActivityModel {
     }
 
     findOne = async(filters) => {
+        const {activity_id} = filters;
         const { filterSet, filterValues } = multipleFilterSet(filters);
 
-        const sql = `SELECT * FROM ${tables.Activities}
+        const sql = `SELECT *,
+        (
+            SELECT COUNT(activity_id)
+            FROM ${tables.ActivityAttendees}
+            WHERE activity_id = ?
+        ) AS num_of_attendees
+        FROM ${tables.Activities}
         WHERE ${filterSet}`;
 
-        const result = await DBService.query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [activity_id, ...filterValues]);
 
         // return back the first row (activity)
         return result[0];
     }
 
-    // 24 fields
     create = async({
         location, privacy, frequency,
-        monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-        month_number, group_size, happens_at, additional_directions,
-        activity_type_id, activity_status_id, campus_spot_id, organizer_erp, created_at
+        monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0, sunday = 0,
+        month_number, group_size, happens_at, additional_directions = null,
+        activity_type_id, activity_status_id, campus_spot_id = null, organizer_erp, created_at
     }) => {
         
         const valueSet = {
