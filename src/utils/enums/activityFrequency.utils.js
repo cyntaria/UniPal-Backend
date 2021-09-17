@@ -1,4 +1,4 @@
-module.exports.Frequency = {
+module.exports.ActivityFrequency = {
     Daily: 'daily',
     Weekly: 'weekly',
     Combo: 'combo',
