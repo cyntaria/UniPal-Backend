@@ -2,7 +2,11 @@ const { body, query } = require('express-validator');
 const { ActivityLocation } = require('../../utils/enums/activityLocation.utils');
 const { Privacy } = require('../../utils/enums/privacy.utils');
 const { ActivityFrequency } = require('../../utils/enums/activityFrequency.utils');
+const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ERPRegex, timeRegex, datetimeRegex } = require('../../utils/common.utils');
+const ActivityModel = require('../../models/activity.model');
+const { NotFoundException } = require('../../utils/exceptions/database.exception');
+const { ForbiddenException } = require('../../utils/exceptions/auth.exception');
 
 exports.createActivitySchema = [
     body('location')
@@ -319,4 +323,19 @@ exports.getActivitiesQuerySchema = [
         .withMessage('Invalid query params!')
 ];
 
-exports.activityOwnerCheck = (body, erp) => body.organizer_erp === erp;
+exports.activityOwnerCheck = async(req) => {
+    const activity_id = req.params.id;
+    const organizer_erp = req.currentStudent.erp;
+
+    if (req.method === RequestMethods.POST) {
+        return req.body.organizer_erp === organizer_erp;
+    }
+
+    const activity = await ActivityModel.findOne({activity_id});
+    if (!activity) {
+        throw new NotFoundException('Activity not found');
+    }
+
+    if (activity.organizer_erp !== organizer_erp) throw new ForbiddenException();
+    else return true;
+};
