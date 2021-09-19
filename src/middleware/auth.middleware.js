@@ -75,7 +75,9 @@ exports.ownerAuth = (checkedRoles = [], customOwnerCheck = null) => {
                 // if not the owner
                 // the student will get this error
                 if (!isOwner) throw new ForbiddenException();
-            } else next();
+            }
+            
+            next();
 
         } catch (e) {
             next(e);
