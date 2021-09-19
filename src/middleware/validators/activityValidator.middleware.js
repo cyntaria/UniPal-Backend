@@ -86,7 +86,7 @@ exports.createActivitySchema = [
         .exists()
         .withMessage('Activity happening time is required')
         .matches(timeRegex)
-        .withMessage('Activity happening time must be of valid format \'hh:mm\''),
+        .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     body('additional_directions')
         .optional()
         .trim()
@@ -188,7 +188,7 @@ exports.updateActivitySchema = [
         .optional()
         .trim()
         .matches(timeRegex)
-        .withMessage('Activity happening time must be of valid format \'hh:mm\''),
+        .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     body('additional_directions')
         .optional()
         .trim()
@@ -290,7 +290,7 @@ exports.getActivitiesQuerySchema = [
         .optional()
         .trim()
         .matches(timeRegex)
-        .withMessage('Activity happening time must be of valid format \'hh:mm\''),
+        .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     query('activity_type_id')
         .optional()
         .trim()
