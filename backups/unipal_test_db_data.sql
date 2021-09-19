@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2021 at 10:00 AM
+-- Generation Time: Sep 19, 2021 at 06:04 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -20,6 +20,15 @@ SET time_zone = "+00:00";
 --
 -- Database: `unipal_test_db`
 --
+
+--
+-- Dumping data for table `activities`
+--
+
+INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_directions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
+(1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
 
 --
 -- Dumping data for table `activity_statuses`
@@ -97,7 +106,7 @@ INSERT INTO `programs` (`program_id`, `program`) VALUES
 
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$xbvVAgR/GPk5uwXiSu39VuO54JzfWtcKoM6NfZwJNqYr92BLkaW2e', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$GOxUY8wR5qIE.fA.q9DdVuyLrdQYLHUFcmt1ibwNeXmIsJvgefwWu', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 --
 -- Dumping data for table `student_statuses`

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2021 at 09:29 AM
+-- Generation Time: Sep 19, 2021 at 06:01 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -42,13 +42,22 @@ CREATE TABLE `activities` (
   `month_number` tinyint(2) UNSIGNED NOT NULL,
   `group_size` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
   `happens_at` time NOT NULL,
-  `additional_directions` varchar(100) NOT NULL,
-  `activity_type` int(10) UNSIGNED NOT NULL,
-  `activity_status` int(10) UNSIGNED NOT NULL,
-  `fixed_spot` int(10) UNSIGNED NOT NULL,
+  `additional_directions` varchar(100) DEFAULT NULL,
+  `activity_type_id` int(10) UNSIGNED NOT NULL,
+  `activity_status_id` int(10) UNSIGNED NOT NULL,
+  `campus_spot_id` int(10) UNSIGNED DEFAULT NULL,
   `organizer_erp` varchar(5) NOT NULL,
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `activities`
+--
+
+INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_directions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
+(1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
 
 -- --------------------------------------------------------
 
@@ -530,9 +539,9 @@ CREATE TABLE `tsr_members` (
 --
 ALTER TABLE `activities`
   ADD PRIMARY KEY (`activity_id`),
-  ADD KEY `fk_activities_activity_status_id_idx` (`activity_status`),
-  ADD KEY `fk_activities_activity_type_id_idx` (`activity_type`),
-  ADD KEY `fk_activities_campus_spot_id_idx` (`fixed_spot`),
+  ADD KEY `fk_activities_activity_status_id_idx` (`activity_status_id`),
+  ADD KEY `fk_activities_activity_type_id_idx` (`activity_type_id`),
+  ADD KEY `fk_activities_campus_spot_id_idx` (`campus_spot_id`),
   ADD KEY `fk_activities_student_erp_idx` (`organizer_erp`);
 
 --
@@ -767,7 +776,7 @@ ALTER TABLE `tsr_members`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `activity_statuses`
@@ -873,9 +882,9 @@ ALTER TABLE `timetable_share_rooms`
 -- Constraints for table `activities`
 --
 ALTER TABLE `activities`
-  ADD CONSTRAINT `fk_activities_activity_status_id` FOREIGN KEY (`activity_status`) REFERENCES `activity_statuses` (`activity_status_id`),
-  ADD CONSTRAINT `fk_activities_activity_type_id` FOREIGN KEY (`activity_type`) REFERENCES `activity_types` (`activity_type_id`),
-  ADD CONSTRAINT `fk_activities_campus_spot_id` FOREIGN KEY (`fixed_spot`) REFERENCES `campus_spots` (`campus_spot_id`),
+  ADD CONSTRAINT `fk_activities_activity_status_id` FOREIGN KEY (`activity_status_id`) REFERENCES `activity_statuses` (`activity_status_id`),
+  ADD CONSTRAINT `fk_activities_activity_type_id` FOREIGN KEY (`activity_type_id`) REFERENCES `activity_types` (`activity_type_id`),
+  ADD CONSTRAINT `fk_activities_campus_spot_id` FOREIGN KEY (`campus_spot_id`) REFERENCES `campus_spots` (`campus_spot_id`),
   ADD CONSTRAINT `fk_activities_student_erp` FOREIGN KEY (`organizer_erp`) REFERENCES `students` (`erp`);
 
 --
