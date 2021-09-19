@@ -16,6 +16,7 @@ The documentation was generated using Postman and is divided into collections at
 - Activity Statuses - https://documenter.getpostman.com/view/13348269/U16kpjou
 - Activity Types - https://documenter.getpostman.com/view/13348269/U16kq4gc
 - Campus Spots - https://documenter.getpostman.com/view/13348269/U16nJNvi
+- Activities - https://documenter.getpostman.com/view/13348269/UUxtEW2F
 
 ### :dvd: Installation
 #### 1. Getting Started

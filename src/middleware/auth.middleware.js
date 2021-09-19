@@ -54,7 +54,7 @@ exports.auth = (...allowedRoles) => {
     };
 };
 
-exports.ownerAuth = (...checkedRoles) => {
+exports.ownerAuth = (checkedRoles = [], customOwnerCheck = null) => {
     return async function(req, res, next) {
         try {
             const student = req.currentStudent;
@@ -66,13 +66,18 @@ exports.ownerAuth = (...checkedRoles) => {
             // if the current student role has to be checked for ownership
             const isChecked = checkedRoles.includes(student.role);
 
-            // check if the current student is the owner student
-            const isOwner = req.params.erp === student.erp; // can update self
-
-            // if check enabled and is not the owner
-            // the student will get this error
-            if (isChecked && !isOwner) throw new ForbiddenException();
-            else next();
+            if (isChecked){ // if needs owner check
+                // check if the current student is the owner student
+                let isOwner;
+                if (customOwnerCheck) isOwner = await customOwnerCheck(req);
+                else isOwner = req.params.erp === student.erp; // can update self
+    
+                // if not the owner
+                // the student will get this error
+                if (!isOwner) throw new ForbiddenException();
+            }
+            
+            next();
 
         } catch (e) {
             next(e);
