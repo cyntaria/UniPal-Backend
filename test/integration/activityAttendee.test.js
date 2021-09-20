@@ -1,8 +1,6 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
 const expect = require('chai').expect;
-const sinon = require('sinon');
-const decache = require('decache');
 const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
@@ -50,17 +48,14 @@ describe("Activity Attendees API", () => {
             expect(res.body.body.affected_rows).to.be.equal(1);
 
             // affirm
+            const query = `involvement_type=${involvement_type}`;
             res = await request(app)
-                .get(`${baseRoute}/${activity_id}/${subRoute}`)
+                .get(`${baseRoute}/${activity_id}/${subRoute}?${query}`)
                 .auth(userToken, { type: 'bearer' });
-
+            
             expect(res.status).to.be.equal(200);
-            const resBody = res.body.body;
-            expect(resBody).to.be.an('array');
-            expect(resBody).to.include.members([{
-                activity_id,
-                ...data
-            }]); // contain all params
+            const studentERPs = res.body.body.map(o => (o.student_erp));
+            expect(studentERPs).to.include(student_erp);
 
             // cleanup
             res = await request(app)
@@ -105,8 +100,6 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
             expect(incorrectParams).to.include.members(['involvement_type', 'student_erp']);
-            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
-            expect(incorrectMsg).to.include('Invalid params!');
         });
 
         it("Scenario 4: Create an activity attendee request is forbidden", async() => {
@@ -166,18 +159,14 @@ describe("Activity Attendees API", () => {
             expect(res.body.body.rows_changed).to.be.equal(1);
             
             // affirm
+            const query = `involvement_type=${involvement_type}`;
             res = await request(app)
-                .get(`${baseRoute}/${activity_id}/${subRoute}`)
+                .get(`${baseRoute}/${activity_id}/${subRoute}?${query}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
-            const resBody = res.body.body;
-            expect(resBody).to.be.an('array');
-            expect(resBody).to.include.members([{
-                activity_id,
-                student_erp,
-                ...data
-            }]); // contain all params
+            const studentERPs = res.body.body.map(o => (o.student_erp));
+            expect(studentERPs).to.include(student_erp);
             
             // cleanup
             data.involvement_type = existingActivityAttendee.involvement_type;
@@ -206,18 +195,14 @@ describe("Activity Attendees API", () => {
             expect(res.body.body.rows_changed).to.be.equal(1);
             
             // affirm
+            const query = `involvement_type=${involvement_type}`;
             res = await request(app)
-                .get(`${baseRoute}/${activity_id}/${subRoute}`)
+                .get(`${baseRoute}/${activity_id}/${subRoute}?${query}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
-            const resBody = res.body.body;
-            expect(resBody).to.be.an('array');
-            expect(resBody).to.include.members([{
-                activity_id,
-                student_erp,
-                ...data
-            }]); // contain all params
+            const studentERPs = res.body.body.map(o => (o.student_erp));
+            expect(studentERPs).to.include(student_erp);
             
             // cleanup
             data.involvement_type = existingActivityAttendee.involvement_type;
@@ -282,7 +267,7 @@ describe("Activity Attendees API", () => {
             const incorrectParams = res.body.headers.data.map(o => (o.param));
             expect(incorrectParams).to.include.members(['involvement_type']);
             const incorrectMsg = res.body.headers.data.map(o => (o.msg));
-            expect(incorrectMsg).to.include('Invalid params!');
+            expect(incorrectMsg).to.include.members(['Invalid updates!']);
         });
 
         it("Scenario 6: Update an activity attendee request is forbidden", async() => {
@@ -320,28 +305,27 @@ describe("Activity Attendees API", () => {
     });
 
     context("DELETE /activities", () => {
-        const activity_attendee = 'Garden (SC)';
-        const campus_id = existingActivityAttendee.campus_id;
+        const involvement_type = 'will_try';
+        const activity_id = activityIdWithoutAttendees;
+        const existingActivityId = existingActivityAttendee.activity_id;
+        const student_erp = userERP;
 
-        it("Scenario 1: Delete an activity attendee request is successful", async() => {
+        it("Scenario 1: Delete an activity attendee request is successful (Owner)", async() => {
             // prepare
-            const data = { activity_attendee, campus_id };
+            const data = { student_erp, involvement_type };
             const app = this.app;
 
             // create dummy
             let res = await request(app)
-                .post(baseRoute)
+                .post(`${baseRoute}/${activity_id}/${subRoute}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(201);
 
-            // arrange
-            const newId = res.body.body.activity_attendee_id;
-
             // act
             res = await request(app)
-                .delete(`${baseRoute}/${newId}`)
-                .auth(adminToken, { type: 'bearer' });
+                .delete(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
+                .auth(userToken, { type: 'bearer' }); // <-- userToken.erp == student_erp
 
             // assert
             expect(res.status).to.be.equal(200);
@@ -351,17 +335,68 @@ describe("Activity Attendees API", () => {
 
             // affirm
             res = await request(app)
-                .get(`${baseRoute}/${newId}`)
+                .get(`${baseRoute}/${activity_id}/${subRoute}`)
                 .auth(userToken, { type: 'bearer' });
+
+            // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
         });
 
-        it("Scenario 2: Delete an activity attendee request is unsuccessful", async() => {
+        it("Scenario 2: Delete an activity attendee request is successful (Admin)", async() => {
+            // prepare
+            const data = { student_erp, involvement_type };
+            const app = this.app;
+
+            // create dummy
+            let res = await request(app)
+                .post(`${baseRoute}/${activity_id}/${subRoute}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+            expect(res.status).to.be.equal(201);
+
+            // act
+            res = await request(app)
+                .delete(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
+                .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp != student_erp but still bypass ownerCheck
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.headers.message).to.be.equal('Activity attendee has been deleted');
+            expect(res.body.body.rows_removed).to.be.equal(1);
+
+            // affirm
+            res = await request(app)
+                .get(`${baseRoute}/${activity_id}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+        });
+
+        it("Scenario 3: Delete an activity attendee request is unsuccessful due to unknown activity_id", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${unknownActivityAttendeeId}`)
+                .delete(`${baseRoute}/${unknownActivityId}/${subRoute}/${student_erp}`)
+                .auth(adminToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendee not found');
+        });
+        
+        it("Scenario 4: Delete an activity attendee request is unsuccessful due to unknown student_erp", async() => {
+            // act
+            const res = await request(this.app)
+                .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${unknownStudentERP}`)
                 .auth(adminToken, { type: 'bearer' });
     
             // assert
@@ -371,11 +406,11 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.message).to.be.equal('Activity attendee not found');
         });
 
-        it("Scenario 3: Delete an activity attendee request is forbidden", async() => {
+        it("Scenario 5: Delete an activity attendee request is forbidden", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
-                .auth(userToken, { type: 'bearer' }); // <-- api_user token instead of admin token
+                .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${adminERP}`)
+                .auth(userToken, { type: 'bearer' }); // <-- adminERP != userToken.erp, can be any other different erp as well
             
             // assert
             expect(res.status).to.be.equal(403);
@@ -384,10 +419,10 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Delete an activity attendee request is unauthorized", async() => {
+        it("Scenario 6: Delete an activity attendee request is unauthorized", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`);
+                .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${student_erp}`);
     
             // assert
             expect(res.status).to.be.equal(401);
