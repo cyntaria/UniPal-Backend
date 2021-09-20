@@ -17,7 +17,6 @@ describe("Activity Attendees API", () => {
         student_erp: userERP,
         involvement_type: 'going'
     };
-    const activityIdWithAttendees = 1;
     const activityIdWithoutAttendees = 2;
     const unknownActivityId = 99999;
     const unknownStudentERP = 19999;
@@ -145,16 +144,58 @@ describe("Activity Attendees API", () => {
     });
 
     context("PATCH /activities/:id", () => {
-        const newActivityAttendee = 'Garden (SC)';
+        const involvement_type = 'will_try';
+        const activity_id = existingActivityAttendee.activity_id;
+        const student_erp = existingActivityAttendee.student_erp;
         
-        it("Scenario 1: Update an activity attendee request is successful", async() => {
+        it("Scenario 1: Update an activity attendee request is successful (Owner)", async() => {
             // arrange
-            const data = { activity_attendee: newActivityAttendee };
+            const data = { involvement_type };
             const app = this.app;
 
             // act
             let res = await request(app)
-                .patch(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
+                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp == student_erp
+                .send(data);
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.body.rows_matched).to.be.equal(1);
+            expect(res.body.body.rows_changed).to.be.equal(1);
+            
+            // affirm
+            res = await request(app)
+                .get(`${baseRoute}/${activity_id}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+            
+            expect(res.status).to.be.equal(200);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            expect(resBody).to.include.members([{
+                activity_id,
+                student_erp,
+                ...data
+            }]); // contain all params
+            
+            // cleanup
+            data.involvement_type = existingActivityAttendee.involvement_type;
+            res = await request(app)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+            expect(res.status).to.be.equal(200);
+        });
+
+        it("Scenario 2: Update an activity attendee request is successful (Admin)", async() => {
+            // arrange
+            const data = { involvement_type };
+            const app = this.app;
+
+            // act
+            let res = await request(app)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -166,32 +207,34 @@ describe("Activity Attendees API", () => {
             
             // affirm
             res = await request(app)
-                .get(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
+                .get(`${baseRoute}/${activity_id}/${subRoute}`)
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
-            expect(res.body.body).to.be.eql({
-                activity_attendee_id: existingActivityAttendee.activity_attendee_id,
-                campus_id: existingActivityAttendee.campus_id,
-                activity_attendee: newActivityAttendee
-            });
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            expect(resBody).to.include.members([{
+                activity_id,
+                student_erp,
+                ...data
+            }]); // contain all params
             
             // cleanup
-            data.activity_attendee = existingActivityAttendee.activity_attendee;
+            data.involvement_type = existingActivityAttendee.involvement_type;
             res = await request(app)
-                .patch(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Update an activity attendee request is unsuccessful", async() => {
+        it("Scenario 3: Update an activity attendee request is unsuccessful due to unknown activity_id", async() => {
             // arrange
-            const data = { activity_attendee: newActivityAttendee };
+            const data = { involvement_type };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${unknownActivityAttendeeId}`)
+                .patch(`${baseRoute}/${unknownActivityId}/${subRoute}/${student_erp}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -202,15 +245,33 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.message).to.be.equal('Activity attendee not found');
         });
 
-        it("Scenario 3: Update an activity attendee request is incorrect", async() => {
+        it("Scenario 4: Update an activity attendee request is unsuccessful due to unknown student_erp", async() => {
+            // arrange
+            const data = { involvement_type };
+
+            // act
+            const res = await request(this.app)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${unknownStudentERP}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendee not found');
+        });
+
+        it("Scenario 5: Update an activity attendee request is incorrect", async() => {
             // arrange
             const data = {
-                activity_attendees: newActivityAttendee // <-- a valid parameter name should be 'activity_attendee'
+                involvement_type: 'not going', // <-- not a valid involvement_type
+                erp: '12345' // <-- an invalid update parameter i.e. not allowed
             };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -219,17 +280,19 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
-            expect(incorrectParams).to.include('activity_attendee');
+            expect(incorrectParams).to.include.members(['involvement_type']);
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include('Invalid params!');
         });
 
-        it("Scenario 4: Update an activity attendee request is forbidden", async() => {
+        it("Scenario 6: Update an activity attendee request is forbidden", async() => {
             // arrange
-            const data = { activity_attendee: newActivityAttendee };
+            const data = { involvement_type };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
-                .auth(userToken, { type: 'bearer' }) // <-- api_user token instead of admin token
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${adminERP}`)
+                .auth(userToken, { type: 'bearer' }) // <-- adminERP != userToken.erp, can be any other different erp as well
                 .send(data);
             
             // assert
@@ -239,13 +302,13 @@ describe("Activity Attendees API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 5: Update an activity attendee request is unauthorized", async() => {
+        it("Scenario 7: Update an activity attendee request is unauthorized", async() => {
             // arrange
-            const data = { activity_attendee: newActivityAttendee };
+            const data = { involvement_type };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${existingActivityAttendee.activity_attendee_id}`)
+                .patch(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
                 .send(data);
     
             // assert
