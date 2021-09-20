@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2021 at 06:01 PM
+-- Generation Time: Sep 20, 2021 at 12:41 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -29,6 +29,14 @@ INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `mo
 (1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
 (2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
 (3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
+
+--
+-- Dumping data for table `activity_attendees`
+--
+
+INSERT INTO `activity_attendees` (`student_erp`, `activity_id`, `involvement_type`) VALUES
+('15030', 1, 'interested'),
+('17855', 1, 'going');
 
 --
 -- Dumping data for table `activity_statuses`
