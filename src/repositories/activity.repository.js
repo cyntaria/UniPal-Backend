@@ -36,7 +36,7 @@ class ActivityRepository {
 
         activityAttendees = activityAttendees.map((activity) => {
             const {involvement_type, activity_id, ...attendee} = activity;
-            return { attendee, involvement_type};
+            return { activity_id, ...attendee, involvement_type};
         });
 
         return successResponse(activityAttendees);

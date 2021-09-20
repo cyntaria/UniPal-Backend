@@ -1,12 +1,13 @@
 const {checkValidation} = require('../middleware/validation.middleware');
 
-const ActivityAttendeeRepository = require('../repositories/campusSpot.repository');
+const ActivityAttendeeRepository = require('../repositories/activityAttendee.repository');
 
 class ActivityAttendeeController {
 
     createActivityAttendee = async(req, res, next) => {
         checkValidation(req);
 
+        req.body.activity_id = req.params.id;
         const response = await ActivityAttendeeRepository.create(req.body);
         res.status(201).send(response);
     };

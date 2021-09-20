@@ -39,7 +39,7 @@ class ActivityModel {
     findAllAttendeesByActivity = async(params) => {
         const { filterSet, filterValues } = multipleFilterSet(params);
 
-        const sql = `SELECT student_erp, first_name, last_name, profile_picture_url, involvement_type 
+        const sql = `SELECT activity_id, student_erp, first_name, last_name, profile_picture_url, involvement_type 
         FROM ${tables.ActivityAttendees}
         NATURAL JOIN ${tables.Students}
         WHERE ${filterSet}`;

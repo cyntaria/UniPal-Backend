@@ -11,12 +11,6 @@ exports.createActivityAttendeeSchema = [
         .withMessage('Student ERP is required')
         .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
-    body('activity_id')
-        .trim()
-        .exists()
-        .withMessage('Activity id is required for the spot')
-        .isInt({ min: 1 })
-        .withMessage('Invalid ActivityID found'),
     body('involvement_type')
         .trim()
         .exists()
@@ -45,13 +39,13 @@ exports.updateActivityAttendeeSchema = [
 ];
 
 exports.activityAttendeeOwnerCheck = async(req) => {
-    const student_erp = req.params.student_erp;
+    const student = req.currentStudent;
 
     if (req.method === RequestMethods.POST) {
-        return req.body.student_erp === student_erp;
+        return req.body.student_erp === student.erp;
     }
 
-    const student = req.currentStudent;
+    const student_erp = req.params.student_erp;
 
     if (student.erp !== student_erp) throw new ForbiddenException();
     else return true;

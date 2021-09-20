@@ -164,6 +164,85 @@ describe("Activities API", () => {
         });
     });
 
+    context("GET /activities/:id/attendees", () => {
+        const subRoute = 'attendees';
+        it("Scenario 1: Get an activity's attendees request successful", async() => {
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingActivity.activity_id}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            expect(resBody[0].activity_id).to.be.equal(existingActivity.activity_id); // should match initially sent id
+            expect(resBody[0]).to.include.keys(['student_erp', 'first_name',
+                'last_name', 'profile_picture_url', 'involvement_type']);
+        });
+
+        it("Scenario 2: Get an activity's attendees request successful (using query params)", async() => {
+            // act
+            const involvement_type = 'going';
+            const query = `involvement_type=${involvement_type}`;
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingActivity.activity_id}/${subRoute}?${query}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            expect(resBody[0].involvement_type).to.be.equal(involvement_type);
+        });
+
+        it("Scenario 3: Get an activity's attendees request is unsuccessful due to unknown activity_id", async() => {
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}/${unknownActivityId}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+        });
+
+        it("Scenario 4: Get an activity's attendees request is unsuccessful due to zero attendees", async() => {
+            // arrange
+            decache('../../src/server');
+            const ActivityModel = require('../../src/models/activity.model');
+            const modelStub = sinon.stub(ActivityModel, 'findAllAttendeesByActivity').callsFake(() => []); // return empty activity attendees list
+            const app = require('../../src/server').setup();
+
+            // act
+            const res = await request(app)
+                .get(`${baseRoute}/${existingActivity.activity_id}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+            modelStub.restore();
+        });
+
+        it("Scenario 5: Get an activity's attendees is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(`${baseRoute}/${existingActivity.activity_id}/${subRoute}`);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
     context("POST /activities", () => {
         const { activity_id, month_number, group_size, ...newActivity } = existingActivity;
         const newActivityMonth = 5;
