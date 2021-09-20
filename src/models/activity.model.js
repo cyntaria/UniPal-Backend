@@ -36,6 +36,19 @@ class ActivityModel {
         return result[0];
     }
 
+    findAllAttendeesByActivity = async(params) => {
+        const { filterSet, filterValues } = multipleFilterSet(params);
+
+        const sql = `SELECT student_erp, first_name, last_name, profile_picture_url, involvement_type 
+        FROM ${tables.ActivityAttendees}
+        NATURAL JOIN ${tables.Students}
+        WHERE ${filterSet}`;
+
+        const result = await DBService.query(sql, [...filterValues]);
+
+        return result;
+    }
+
     create = async({
         location, privacy, frequency,
         monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0, sunday = 0,

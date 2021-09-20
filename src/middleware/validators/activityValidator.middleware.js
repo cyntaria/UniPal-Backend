@@ -2,6 +2,7 @@ const { body, query } = require('express-validator');
 const { ActivityLocation } = require('../../utils/enums/activityLocation.utils');
 const { Privacy } = require('../../utils/enums/privacy.utils');
 const { ActivityFrequency } = require('../../utils/enums/activityFrequency.utils');
+const { InvolvementType } = require('../../utils/enums/involvementType.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ERPRegex, timeRegex, datetimeRegex } = require('../../utils/common.utils');
 const ActivityModel = require('../../models/activity.model');
@@ -318,6 +319,21 @@ exports.getActivitiesQuerySchema = [
                 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
                 'month_number', 'group_size', 'happens_at', 'additional_directions',
                 'activity_type_id', 'activity_status_id', 'campus_spot_id'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
+];
+
+exports.getActivitiesAttendeesQuerySchema = [
+    query('involvement_type')
+        .optional()
+        .trim()
+        .isIn([...Object.values(InvolvementType)])
+        .withMessage('Invalid Involvement Type'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['involvement_type'];
             return queryParams.every(param => allowParams.includes(param));
         })
         .withMessage('Invalid query params!')
