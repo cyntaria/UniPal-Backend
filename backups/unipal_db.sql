@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2021 at 06:01 PM
+-- Generation Time: Sep 20, 2021 at 12:40 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -70,6 +70,14 @@ CREATE TABLE `activity_attendees` (
   `activity_id` int(10) UNSIGNED NOT NULL,
   `involvement_type` enum('going','interested','maybe') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `activity_attendees`
+--
+
+INSERT INTO `activity_attendees` (`student_erp`, `activity_id`, `involvement_type`) VALUES
+('15030', 1, 'interested'),
+('17855', 1, 'going');
 
 -- --------------------------------------------------------
 

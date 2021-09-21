@@ -14,6 +14,16 @@ class ActivityController {
         res.send(response);
     };
 
+    getActivityAttendees = async(req, res, next) => {
+        checkValidation(req);
+        const filters = {
+            activity_id: req.params.id,
+            ...req.query
+        };
+        const response = await ActivityRepository.findAllAttendeesByActivity(filters);
+        res.send(response);
+    };
+
     createActivity = async(req, res, next) => {
         checkValidation(req);
         const response = await ActivityRepository.create(req.body);

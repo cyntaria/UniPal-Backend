@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2021 at 06:01 PM
+-- Generation Time: Sep 21, 2021 at 12:20 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -59,7 +59,7 @@ CREATE TABLE `activities` (
 CREATE TABLE `activity_attendees` (
   `student_erp` varchar(5) NOT NULL,
   `activity_id` int(10) UNSIGNED NOT NULL,
-  `involvement_type` enum('going','interested','maybe') NOT NULL
+  `involvement_type` enum('going','interested','will_try') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

@@ -15,7 +15,7 @@
   "mocha": {
     "exit": true,
     "spec": "./test/**/*.test.js",
-    "timeout": "10000"
+    "timeout": "20000"
   },
   "keywords": [],
   "author": "Abdur Rafay Saleem",
