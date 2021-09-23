@@ -1,10 +1,8 @@
-const { hashPassword } = require('../utils/common.utils');
 const { successResponse } = require('../utils/responses.utils');
 
 const StudentModel = require('../models/student.model');
 const {
     NotFoundException,
-    CreateFailedException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
@@ -34,18 +32,6 @@ class StudentRepository {
         const { password, ...studentWithoutPassword } = student;
 
         return successResponse(studentWithoutPassword);
-    };
-
-    create = async(body) => {
-        await hashPassword(body);
-
-        const result = await StudentModel.create(body);
-
-        if (!result) {
-            throw new CreateFailedException('Student failed to be created');
-        }
-
-        return successResponse(result, 'Student was created!');
     };
 
     update = async(body, erp) => {

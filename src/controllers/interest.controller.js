@@ -1,5 +1,3 @@
-const {checkValidation} = require('../middleware/validation.middleware');
-
 const InterestRepository = require('../repositories/interest.repository');
 
 class InterestController {
@@ -14,15 +12,11 @@ class InterestController {
     };
 
     createInterest = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await InterestRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateInterest = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await InterestRepository.update(req.body, req.params.id);
         res.send(response);
     };
