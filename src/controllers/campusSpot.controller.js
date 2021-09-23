@@ -1,5 +1,3 @@
-const {checkValidation} = require('../middleware/validation.middleware');
-
 const CampusSpotRepository = require('../repositories/campusSpot.repository');
 
 class CampusSpotController {
@@ -14,15 +12,11 @@ class CampusSpotController {
     };
 
     createCampusSpot = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await CampusSpotRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateCampusSpot = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await CampusSpotRepository.update(req.body, req.params.id);
         res.send(response);
     };

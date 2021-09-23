@@ -1,10 +1,7 @@
-const { checkValidation } = require('../middleware/validation.middleware');
-
 const ActivityRepository = require('../repositories/activity.repository');
 
 class ActivityController {
     getAllActivities = async(req, res, next) => {
-        checkValidation(req);
         const response = await ActivityRepository.findAll(req.query);
         res.send(response);
     };
@@ -15,7 +12,6 @@ class ActivityController {
     };
 
     getActivityAttendees = async(req, res, next) => {
-        checkValidation(req);
         const filters = {
             activity_id: req.params.id,
             ...req.query
@@ -25,13 +21,11 @@ class ActivityController {
     };
 
     createActivity = async(req, res, next) => {
-        checkValidation(req);
         const response = await ActivityRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateActivity = async(req, res, next) => {
-        checkValidation(req);
         const response = await ActivityRepository.update(req.body, req.params.id);
         res.send(response);
     };

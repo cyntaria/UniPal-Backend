@@ -1,5 +1,3 @@
-const {checkValidation} = require('../middleware/validation.middleware');
-
 const ProgramRepository = require('../repositories/program.repository');
 
 class ProgramController {
@@ -14,15 +12,11 @@ class ProgramController {
     };
 
     createProgram = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await ProgramRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateProgram = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await ProgramRepository.update(req.body, req.params.id);
         res.send(response);
     };

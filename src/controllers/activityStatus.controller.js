@@ -1,5 +1,3 @@
-const {checkValidation} = require('../middleware/validation.middleware');
-
 const ActivityStatusRepository = require('../repositories/activityStatus.repository');
 
 class ActivityStatusController {
@@ -14,15 +12,11 @@ class ActivityStatusController {
     };
 
     createActivityStatus = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await ActivityStatusRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateActivityStatus = async(req, res, next) => {
-        checkValidation(req);
-
         const response = await ActivityStatusRepository.update(req.body, req.params.id);
         res.send(response);
     };
