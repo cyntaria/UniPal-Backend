@@ -12,11 +12,7 @@ class ActivityController {
     };
 
     getActivityAttendees = async(req, res, next) => {
-        const filters = {
-            activity_id: req.params.id,
-            ...req.query
-        };
-        const response = await ActivityRepository.findAllAttendeesByActivity(filters);
+        const response = await ActivityRepository.findAllAttendeesByActivity(req.params.id, req.query);
         res.send(response);
     };
 

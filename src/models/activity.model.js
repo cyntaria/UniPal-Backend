@@ -36,15 +36,21 @@ class ActivityModel {
         return result[0];
     }
 
-    findAllAttendeesByActivity = async(params) => {
-        const { filterSet, filterValues } = multipleFilterSet(params);
+    findAllAttendeesByActivity = async(activity_id, filters) => {
+        let sql = `SELECT activity_id, student_erp, first_name, last_name, profile_picture_url, involvement_type 
+        FROM ${tables.ActivityAttendees} AS a
+        INNER JOIN ${tables.Students} AS s
+        ON a.student_erp = s.erp
+        WHERE activity_id = ?`;
 
-        const sql = `SELECT activity_id, student_erp, first_name, last_name, profile_picture_url, involvement_type 
-        FROM ${tables.ActivityAttendees}
-        NATURAL JOIN ${tables.Students}
-        WHERE ${filterSet}`;
+        if (!Object.keys(filters).length) {
+            return await DBService.query(sql, [activity_id]);
+        }
 
-        const result = await DBService.query(sql, [...filterValues]);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
+        sql += ` AND ${filterSet}`;
+
+        const result = await DBService.query(sql, [activity_id, ...filterValues]);
 
         return result;
     }

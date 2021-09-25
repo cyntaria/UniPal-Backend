@@ -28,16 +28,11 @@ class ActivityRepository {
         return successResponse(activity);
     };
 
-    findAllAttendeesByActivity = async(params) => {
-        let activityAttendees = await ActivityModel.findAllAttendeesByActivity(params);
+    findAllAttendeesByActivity = async(id, filters) => {
+        let activityAttendees = await ActivityModel.findAllAttendeesByActivity(id, filters);
         if (!activityAttendees.length) {
             throw new NotFoundException('Activity attendees not found');
         }
-
-        activityAttendees = activityAttendees.map((activity) => {
-            const {involvement_type, activity_id, ...attendee} = activity;
-            return { activity_id, ...attendee, involvement_type};
-        });
 
         return successResponse(activityAttendees);
     };
