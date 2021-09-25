@@ -1,7 +1,11 @@
 const { body, query } = require('express-validator');
 const { Roles } = require('../../utils/enums/roles.utils');
 const { Genders } = require('../../utils/enums/genders.utils');
-const { yearRegex, ERPRegex } = require('../../utils/common.utils');
+const { ActivityLocation } = require('../../utils/enums/activityLocation.utils');
+const { Privacy } = require('../../utils/enums/privacy.utils');
+const { ActivityFrequency } = require('../../utils/enums/activityFrequency.utils');
+const { InvolvementType } = require('../../utils/enums/involvementType.utils');
+const { yearRegex, ERPRegex, timeRegex } = require('../../utils/common.utils');
 const EmailValidator = require('deep-email-validator');
 
 exports.createStudentSchema = [
@@ -421,6 +425,114 @@ exports.getStudentsQuerySchema = [
                 'graduation_year', 'uni_email', 'hobby_1', 'hobby_2', 'hobby_3',
                 'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_user_status',
                 'favourite_campus_hangout_spot', 'favourite_campus_activity', 'role'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
+];
+
+exports.getOrganizedActivitiesQuerySchema = [
+    query('location')
+        .optional()
+        .trim()
+        .isIn([...Object.values(ActivityLocation)])
+        .withMessage('Invalid Location'),
+    query('frequency')
+        .optional()
+        .trim()
+        .isIn([...Object.values(ActivityFrequency)])
+        .withMessage('Invalid Frequency'),
+    query('privacy')
+        .optional()
+        .trim()
+        .isIn([...Object.values(Privacy)])
+        .withMessage('Invalid Privacy'),
+    query('monday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('tuesday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('wednesday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('thursday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('friday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('saturday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('sunday')
+        .optional()
+        .trim()
+        .isBoolean()
+        .withMessage('Invalid boolean. Should be either 0 or 1'),
+    query('month_number')
+        .optional()
+        .trim()
+        .isInt({min: 1, max: 12})
+        .withMessage('Invalid month number'),
+    query('group_size')
+        .optional()
+        .trim()
+        .isInt({min: 0})
+        .withMessage('Invalid group size'),
+    query('happens_at')
+        .optional()
+        .trim()
+        .matches(timeRegex)
+        .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
+    query('activity_type_id')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid Activity Type ID found'),
+    query('activity_status_id')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid Activity Status ID found'),
+    query('campus_spot_id')
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Invalid Campus Spot ID found'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['location', 'privacy', 'frequency',
+                'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+                'month_number', 'group_size', 'happens_at',
+                'activity_type_id', 'activity_status_id', 'campus_spot_id'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
+];
+
+exports.getAttendedActivitiesQuerySchema = [
+    query('involvement_type')
+        .optional()
+        .trim()
+        .isIn([...Object.values(InvolvementType)])
+        .withMessage('Invalid Involvement Type'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['involvement_type'];
             return queryParams.every(param => allowParams.includes(param));
         })
         .withMessage('Invalid query params!')

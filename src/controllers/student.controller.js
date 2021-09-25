@@ -11,6 +11,16 @@ class StudentController {
         res.send(response);
     };
 
+    getOrganizedActivities = async(req, res, next) => {
+        const response = await StudentRepository.findAllOrganizedActivitiesByStudent(req.params.erp, req.query);
+        res.send(response);
+    };
+
+    getAttendedActivities = async(req, res, next) => {
+        const response = await StudentRepository.findAllAttendedActivitiesByStudent(req.params.erp, req.query);
+        res.send(response);
+    };
+
     updateStudent = async(req, res, next) => {
         const response = await StudentRepository.update(req.body, req.params.erp);
         res.send(response);

@@ -34,6 +34,25 @@ class StudentRepository {
         return successResponse(studentWithoutPassword);
     };
 
+    findAllOrganizedActivitiesByStudent = async(erp, filters) => {
+        let organizedActivities = await StudentModel.findAllOrganizedActivitiesByStudent(erp, filters);
+        
+        if (!organizedActivities.length) {
+            throw new NotFoundException('No organized activities found');
+        }
+
+        return successResponse(organizedActivities);
+    };
+
+    findAllAttendedActivitiesByStudent = async(erp, filters) => {
+        let attendedActivities = await StudentModel.findAllAttendedActivitiesByStudent(erp, filters);
+        if (!attendedActivities.length) {
+            throw new NotFoundException('No interacted activities found');
+        }
+
+        return successResponse(attendedActivities);
+    };
+
     update = async(body, erp) => {
         const result = await StudentModel.update(body, erp);
 

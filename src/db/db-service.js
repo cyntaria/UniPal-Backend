@@ -6,6 +6,7 @@ const {
 } = require('../utils/exceptions/database.exception');
 const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
+const {Config} = require('../configs/config');
 
 class DatabaseService {
     init({ host, user, password, database, connLimit, dateStrings }) {
@@ -47,8 +48,8 @@ class DatabaseService {
                 }
                 resolve(result);
             };
-            // console.log(`[SQL] ${sql}`);
-            // console.log(`[VALUES] ${values}`);
+            if (Config.NODE_ENV === 'dev') console.log(`[SQL] ${sql}`);
+            if (Config.NODE_ENV === 'dev') console.log(`[VALUES] ${values}`);
             this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
