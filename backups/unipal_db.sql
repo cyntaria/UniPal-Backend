@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 20, 2021 at 12:40 PM
+-- Generation Time: Sep 26, 2021 at 04:51 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -68,7 +68,7 @@ INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `mo
 CREATE TABLE `activity_attendees` (
   `student_erp` varchar(5) NOT NULL,
   `activity_id` int(10) UNSIGNED NOT NULL,
-  `involvement_type` enum('going','interested','maybe') NOT NULL
+  `involvement_type` enum('going','interested','will_try') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -371,6 +371,14 @@ CREATE TABLE `saved_activities` (
   `activity_id` int(10) UNSIGNED NOT NULL,
   `saved_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `saved_activities`
+--
+
+INSERT INTO `saved_activities` (`student_erp`, `activity_id`, `saved_at`) VALUES
+('17855', 1, '2021-09-17 15:53:40'),
+('17855', 3, '2021-09-17 15:53:40');
 
 -- --------------------------------------------------------
 
