@@ -10,7 +10,8 @@ const {
     updateStudentSchema,
     getStudentsQuerySchema,
     getOrganizedActivitiesQuerySchema,
-    getAttendedActivitiesQuerySchema
+    getAttendedActivitiesQuerySchema,
+    getSavedActivitiesQuerySchema
 } = require('../middleware/validators/studentValidator.middleware');
 
 router.get('/',
@@ -38,6 +39,14 @@ router.get('/:erp/attended-activities',
     checkValidation,
     awaitHandlerFactory(studentController.getAttendedActivities)
 ); // localhost:3000/api/API_VERSION/students/17855/attended-activities
+
+router.get('/:erp/saved-activities',
+    auth(Roles.Admin, Roles.ApiUser),
+    ownerAuth([Roles.ApiUser]),
+    getSavedActivitiesQuerySchema,
+    checkValidation,
+    awaitHandlerFactory(studentController.getSavedActivities)
+); // localhost:3000/api/API_VERSION/activities/1/attendees
 
 router.patch('/:erp',
     auth(Roles.Admin, Roles.ApiUser),

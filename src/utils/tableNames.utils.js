@@ -10,5 +10,6 @@ exports.tables = {
     ActivityTypes: 'activity_types',
     CampusSpots: 'campus_spots',
     Activities: 'activities',
-    ActivityAttendees: 'activity_attendees'
+    ActivityAttendees: 'activity_attendees',
+    SavedActivities: 'saved_activities'
 };

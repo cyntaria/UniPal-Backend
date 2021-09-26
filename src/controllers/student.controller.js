@@ -21,6 +21,11 @@ class StudentController {
         res.send(response);
     };
 
+    getSavedActivities = async(req, res, next) => {
+        const response = await StudentRepository.findAllSavedActivitiesByStudent(req.params.erp, req.query);
+        res.send(response);
+    };
+
     updateStudent = async(req, res, next) => {
         const response = await StudentRepository.update(req.body, req.params.erp);
         res.send(response);

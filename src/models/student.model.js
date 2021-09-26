@@ -66,6 +66,25 @@ class StudentModel {
         return result;
     }
 
+    findAllSavedActivitiesByStudent = async(student_erp, filters) => {
+        let sql = `SELECT * 
+        FROM ${tables.SavedActivities} AS sa
+        INNER JOIN ${tables.Activities} AS a
+        ON sa.activity_id = a.activity_id
+        WHERE student_erp = ?`;
+
+        if (!Object.keys(filters).length) {
+            return await DBService.query(sql, [student_erp]);
+        }
+
+        const { filterSet, filterValues } = multipleFilterSet(filters);
+        sql += ` AND ${filterSet}`;
+
+        const result = await DBService.query(sql, [student_erp, ...filterValues]);
+
+        return result;
+    }
+
     // 24 fields
     create = async({ erp, first_name, last_name, gender, contact, email, birthday, password,
         profile_picture_url, graduation_year, uni_email, hobby_1, hobby_2, hobby_3,

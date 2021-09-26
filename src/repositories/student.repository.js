@@ -53,6 +53,15 @@ class StudentRepository {
         return successResponse(attendedActivities);
     };
 
+    findAllSavedActivitiesByStudent = async(erp, filters) => {
+        let savedActivities = await StudentModel.findAllSavedActivitiesByStudent(erp, filters);
+        if (!savedActivities.length) {
+            throw new NotFoundException('No saved activities found');
+        }
+
+        return successResponse(savedActivities);
+    };
+
     update = async(body, erp) => {
         const result = await StudentModel.update(body, erp);
 
