@@ -316,7 +316,7 @@ describe("Programs API", () => {
         });
     });
 
-    context("DELETE /programs", () => {
+    context("DELETE /programs/:id", () => {
         const program = 'BBA';
         
         it("Scenario 1: Delete a program request is successful", async() => {

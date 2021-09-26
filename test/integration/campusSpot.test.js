@@ -337,7 +337,7 @@ describe("Campus Spots API", () => {
         });
     });
 
-    context("DELETE /campus-spots", () => {
+    context("DELETE /campus-spots/:id", () => {
         const campus_spot = 'Garden (SC)';
         const campus_id = existingCampusSpot.campus_id;
 

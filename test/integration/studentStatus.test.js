@@ -316,7 +316,7 @@ describe("Student Statuses API", () => {
         });
     });
 
-    context("DELETE /student-statuses", () => {
+    context("DELETE /student-statuses/:id", () => {
         const student_status = 'Looking for help';
         
         it("Scenario 1: Delete a student status request is successful", async() => {

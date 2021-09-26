@@ -315,7 +315,7 @@ describe("Activity Statuses API", () => {
         });
     });
 
-    context("DELETE /activity-statuses", () => {
+    context("DELETE /activity-statuses/:id", () => {
         const activity_status = 'Postponed';
         
         it("Scenario 1: Delete a activity status request is successful", async() => {

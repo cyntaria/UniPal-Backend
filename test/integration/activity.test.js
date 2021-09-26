@@ -683,7 +683,7 @@ describe("Activities API", () => {
         });
     });
 
-    context("DELETE /activities", () => {
+    context("DELETE /activities/:id", () => {
         const { activity_id, month_number, group_size, ...newActivity } = existingActivity;
         const newActivityMonth = 5;
         const newActivityGroupSize = 40;
