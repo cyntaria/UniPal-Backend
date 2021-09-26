@@ -145,6 +145,317 @@ describe("Students API", () => {
         });
     });
 
+    context("GET /students/:erp/organized-activities", () => {
+        const subRoute = 'organized-activities';
+
+        it("Scenario 1: Get a student's organized activities request successful", async() => {
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const organizerCheck = activity => activity.organizer_erp === existingStudent.erp;
+            expect(resBody.every(organizerCheck)).to.be.true; // should match initially sent id
+        });
+
+        it("Scenario 2: Get a student's organized activities request successful (using query params)", async() => {
+            // act
+            const frequency = 'one_time';
+            const query = `frequency=${frequency}`;
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${query}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const queryCheck = activity => activity.frequency === frequency;
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+        });
+
+        it("Scenario 3: Get a student's organized activities request is unsuccessful due to unknown erp", async() => {
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}/${unregisteredERP}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No organized activities found');
+        });
+
+        it("Scenario 4: Get a student's organized activities request is unsuccessful due to no organized activities", async() => {
+            // arrange
+            decache('../../src/server');
+            const StudentModel = require('../../src/models/student.model');
+            const modelStub = sinon.stub(StudentModel, 'findAllOrganizedActivitiesByStudent').callsFake(() => []); // return empty organized activities list
+            const app = require('../../src/server').setup();
+
+            // act
+            const res = await request(app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No organized activities found');
+            modelStub.restore();
+        });
+
+        it("Scenario 5: Get a student's organized activities request is incorrect", async() => {
+            // act
+            const privacy = 'all'; // <-- invalid privacy value
+            const invalidQueryParams = `privacy=${privacy}&week=2`; // <-- `week` is an incorrect query param
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${invalidQueryParams}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(422);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParamCheck = o => o.param === 'privacy';
+            expect(resHeaders.data.some(incorrectParamCheck)).to.be.true;
+            const incorrectMsgCheck = o => o.msg === 'Invalid query params!';
+            expect(resHeaders.data.some(incorrectMsgCheck)).to.be.true;
+        });
+
+        it("Scenario 6: Get a student's organized activities is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(`${baseRoute}/${existingStudent.erp}/${subRoute}`);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
+    context("GET /students/:erp/attended-activities", () => {
+        const subRoute = 'attended-activities';
+
+        it("Scenario 1: Get a student's attended activities request successful", async() => {
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const attendeeCheck = activity => activity.student_erp === existingStudent.erp;
+            expect(resBody.every(attendeeCheck)).to.be.true; // should match initially sent id
+        });
+
+        it("Scenario 2: Get a student's attended activities request successful (using query params)", async() => {
+            // act
+            const involvement_type = 'going';
+            const query = `involvement_type=${involvement_type}`;
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${query}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const attendeeCheck = activity => activity.student_erp === existingStudent.erp;
+            expect(resBody.every(attendeeCheck)).to.be.true; // should match initially sent id
+            const queryCheck = activity => activity.involvement_type === involvement_type;
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+        });
+
+        it("Scenario 3: Get a student's attended activities request is unsuccessful due to unknown erp", async() => {
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}/${unregisteredERP}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No interacted activities found');
+        });
+
+        it("Scenario 4: Get a student's attended activities request is unsuccessful due to no attended activities", async() => {
+            // arrange
+            decache('../../src/server');
+            const StudentModel = require('../../src/models/student.model');
+            const modelStub = sinon.stub(StudentModel, 'findAllAttendedActivitiesByStudent').callsFake(() => []); // return empty attended activities list
+            const app = require('../../src/server').setup();
+
+            // act
+            const res = await request(app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No interacted activities found');
+            modelStub.restore();
+        });
+
+        it("Scenario 5: Get a student's attended activities request is incorrect", async() => {
+            // act
+            const involvement_type = 'not going'; // <-- invalid involvement type value
+            const invalidQueryParams = `involvement_type=${involvement_type}&week=2`; // <-- `week` is an incorrect query param
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${invalidQueryParams}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(422);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParamCheck = o => o.param === 'involvement_type';
+            expect(resHeaders.data.some(incorrectParamCheck)).to.be.true;
+            const incorrectMsgCheck = o => o.msg === 'Invalid query params!';
+            expect(resHeaders.data.some(incorrectMsgCheck)).to.be.true;
+        });
+
+        it("Scenario 6: Get a student's attended activities is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(`${baseRoute}/${existingStudent.erp}/${subRoute}`);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
+    context("GET /students/:erp/saved-activities", () => {
+        const subRoute = 'saved-activities';
+
+        it("Scenario 1: Get a student's saved activities request successful", async() => {
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const studentERPCheck = activity => activity.student_erp === existingStudent.erp;
+            expect(resBody.every(studentERPCheck)).to.be.true; // should match initially sent erp
+        });
+
+        it("Scenario 2: Get a student's saved activities request successful (using query params)", async() => {
+            // act
+            const frequency = 'daily';
+            const query = `frequency=${frequency}`;
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${query}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const queryCheck = activity => activity.frequency === frequency;
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+        });
+
+        it("Scenario 3: Get a student's saved activities request is unsuccessful due to unknown erp", async() => {
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}/${unregisteredERP}/${subRoute}`)
+                .auth(adminToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No saved activities found');
+        });
+
+        it("Scenario 4: Get a student's saved activities request is unsuccessful due to no saved activities", async() => {
+            // arrange
+            decache('../../src/server');
+            const StudentModel = require('../../src/models/student.model');
+            const modelStub = sinon.stub(StudentModel, 'findAllSavedActivitiesByStudent').callsFake(() => []); // return empty saved activities list
+            const app = require('../../src/server').setup();
+
+            // act
+            const res = await request(app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('No saved activities found');
+            modelStub.restore();
+        });
+
+        it("Scenario 5: Get a student's saved activities request is incorrect", async() => {
+            // act
+            const privacy = 'all'; // <-- invalid privacy value
+            const invalidQueryParams = `privacy=${privacy}&week=2`; // <-- `week` is an incorrect query param
+            let res = await request(this.app)
+                .get(`${baseRoute}/${existingStudent.erp}/${subRoute}?${invalidQueryParams}`)
+                .auth(userToken, { type: 'bearer' });
+
+            // assert
+            expect(res.status).to.be.equal(422);
+            const resHeaders = res.body.headers;
+            expect(resHeaders.error).to.be.equal(1);
+            expect(resHeaders.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParamCheck = o => o.param === 'privacy';
+            expect(resHeaders.data.some(incorrectParamCheck)).to.be.true;
+            const incorrectMsgCheck = o => o.msg === 'Invalid query params!';
+            expect(resHeaders.data.some(incorrectMsgCheck)).to.be.true;
+        });
+
+        it("Scenario 6: Get a student's saved activities request is forbidden (Unowned Student ERP)", async() => {
+            const res = await request(this.app)
+                .get(`${baseRoute}/${adminERP}/${subRoute}`) // token erp != adminERP
+                .auth(userToken, { type: 'bearer' }); // <-- user can't view others saved activities
+            
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
+
+        it("Scenario 7: Get a student's saved activities is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(`${baseRoute}/${existingStudent.erp}/${subRoute}`);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
     context("PATCH /students/:erp", () => {
         const newStudentLastName = 'Test';
 
@@ -293,7 +604,7 @@ describe("Students API", () => {
         });
     });
 
-    context("DELETE /students", () => {
+    context("DELETE /students/:erp", () => {
         const { email, erp, ...student } = existingStudent;
         student.email = newEmail;
         student.erp = newERP;

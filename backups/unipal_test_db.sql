@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2021 at 01:00 AM
+-- Generation Time: Sep 26, 2021 at 05:25 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -372,6 +372,14 @@ CREATE TABLE `saved_activities` (
   `saved_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `saved_activities`
+--
+
+INSERT INTO `saved_activities` (`student_erp`, `activity_id`, `saved_at`) VALUES
+('17855', 1, '2021-09-17 15:53:40'),
+('17855', 3, '2021-09-17 15:53:40');
+
 -- --------------------------------------------------------
 
 --
@@ -411,7 +419,7 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$URN8rXGU8cmkMkBDKyWw7eVhRp414QqcFji875R1tGliF2eYj/MeK', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$ae56kqYKrC.0WFsB5oTKxOL4l9hVB5tLCAEYfE5AdF8iVncG7OEQe', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 -- --------------------------------------------------------
 
@@ -784,31 +792,31 @@ ALTER TABLE `tsr_members`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `activity_statuses`
 --
 ALTER TABLE `activity_statuses`
-  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `activity_types`
 --
 ALTER TABLE `activity_types`
-  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `campuses`
 --
 ALTER TABLE `campuses`
-  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `campus_spots`
 --
 ALTER TABLE `campus_spots`
-  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `classrooms`
@@ -820,13 +828,13 @@ ALTER TABLE `classrooms`
 -- AUTO_INCREMENT for table `hobbies`
 --
 ALTER TABLE `hobbies`
-  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
-  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -838,7 +846,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `reaction_types`
@@ -850,7 +858,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `teachers`

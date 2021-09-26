@@ -316,7 +316,7 @@ describe("Hobbies API", () => {
         });
     });
 
-    context("DELETE /hobbies", () => {
+    context("DELETE /hobbies/:id", () => {
         const hobby = 'cycling';
         
         it("Scenario 1: Delete a hobby request is successful", async() => {

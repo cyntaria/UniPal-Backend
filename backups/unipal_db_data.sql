@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 20, 2021 at 12:41 PM
+-- Generation Time: Sep 26, 2021 at 04:51 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -107,6 +107,14 @@ INSERT INTO `interests` (`interest_id`, `interest`) VALUES
 INSERT INTO `programs` (`program_id`, `program`) VALUES
 (1, 'BSCS'),
 (2, 'BSACF');
+
+--
+-- Dumping data for table `saved_activities`
+--
+
+INSERT INTO `saved_activities` (`student_erp`, `activity_id`, `saved_at`) VALUES
+('17855', 1, '2021-09-17 15:53:40'),
+('17855', 3, '2021-09-17 15:53:40');
 
 --
 -- Dumping data for table `students`

@@ -316,7 +316,7 @@ describe("Interests API", () => {
         });
     });
 
-    context("DELETE /interests", () => {
+    context("DELETE /interests/:id", () => {
         const interest = 'gaming';
         
         it("Scenario 1: Delete a interest request is successful", async() => {

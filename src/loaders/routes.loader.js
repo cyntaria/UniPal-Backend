@@ -11,12 +11,14 @@ const activityTypeRouter = require('../routes/activityType.routes');
 const campusSpotRouter = require('../routes/campusSpot.routes');
 const activityRouter = require('../routes/activity.routes');
 const activityAttendeeRouter = require('../routes/activityAttendee.routes');
+const savedActivityRouter = require('../routes/savedActivity.routes');
 const healthCheckRouter = require('../routes/healthCheck.routes');
 
 class RoutesLoader {
     static initRoutes(app, version) {
         app.use(`/api/${version}/auth`, authRouter);
         app.use(`/api/${version}/students`, studentRouter);
+        app.use(`/api/${version}/students`, savedActivityRouter);
         app.use(`/api/${version}/hobbies`, hobbyRouter);
         app.use(`/api/${version}/interests`, interestRouter);
         app.use(`/api/${version}/campuses`, campusRouter);

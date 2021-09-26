@@ -315,7 +315,7 @@ describe("Activity Types API", () => {
         });
     });
 
-    context("DELETE /activity-types", () => {
+    context("DELETE /activity-types/:id", () => {
         const activity_type = 'Photography';
         
         it("Scenario 1: Delete a activity type request is successful", async() => {

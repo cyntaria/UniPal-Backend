@@ -54,12 +54,12 @@ describe("Activity Attendees API", () => {
                 .auth(userToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
-            const studentERPs = res.body.body.map(o => (o.student_erp));
-            expect(studentERPs).to.include(student_erp);
+            const checkStudentERP = activity => activity.student_erp === data.student_erp;
+            expect(res.body.body.some(checkStudentERP)).to.be.true;
 
             // cleanup
             res = await request(app)
-                .delete(`${baseRoute}/${activity_id}/${subRoute}/${student_erp}`)
+                .delete(`${baseRoute}/${activity_id}/${subRoute}/${data.student_erp}`)
                 .auth(adminToken, { type: 'bearer' });
             expect(res.status).to.be.equal(200);
         });
@@ -136,7 +136,7 @@ describe("Activity Attendees API", () => {
         });
     });
 
-    context("PATCH /activities/:id", () => {
+    context("PATCH /activities/:id/attendees/:student_erp", () => {
         const involvement_type = 'will_try';
         const activity_id = existingActivityAttendee.activity_id;
         const student_erp = existingActivityAttendee.student_erp;
@@ -304,7 +304,7 @@ describe("Activity Attendees API", () => {
         });
     });
 
-    context("DELETE /activities", () => {
+    context("DELETE /activities/:id/attendees/:student_erp", () => {
         const involvement_type = 'will_try';
         const activity_id = activityIdWithoutAttendees;
         const existingActivityId = existingActivityAttendee.activity_id;

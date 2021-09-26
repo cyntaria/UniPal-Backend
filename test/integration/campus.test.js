@@ -321,7 +321,7 @@ describe("Campuses API", () => {
         });
     });
 
-    context("DELETE /campuses", () => {
+    context("DELETE /campuses/:id", () => {
         const campus = 'SUKKUR';
         const location_url = 'https://maps.app.goo.gl/LvH61VeZZVfyggHw6';
         

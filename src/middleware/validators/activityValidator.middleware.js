@@ -317,7 +317,7 @@ exports.getActivitiesQuerySchema = [
             const queryParams = Object.keys(value);
             const allowParams = ['location', 'privacy', 'frequency',
                 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
-                'month_number', 'group_size', 'happens_at', 'additional_directions',
+                'month_number', 'group_size', 'happens_at', 'organizer_erp',
                 'activity_type_id', 'activity_status_id', 'campus_spot_id'];
             return queryParams.every(param => allowParams.includes(param));
         })
