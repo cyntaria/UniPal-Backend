@@ -56,6 +56,7 @@ describe("Authentication API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody.token).to.exist;
+            expect(resBody.role).to.be.equal('api_user');
             delete studentBody.password; // omit token and password
             const studentFields = Object.keys(studentBody);
             const studentFieldsCheck = field => resBody[field] === studentBody[field]; // deep compare two objects

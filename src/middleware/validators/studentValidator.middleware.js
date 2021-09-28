@@ -232,7 +232,7 @@ exports.updateStudentSchema = [
             const updates = Object.keys(value);
             const allowUpdates = ['first_name', 'last_name', 'gender', 'contact', 'email', 'birthday',
                 'profile_picture_url', 'graduation_year', 'uni_email', 'hobby_1', 'hobby_2', 'hobby_3',
-                'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_user_status',
+                'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_status',
                 'favourite_campus_hangout_spot', 'favourite_campus_activity', 'is_active'];
             return updates.every(update => allowUpdates.includes(update));
         })
