@@ -1,8 +1,15 @@
 const AuthRepository = require('../repositories/auth.repository');
+const { Roles } = require('../utils/enums/roles.utils');
 
 class AuthController {
 
     register = async(req, res, next) => {
+        const response = await AuthRepository.register(req.body);
+        res.status(201).send(response);
+    };
+
+    registerAdmin = async(req, res, next) => {
+        req.body.role = Roles.Admin;
         const response = await AuthRepository.register(req.body);
         res.status(201).send(response);
     };

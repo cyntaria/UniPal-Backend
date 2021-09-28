@@ -35,7 +35,7 @@ describe("Students API", () => {
         role: "api_user"
     };
     const newERP = '17999';
-    const newEmail = 'test@gmail.com';
+    const newEmail = 'test@iba.khi.edu.pk';
     const unregisteredERP = 19999;
     const adminERP = '15030';
     const userToken = jwt.sign({erp: existingStudent.erp}, Config.SECRET_JWT); // non expiry token
@@ -605,14 +605,25 @@ describe("Students API", () => {
     });
 
     context("DELETE /students/:erp", () => {
-        const { email, erp, ...student } = existingStudent;
-        student.email = newEmail;
-        student.erp = newERP;
-        student.password = '123';
-        const registerRoute = `/api/${Config.API_VERSION}/auth/register`;
 
         it("Scenario 1: Delete a student request is successful", async() => {
             // prepare
+            const student = {
+                erp: newERP,
+                password: '123',
+                uni_email: newEmail,
+                first_name: existingStudent.first_name,
+                last_name: existingStudent.last_name,
+                gender: existingStudent.gender,
+                contact: existingStudent.contact,
+                birthday: existingStudent.birthday,
+                profile_picture_url: existingStudent.profile_picture_url,
+                graduation_year: existingStudent.graduation_year,
+                campus_id: existingStudent.campus_id,
+                program_id: existingStudent.program_id,
+                is_active: existingStudent.is_active
+            };
+            const registerRoute = `/api/${Config.API_VERSION}/auth/register`;
             const app = this.app;
 
             // create dummy

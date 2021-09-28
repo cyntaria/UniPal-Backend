@@ -11,11 +11,11 @@ describe("Authentication API", () => {
     const API = `/api/${Config.API_VERSION}`;
     const baseRoute = API + "/auth";
     const existingERP = '17855';
-    const existingEmail = 'arafaysaleem@gmail.com';
+    const existingEmail = 'a.rafay.17855@iba.khi.edu.pk';
     const newERP = '17999';
     const adminERP = '15030';
     const unregisteredERP = '19999';
-    const newEmail = 'test@gmail.com';
+    const newEmail = 'test@iba.khi.edu.pk';
 
     beforeEach(() => {
         this.app = require('../../src/server').setup();
@@ -31,32 +31,21 @@ describe("Authentication API", () => {
                 last_name: "Saleem",
                 gender: "male",
                 contact: "+923009999999",
-                email: newEmail,
                 birthday: "1999-09-18",
                 password: "123",
                 profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
                 graduation_year: 2022,
-                uni_email: "a.rafay.17855@iba.khi.edu.pk",
-                hobby_1: 1,
-                hobby_2: 2,
-                hobby_3: 3,
-                interest_1: 1,
-                interest_2: 2,
-                interest_3: 3,
+                uni_email: newEmail,
                 campus_id: 1,
                 program_id: 1,
-                favourite_campus_hangout_spot: "CED",
-                favourite_campus_activity: "Lifting",
-                current_status: 1,
-                is_active: 1,
-                role: "api_user"
+                is_active: 1
             };
         });
 
         it("Scenario 1: Register request is successful", async() => {
             // arrange
             studentBody.erp = newERP;
-            studentBody.email = newEmail;
+            studentBody.uni_email = newEmail;
             const app = this.app;
 
             // act
@@ -67,9 +56,11 @@ describe("Authentication API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody.token).to.exist;
-            delete resBody.token;
+            expect(resBody.role).to.be.equal('api_user');
             delete studentBody.password; // omit token and password
-            expect(resBody).to.be.eql(studentBody); // deep compare two objects using 'eql'
+            const studentFields = Object.keys(studentBody);
+            const studentFieldsCheck = field => resBody[field] === studentBody[field]; // deep compare two objects
+            expect(studentFields.every(studentFieldsCheck)).to.be.true;
 
             // cleanup
             const deleteRoute = `/api/${Config.API_VERSION}/students/${studentBody.erp}`;
@@ -83,7 +74,7 @@ describe("Authentication API", () => {
         it("Scenario 2: Register request is unsuccessful due to duplicate student", async() => {
             // arrange
             studentBody.erp = existingERP;
-            studentBody.email = existingEmail;
+            studentBody.uni_email = existingEmail;
 
             // act
             const res = await request(this.app).post(`${baseRoute}/register`).send(studentBody);
@@ -110,6 +101,86 @@ describe("Authentication API", () => {
         });
     });
 
+    context("POST /auth/register-admin", () => {
+        let adminBody;
+
+        beforeEach(() => {
+            adminBody = {
+                erp: newERP,
+                first_name: "Abdur Rafay",
+                last_name: "Saleem",
+                gender: "male",
+                contact: "+923009999999",
+                birthday: "1999-09-18",
+                password: "123",
+                profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
+                graduation_year: 2022,
+                uni_email: newEmail,
+                campus_id: 1,
+                program_id: 1,
+                is_active: 1
+            };
+        });
+
+        it("Scenario 1: Register request is successful", async() => {
+            // arrange
+            adminBody.erp = newERP;
+            adminBody.uni_email = newEmail;
+            const app = this.app;
+
+            // act
+            let res = await request(app).post(`${baseRoute}/register-admin`).send(adminBody);
+    
+            // assert
+            expect(res.status).to.be.equal(201);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody.token).to.exist;
+            expect(resBody.role).to.be.equal('admin');
+            delete adminBody.password; // omit token, role and password
+            const adminFields = Object.keys(adminBody);
+            const adminFieldsCheck = field => resBody[field] === adminBody[field]; // deep compare two objects
+            expect(adminFields.every(adminFieldsCheck)).to.be.true;
+
+            // cleanup
+            const deleteRoute = `/api/${Config.API_VERSION}/students/${adminBody.erp}`;
+            const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
+            res = await request(app)
+                .delete(deleteRoute)
+                .auth(adminToken, { type: 'bearer' });
+            expect(res.status).to.be.equal(200);
+        });
+
+        it("Scenario 2: Register request is unsuccessful due to duplicate student", async() => {
+            // arrange
+            adminBody.erp = existingERP;
+            adminBody.uni_email = existingEmail;
+
+            // act
+            const res = await request(this.app).post(`${baseRoute}/register-admin`).send(adminBody);
+    
+            // assert
+            expect(res.status).to.be.equal(409);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('DuplicateEntryException');
+        });
+
+        it("Scenario 3: Register request is incorrect", async() => {
+            // arrange
+            adminBody.erp = 'abdfe';
+
+            // act
+            const res = await request(this.app).post(`${baseRoute}/register-admin`).send(adminBody);
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('erp');
+        });
+    });
+
     context("POST /auth/login", () => {
         it("Scenario 1: Login request is successful", async() => {
             // arrange
@@ -119,11 +190,11 @@ describe("Authentication API", () => {
                 last_name: "Saleem",
                 gender: "male",
                 contact: "+923009999999",
-                email: existingEmail,
+                email: 'arafaysaleem@gmail.com',
                 birthday: "1999-09-18",
                 profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
                 graduation_year: 2022,
-                uni_email: "a.rafay.17855@iba.khi.edu.pk",
+                uni_email: existingEmail,
                 hobby_1: 1,
                 hobby_2: 2,
                 hobby_3: 3,
