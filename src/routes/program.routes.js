@@ -9,7 +9,6 @@ const programController = require('../controllers/program.controller');
 const { createProgramSchema, updateProgramSchema } = require('../middleware/validators/programValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(programController.getAllPrograms)
 ); // localhost:3000/api/API_VERSION/programs
 

@@ -28,8 +28,7 @@ describe("Programs API", () => {
         it("Scenario 1: Get all programs request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(baseRoute)
-                .auth(userToken, { type: 'bearer' });
+                .get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -48,8 +47,7 @@ describe("Programs API", () => {
 
             // act
             const res = await request(app)
-                .get(baseRoute)
-                .auth(userToken, { type: 'bearer' });
+                .get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(404);
@@ -57,17 +55,6 @@ describe("Programs API", () => {
             expect(res.body.headers.code).to.be.equal('NotFoundException');
             expect(res.body.headers.message).to.be.equal('Programs not found');
             modelStub.restore();
-        });
-
-        it("Scenario 3: Get all programs request is unauthorized", async() => {
-            // act
-            let res = await request(this.app).get(baseRoute);
-    
-            // assert
-            expect(res.status).to.be.equal(401);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('TokenMissingException');
-            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
         });
     });
 
