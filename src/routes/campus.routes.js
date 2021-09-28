@@ -9,7 +9,6 @@ const campusController = require('../controllers/campus.controller');
 const { createCampusSchema, updateCampusSchema } = require('../middleware/validators/campusValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(campusController.getAllCampuses)
 ); // localhost:3000/api/API_VERSION/campuses
 
