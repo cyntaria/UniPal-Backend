@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2021 at 05:25 PM
+-- Generation Time: Sep 28, 2021 at 08:23 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -392,23 +392,23 @@ CREATE TABLE `students` (
   `last_name` varchar(45) NOT NULL,
   `gender` enum('male','female') NOT NULL,
   `contact` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
   `birthday` date NOT NULL,
   `password` text NOT NULL,
   `profile_picture_url` text NOT NULL,
   `graduation_year` year(4) NOT NULL,
   `uni_email` varchar(45) NOT NULL,
-  `hobby_1` int(10) UNSIGNED NOT NULL,
-  `hobby_2` int(10) UNSIGNED NOT NULL,
-  `hobby_3` int(10) UNSIGNED NOT NULL,
-  `interest_1` int(10) UNSIGNED NOT NULL,
-  `interest_2` int(10) UNSIGNED NOT NULL,
-  `interest_3` int(10) UNSIGNED NOT NULL,
+  `hobby_1` int(10) UNSIGNED DEFAULT NULL,
+  `hobby_2` int(10) UNSIGNED DEFAULT NULL,
+  `hobby_3` int(10) UNSIGNED DEFAULT NULL,
+  `interest_1` int(10) UNSIGNED DEFAULT NULL,
+  `interest_2` int(10) UNSIGNED DEFAULT NULL,
+  `interest_3` int(10) UNSIGNED DEFAULT NULL,
   `program_id` int(10) UNSIGNED NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL,
-  `favourite_campus_hangout_spot` varchar(45) NOT NULL,
-  `favourite_campus_activity` varchar(45) NOT NULL,
-  `current_status` int(10) UNSIGNED NOT NULL,
+  `favourite_campus_hangout_spot` varchar(45) DEFAULT NULL,
+  `favourite_campus_activity` varchar(45) DEFAULT NULL,
+  `current_status` int(10) UNSIGNED DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `role` enum('admin','api_user','moderator') NOT NULL DEFAULT 'api_user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -419,7 +419,7 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$ae56kqYKrC.0WFsB5oTKxOL4l9hVB5tLCAEYfE5AdF8iVncG7OEQe', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$rzP5uXVlVKUtGw/GGnEr9exWch9Az4ZcqMYuf3bdRLehWZ3u88.xK', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 -- --------------------------------------------------------
 
@@ -706,7 +706,7 @@ ALTER TABLE `saved_activities`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`erp`),
-  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `uni_email` (`uni_email`),
   ADD KEY `fk_students_campus_id_idx` (`campus_id`),
   ADD KEY `fk_students_hobby_id_1_idx` (`hobby_1`),
   ADD KEY `fk_students_hobby_id_2_idx` (`hobby_2`),
@@ -792,31 +792,31 @@ ALTER TABLE `tsr_members`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `activity_statuses`
 --
 ALTER TABLE `activity_statuses`
-  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `activity_types`
 --
 ALTER TABLE `activity_types`
-  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `campuses`
 --
 ALTER TABLE `campuses`
-  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `campus_spots`
 --
 ALTER TABLE `campus_spots`
-  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `classrooms`
@@ -828,13 +828,13 @@ ALTER TABLE `classrooms`
 -- AUTO_INCREMENT for table `hobbies`
 --
 ALTER TABLE `hobbies`
-  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `hobby_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
-  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -846,7 +846,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `reaction_types`
@@ -858,7 +858,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `teachers`

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2021 at 04:51 PM
+-- Generation Time: Sep 28, 2021 at 08:22 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -297,23 +297,23 @@ CREATE TABLE `students` (
   `last_name` varchar(45) NOT NULL,
   `gender` enum('male','female') NOT NULL,
   `contact` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
   `birthday` date NOT NULL,
   `password` text NOT NULL,
   `profile_picture_url` text NOT NULL,
   `graduation_year` year(4) NOT NULL,
   `uni_email` varchar(45) NOT NULL,
-  `hobby_1` int(10) UNSIGNED NOT NULL,
-  `hobby_2` int(10) UNSIGNED NOT NULL,
-  `hobby_3` int(10) UNSIGNED NOT NULL,
-  `interest_1` int(10) UNSIGNED NOT NULL,
-  `interest_2` int(10) UNSIGNED NOT NULL,
-  `interest_3` int(10) UNSIGNED NOT NULL,
+  `hobby_1` int(10) UNSIGNED DEFAULT NULL,
+  `hobby_2` int(10) UNSIGNED DEFAULT NULL,
+  `hobby_3` int(10) UNSIGNED DEFAULT NULL,
+  `interest_1` int(10) UNSIGNED DEFAULT NULL,
+  `interest_2` int(10) UNSIGNED DEFAULT NULL,
+  `interest_3` int(10) UNSIGNED DEFAULT NULL,
   `program_id` int(10) UNSIGNED NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL,
-  `favourite_campus_hangout_spot` varchar(45) NOT NULL,
-  `favourite_campus_activity` varchar(45) NOT NULL,
-  `current_status` int(10) UNSIGNED NOT NULL,
+  `favourite_campus_hangout_spot` varchar(45) DEFAULT NULL,
+  `favourite_campus_activity` varchar(45) DEFAULT NULL,
+  `current_status` int(10) UNSIGNED DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `role` enum('admin','api_user','moderator') NOT NULL DEFAULT 'api_user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -595,7 +595,7 @@ ALTER TABLE `saved_activities`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`erp`),
-  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `uni_email` (`uni_email`),
   ADD KEY `fk_students_campus_id_idx` (`campus_id`),
   ADD KEY `fk_students_hobby_id_1_idx` (`hobby_1`),
   ADD KEY `fk_students_hobby_id_2_idx` (`hobby_2`),
