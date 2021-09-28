@@ -20,6 +20,12 @@ router.post('/register',
     awaitHandlerFactory(authController.register)
 ); // localhost:3000/api/API_VERSION/auth/register
 
+router.post('/register-admin',
+    createStudentSchema,
+    checkValidation,
+    awaitHandlerFactory(authController.registerAdmin)
+); // localhost:3000/api/API_VERSION/auth/register-admin
+
 router.post('/login',
     validateLogin,
     checkValidation,

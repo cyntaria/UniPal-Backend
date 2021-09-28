@@ -42,18 +42,6 @@ exports.createStudentSchema = [
         .withMessage('Contact is required')
         .isMobilePhone('en-PK', {strictMode: true})
         .withMessage('Must be a valid Pakistan mobile number along with country code'),
-    body('email')
-        .trim()
-        .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .custom(async(email) => {
-            const {valid} = await EmailValidator.validate(email);
-            return valid;
-        })
-        .withMessage('Email unrecognized')
-        .normalizeEmail(),
     body('birthday')
         .trim()
         .exists()
@@ -90,42 +78,6 @@ exports.createStudentSchema = [
         })
         .withMessage('Email unrecognized')
         .normalizeEmail(),
-    body('hobby_1')
-        .trim()
-        .exists()
-        .withMessage('Hobby 1 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid HobbyID found'),
-    body('hobby_2')
-        .trim()
-        .exists()
-        .withMessage('Hobby 2 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid HobbyID found'),
-    body('hobby_3')
-        .trim()
-        .exists()
-        .withMessage('Hobby 3 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid HobbyID found'),
-    body('interest_1')
-        .trim()
-        .exists()
-        .withMessage('Interest 1 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid InterestID found'),
-    body('interest_2')
-        .trim()
-        .exists()
-        .withMessage('Interest 2 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid InterestID found'),
-    body('interest_3')
-        .trim()
-        .exists()
-        .withMessage('Interest 3 id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid InterestID found'),
     body('campus_id')
         .trim()
         .exists()
@@ -138,38 +90,11 @@ exports.createStudentSchema = [
         .withMessage('Program id is required for the student')
         .isInt({ min: 1 })
         .withMessage('Invalid ProgramID found'),
-    body('favourite_campus_hangout_spot')
-        .trim()
-        .exists()
-        .withMessage('Favourite Campus Hangout Spot is required')
-        .notEmpty()
-        .withMessage('Favourite Campus Hangout Spot must be filled')
-        .isLength({max: 45})
-        .withMessage('Should be less than 45 chars'),
-    body('favourite_campus_activity')
-        .trim()
-        .exists()
-        .withMessage('Favourite Campus Activity is required')
-        .notEmpty()
-        .withMessage('Favourite Campus Activity must be filled')
-        .isLength({max: 45})
-        .withMessage('Should be less than 45 chars'),
-    body('current_status')
-        .trim()
-        .exists()
-        .withMessage('Current Student Status id is required for the student')
-        .isInt({ min: 1 })
-        .withMessage('Invalid StudentStatusID found'),
     body('is_active')
         .optional()
         .trim()
         .isBoolean()
-        .withMessage('Invalid boolean. Should be either 0 or 1'),
-    body('role')
-        .optional()
-        .trim()
-        .isIn([...Object.values(Roles)])
-        .withMessage('Invalid Role type')
+        .withMessage('Invalid boolean. Should be either 0 or 1')
 ];
 
 exports.updateStudentSchema = [
@@ -298,11 +223,6 @@ exports.updateStudentSchema = [
         .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
-    body('role')
-        .optional()
-        .trim()
-        .isIn([...Object.values(Roles)])
-        .withMessage('Invalid Role type'),
     body()
         .custom(value => {
             return Object.keys(value).length !== 0;
@@ -313,7 +233,7 @@ exports.updateStudentSchema = [
             const allowUpdates = ['first_name', 'last_name', 'gender', 'contact', 'email', 'birthday',
                 'profile_picture_url', 'graduation_year', 'uni_email', 'hobby_1', 'hobby_2', 'hobby_3',
                 'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_user_status',
-                'favourite_campus_hangout_spot', 'favourite_campus_activity', 'is_active', 'role'];
+                'favourite_campus_hangout_spot', 'favourite_campus_activity', 'is_active'];
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
