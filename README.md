@@ -1,4 +1,4 @@
-# NodeJS Starter Template Using Express With MVC Architecture
+# UniPal REST API Using Express With MVC Architecture
 
 [![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/)
 
@@ -23,10 +23,10 @@ The documentation was generated using Postman and is divided into collections at
 
 ``` sh
 # Clone this repo to your local machine using
-git clone https://github.com/arafaysaleem/nodejs_starter_template
+git clone https://github.com/cyntaria/UniPal-Backend
 
 # Get into the directory
-cd ez_tickets_backend
+cd UniPal-Backend
 
 # Make it your own
 rm -rf .git && git init (For Linux/MacOS)
@@ -118,7 +118,7 @@ This example uses a number of open source projects to work properly:
 * [otp-generator]
 
 ### :bookmark_tabs: License
-NodeJS Starter Template © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.0 
+UniPal-Backend © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.0 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
