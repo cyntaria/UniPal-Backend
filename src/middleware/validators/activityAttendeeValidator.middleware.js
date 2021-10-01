@@ -38,7 +38,7 @@ exports.updateActivityAttendeeSchema = [
         .withMessage('Invalid updates!')
 ];
 
-exports.activityAttendeeOwnerCheck = async(req) => {
+exports.activityAttendeeOwnerCheck = (req) => {
     const student = req.currentStudent;
 
     if (req.method === RequestMethods.POST) {
