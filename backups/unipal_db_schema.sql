@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2021 at 08:22 PM
+-- Generation Time: Oct 01, 2021 at 04:38 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -158,9 +158,12 @@ CREATE TABLE `friends` (
 --
 
 CREATE TABLE `friend_requests` (
+  `friend_request_id` int(11) NOT NULL,
   `sender_erp` varchar(5) NOT NULL,
   `receiver_erp` varchar(5) NOT NULL,
-  `is_accepted` tinyint(1) NOT NULL
+  `is_accepted` tinyint(1) NOT NULL DEFAULT 0,
+  `sent_at` datetime NOT NULL,
+  `accepted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -514,7 +517,7 @@ ALTER TABLE `friends`
 -- Indexes for table `friend_requests`
 --
 ALTER TABLE `friend_requests`
-  ADD PRIMARY KEY (`sender_erp`,`receiver_erp`),
+  ADD PRIMARY KEY (`friend_request_id`),
   ADD KEY `fk_friend_requests_receiver_erp_idx` (`receiver_erp`),
   ADD KEY `fk_friend_requests_sender_erp_idx` (`sender_erp`),
   ADD KEY `REVERSE_PK` (`receiver_erp`,`sender_erp`);
@@ -712,6 +715,12 @@ ALTER TABLE `campus_spots`
 --
 ALTER TABLE `classrooms`
   MODIFY `classroom_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `friend_requests`
+--
+ALTER TABLE `friend_requests`
+  MODIFY `friend_request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `hobbies`
