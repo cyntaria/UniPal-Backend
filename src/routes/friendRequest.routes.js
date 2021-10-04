@@ -14,14 +14,16 @@ const {
 } = require('../middleware/validators/friendRequestValidator.middleware');
 
 router.get('/',
-    auth(),
+    auth(Roles.Admin, Roles.ApiUser),
     getFriendRequestQuerySchema,
     checkValidation,
+    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     awaitHandlerFactory(friendRequestController.getAllFriendRequests)
 ); // localhost:3000/api/API_VERSION/friend-requests
 
 router.get('/:id',
-    auth(),
+    auth(Roles.Admin, Roles.ApiUser),
+    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     awaitHandlerFactory(friendRequestController.getFriendRequestById)
 ); // localhost:3000/api/API_VERSION/friend-requests/1
 

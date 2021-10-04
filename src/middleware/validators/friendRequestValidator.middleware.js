@@ -1,6 +1,7 @@
 const { body, query } = require('express-validator');
 const { datetimeRegex, ERPRegex } = require('../../utils/common.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
+const { ConnectionStatus } = require('../../utils/enums/connectionStatus.utils');
 const FriendRequestModel = require('../../models/friendRequest.model');
 const { NotFoundException } = require('../../utils/exceptions/database.exception');
 
@@ -28,12 +29,12 @@ exports.createFriendRequestSchema = [
 ];
 
 exports.updateFriendRequestSchema = [
-    body('is_accepted')
+    body('connection_status')
         .trim()
         .exists()
-        .withMessage('Is accepted is required')
-        .isBoolean()
-        .withMessage('Invalid boolean. Should be either 0 or 1'),
+        .withMessage('Connection status is required')
+        .isIn([ConnectionStatus.Friends])
+        .withMessage('Invalid Connection Status'),
     body('accepted_at')
         .trim()
         .exists()
@@ -47,7 +48,7 @@ exports.updateFriendRequestSchema = [
         .withMessage('Please provide required fields to update')
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ["accepted_at", "is_accepted"];
+            const allowUpdates = ["accepted_at", "connection_status"];
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
@@ -84,6 +85,11 @@ exports.friendRequestOwnerCheck = async(req) => {
 
     if (req.method === RequestMethods.POST) {
         return req.body.sender_erp === student.erp;
+    }
+
+    if (req.params.id === undefined){
+        if (req.query.sender_erp) return req.query.sender_erp === student.erp;
+        else if (req.query.receiver_erp) return req.query.receiver_erp === student.erp;
     }
 
     const friend_request_id = req.params.id;

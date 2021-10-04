@@ -6,7 +6,8 @@ const { ConnectionStatus } = require('../utils/enums/connectionStatus.utils');
 class FriendRequestModel {
 
     findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.StudentConnections}
+        let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at, accepted_at
+        FROM ${tables.StudentConnections}
         WHERE connection_status = ?`;
 
         if (!Object.keys(filters).length) {
