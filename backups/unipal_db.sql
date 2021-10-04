@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 04, 2021 at 03:35 PM
+-- Generation Time: Oct 04, 2021 at 08:21 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -842,7 +842,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_connections`
 --
 ALTER TABLE `student_connections`
-  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `student_statuses`
