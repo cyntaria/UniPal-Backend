@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2021 at 04:38 PM
+-- Generation Time: Oct 04, 2021 at 03:35 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -137,33 +137,6 @@ CREATE TABLE `classrooms` (
   `classroom_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(10) NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `friends`
---
-
-CREATE TABLE `friends` (
-  `student_erp` varchar(5) NOT NULL,
-  `friend_erp` varchar(5) NOT NULL,
-  `starting_datetime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `friend_requests`
---
-
-CREATE TABLE `friend_requests` (
-  `friend_request_id` int(11) NOT NULL,
-  `sender_erp` varchar(5) NOT NULL,
-  `receiver_erp` varchar(5) NOT NULL,
-  `is_accepted` tinyint(1) NOT NULL DEFAULT 0,
-  `sent_at` datetime NOT NULL,
-  `accepted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -319,6 +292,23 @@ CREATE TABLE `students` (
   `current_status` int(10) UNSIGNED DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `role` enum('admin','api_user','moderator') NOT NULL DEFAULT 'api_user'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_connections`
+--
+
+CREATE TABLE `student_connections` (
+  `student_connection_id` int(11) NOT NULL,
+  `sender_erp` varchar(5) NOT NULL,
+  `receiver_erp` varchar(5) NOT NULL,
+  `connection_status` enum('friends','request_pending') NOT NULL DEFAULT 'request_pending',
+  `sent_at` datetime NOT NULL,
+  `accepted_at` datetime DEFAULT NULL,
+  `student_1_erp` varchar(5) NOT NULL,
+  `student_2_erp` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -505,24 +495,6 @@ ALTER TABLE `classrooms`
   ADD KEY `fk_class_rooms_campus_id_idx` (`campus_id`);
 
 --
--- Indexes for table `friends`
---
-ALTER TABLE `friends`
-  ADD PRIMARY KEY (`student_erp`,`friend_erp`),
-  ADD KEY `fk_friends_friend_erp_idx` (`friend_erp`),
-  ADD KEY `fk_friends_student_erp_idx` (`student_erp`),
-  ADD KEY `REVERSE_PK` (`friend_erp`,`student_erp`);
-
---
--- Indexes for table `friend_requests`
---
-ALTER TABLE `friend_requests`
-  ADD PRIMARY KEY (`friend_request_id`),
-  ADD KEY `fk_friend_requests_receiver_erp_idx` (`receiver_erp`),
-  ADD KEY `fk_friend_requests_sender_erp_idx` (`sender_erp`),
-  ADD KEY `REVERSE_PK` (`receiver_erp`,`sender_erp`);
-
---
 -- Indexes for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
@@ -608,6 +580,15 @@ ALTER TABLE `students`
   ADD KEY `fk_students_interest_id_3_idx` (`interest_3`),
   ADD KEY `fk_students_program_id_idx` (`program_id`),
   ADD KEY `fk_students_student_status_id_idx` (`current_status`) USING BTREE;
+
+--
+-- Indexes for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  ADD PRIMARY KEY (`student_connection_id`),
+  ADD UNIQUE KEY `unique_sender_receiver` (`student_1_erp`,`student_2_erp`) USING BTREE,
+  ADD KEY `search_by_sender_erp` (`sender_erp`,`receiver_erp`) USING BTREE,
+  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE;
 
 --
 -- Indexes for table `student_statuses`
@@ -717,12 +698,6 @@ ALTER TABLE `classrooms`
   MODIFY `classroom_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `friend_requests`
---
-ALTER TABLE `friend_requests`
-  MODIFY `friend_request_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `hobbies`
 --
 ALTER TABLE `hobbies`
@@ -751,6 +726,12 @@ ALTER TABLE `programs`
 --
 ALTER TABLE `reaction_types`
   MODIFY `reaction_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `student_statuses`
@@ -832,20 +813,6 @@ ALTER TABLE `classrooms`
   ADD CONSTRAINT `fk_class_rooms_campus_id` FOREIGN KEY (`campus_id`) REFERENCES `campuses` (`campus_id`);
 
 --
--- Constraints for table `friends`
---
-ALTER TABLE `friends`
-  ADD CONSTRAINT `fk_friends_friend_erp` FOREIGN KEY (`friend_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friends_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
-
---
--- Constraints for table `friend_requests`
---
-ALTER TABLE `friend_requests`
-  ADD CONSTRAINT `fk_friend_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
-
---
 -- Constraints for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
@@ -900,6 +867,13 @@ ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_interest_id_3` FOREIGN KEY (`interest_3`) REFERENCES `interests` (`interest_id`),
   ADD CONSTRAINT `fk_students_program_id` FOREIGN KEY (`program_id`) REFERENCES `programs` (`program_id`),
   ADD CONSTRAINT `fk_students_student_status_id` FOREIGN KEY (`current_status`) REFERENCES `student_statuses` (`student_status_id`);
+
+--
+-- Constraints for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  ADD CONSTRAINT `fk_friend_requests_receiver_erp_idx` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `teacher_reviews`
