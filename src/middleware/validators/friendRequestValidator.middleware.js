@@ -88,7 +88,7 @@ exports.friendRequestOwnerCheck = async(req) => {
 
     const friend_request_id = req.params.id;
 
-    const friendRequest = await FriendRequestModel.findOne({friend_request_id});
+    const friendRequest = await FriendRequestModel.findOne(friend_request_id);
     if (!friendRequest) {
         throw new NotFoundException('Friend request not found');
     }

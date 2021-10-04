@@ -19,8 +19,8 @@ class FriendRequestRepository {
         return successResponse(friendRequestList);
     };
 
-    findOne = async(filters) => {
-        const friendRequest = await FriendRequestModel.findOne(filters);
+    findOne = async(id) => {
+        const friendRequest = await FriendRequestModel.findOne(id);
         if (!friendRequest) {
             throw new NotFoundException('Friend request not found');
         }

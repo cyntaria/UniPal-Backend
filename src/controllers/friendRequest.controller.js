@@ -8,7 +8,7 @@ class FriendRequestController {
     };
 
     getFriendRequestById = async(req, res, next) => {
-        const response = await FriendRequestRepository.findOne({friend_request_id: req.params.id});
+        const response = await FriendRequestRepository.findOne(req.params.id);
         res.send(response);
     };
 

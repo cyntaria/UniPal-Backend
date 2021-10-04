@@ -1,29 +1,29 @@
 const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
+const { ConnectionStatus } = require('../utils/enums/connectionStatus.utils');
 
 class FriendRequestModel {
 
     findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.FriendRequests}`;
+        let sql = `SELECT * FROM ${tables.StudentConnections}
+        WHERE connection_status = ?`;
 
         if (!Object.keys(filters).length) {
-            return await DBService.query(sql);
+            return await DBService.query(sql, [ConnectionStatus.RequestPending]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
-        sql += ` WHERE ${filterSet}`;
+        sql += ` AND ${filterSet}`;
 
-        return await DBService.query(sql, [...filterValues]);
+        return await DBService.query(sql, [ConnectionStatus.RequestPending, ...filterValues]);
     }
 
-    findOne = async(filters) => {
-        const { filterSet, filterValues } = multipleFilterSet(filters);
+    findOne = async(id) => {
+        const sql = `SELECT * FROM ${tables.StudentConnections}
+        WHERE student_connection_id = ?`;
 
-        const sql = `SELECT * FROM ${tables.FriendRequests}
-        WHERE ${filterSet}`;
-
-        const result = await DBService.query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [id]);
 
         return result[0];
     }
@@ -32,11 +32,13 @@ class FriendRequestModel {
         const valueSet = { sender_erp, receiver_erp, sent_at };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const sql = `INSERT INTO ${tables.FriendRequests} SET ${columnSet}`;
+        const sql = `INSERT INTO ${tables.StudentConnections} SET ${columnSet},
+        student_1_erp = LEAST(?,?),
+        student_2_erp = GREATEST(?,?)`;
 
-        const result = await DBService.query(sql, [...values]);
+        const result = await DBService.query(sql, [...values, sender_erp, receiver_erp, sender_erp, receiver_erp]);
         const created_friend_request = !result ? 0 : {
-            friend_request_id: result.insertId,
+            student_connection_id: result.insertId,
             affected_rows: result.affectedRows
         };
 
@@ -46,7 +48,7 @@ class FriendRequestModel {
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
 
-        const sql = `UPDATE ${tables.FriendRequests} SET ${columnSet} WHERE friend_request_id = ?`;
+        const sql = `UPDATE ${tables.StudentConnections} SET ${columnSet} WHERE student_connection_id = ?`;
 
         const result = await DBService.query(sql, [...values, id]);
 
@@ -54,7 +56,7 @@ class FriendRequestModel {
     }
 
     delete = async(id) => {
-        const sql = `DELETE FROM ${tables.FriendRequests} WHERE friend_request_id = ?`;
+        const sql = `DELETE FROM ${tables.StudentConnections} WHERE student_connection_id = ?`;
 
         const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
