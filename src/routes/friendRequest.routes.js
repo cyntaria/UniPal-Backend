@@ -29,17 +29,17 @@ router.get('/:id',
 
 router.post('/',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     createFriendRequestSchema,
     checkValidation,
+    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     awaitHandlerFactory(friendRequestController.createFriendRequest)
 ); // localhost:3000/api/API_VERSION/friend-requests
 
 router.patch('/:id',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     updateFriendRequestSchema,
     checkValidation,
+    ownerAuth([Roles.Admin, Roles.ApiUser], friendRequestOwnerCheck),
     awaitHandlerFactory(friendRequestController.updateFriendRequest)
 ); // localhost:3000/api/API_VERSION/friend-requests/1
 
