@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 05:34 PM
+-- Generation Time: Oct 05, 2021 at 05:50 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -414,6 +414,13 @@ CREATE TABLE `student_connections` (
   `student_1_erp` varchar(5) NOT NULL,
   `student_2_erp` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `student_connections`
+--
+
+INSERT INTO `student_connections` (`student_connection_id`, `sender_erp`, `receiver_erp`, `connection_status`, `sent_at`, `accepted_at`, `student_1_erp`, `student_2_erp`) VALUES
+(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855');
 
 -- --------------------------------------------------------
 
@@ -843,7 +850,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_connections`
 --
 ALTER TABLE `student_connections`
-  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `student_statuses`

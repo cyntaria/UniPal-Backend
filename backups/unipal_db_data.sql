@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 05:34 PM
+-- Generation Time: Oct 05, 2021 at 05:51 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -124,6 +124,13 @@ INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
 ('17619', 'Test', 'User', 'male', '+923009999999', 'testuser3@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'test.user.17619@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user'),
 ('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$GOxUY8wR5qIE.fA.q9DdVuyLrdQYLHUFcmt1ibwNeXmIsJvgefwWu', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+
+--
+-- Dumping data for table `student_connections`
+--
+
+INSERT INTO `student_connections` (`student_connection_id`, `sender_erp`, `receiver_erp`, `connection_status`, `sent_at`, `accepted_at`, `student_1_erp`, `student_2_erp`) VALUES
+(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855');
 
 --
 -- Dumping data for table `student_statuses`
