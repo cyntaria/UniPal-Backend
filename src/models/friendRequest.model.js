@@ -46,7 +46,8 @@ class FriendRequestModel {
         return created_friend_request;
     }
 
-    update = async(columns, id) => {
+    update = async({ connection_status, accepted_at = null }, id) => {
+        const columns = { connection_status, accepted_at };
         const { columnSet, values } = multipleColumnSet(columns);
 
         const sql = `UPDATE ${tables.StudentConnections} SET ${columnSet} WHERE student_connection_id = ?`;

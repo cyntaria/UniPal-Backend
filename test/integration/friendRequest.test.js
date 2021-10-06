@@ -32,7 +32,7 @@ describe("Friend Requests API", () => {
         const receiver_erp = user2ERP;
         const sent_at = existingFriendRequest.sent_at;
 
-        it("Scenario 1: Create a friend request request is successful (Owner)", async() => {
+        it("Scenario 1: Create a friend request is successful (Owner)", async() => {
             // arrange
             const data = { sender_erp, receiver_erp, sent_at };
             const app = this.app;
@@ -72,7 +72,7 @@ describe("Friend Requests API", () => {
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Create a friend request request is unsuccessful due to already sent friend request", async() => {
+        it("Scenario 2: Create a friend request is unsuccessful due to already sent friend request", async() => {
             // arrange
             const data = {
                 sender_erp: existingFriendRequest.sender_erp,
@@ -91,7 +91,7 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.code).to.be.equal('DuplicateEntryException');
         });
 
-        it("Scenario 3: Create a friend request request is unsuccessful due to already received friend request", async() => {
+        it("Scenario 3: Create a friend request is unsuccessful due to already received friend request", async() => {
             // arrange
             const data = {
                 sender_erp: existingFriendRequest.receiver_erp,
@@ -112,7 +112,7 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.code).to.be.equal('DuplicateEntryException');
         });
 
-        it("Scenario 4: Create a friend request request is incorrect due to wrong key name in the body", async() => {
+        it("Scenario 4: Create a friend request is incorrect due to wrong key name in the body", async() => {
             // arrange
             const data = { // missing receiver_erp
                 sent_at: 'not going', // <-- not a valid sent_at
@@ -133,7 +133,7 @@ describe("Friend Requests API", () => {
             expect(incorrectParams).to.include.members(['receiver_erp', 'sent_at']);
         });
 
-        it("Scenario 5: Create a friend request request is incorrect due to friend request to oneself", async() => {
+        it("Scenario 5: Create a friend request is incorrect due to friend request to oneself", async() => {
             // arrange
             const data = {
                 sender_erp: sender_erp,
@@ -157,7 +157,7 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include('Sender and receiver ERP can\'t be the same');
         });
 
-        it("Scenario 6: Create a friend request request is forbidden due to unowned friend request", async() => {
+        it("Scenario 6: Create a friend request is forbidden due to unowned friend request", async() => {
             // arrange
             const data = { sender_erp: adminERP, receiver_erp, sent_at }; // adminERP instead of userERP
 
@@ -174,7 +174,7 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 7: Create a friend request request is unauthorized", async() => {
+        it("Scenario 7: Create a friend request is unauthorized", async() => {
             // arrange
             const data = { sender_erp, receiver_erp, sent_at };
 
@@ -191,181 +191,118 @@ describe("Friend Requests API", () => {
         });
     });
 
-    // context("PATCH /friend-requests/:sender_erp", () => {
-    //     const involvement_type = 'will_try';
-    //     const activity_id = existingFriendRequest.activity_id;
-    //     const sender_erp = existingFriendRequest.sender_erp;
+    context("PATCH /friend-requests/:id", () => {
+        const connection_status = 'friends';
+        const friendRequestId = existingFriendRequest.student_connection_id;
+        const accepted_at = '2021-10-07 17:30:40';
         
-    //     it("Scenario 1: Update a friend request request is successful (Owner)", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
-    //         const app = this.app;
+        it("Scenario 1: Update a friend request is successful (Owner)", async() => {
+            // arrange
+            const data = { connection_status, accepted_at };
+            const app = this.app;
 
-    //         // act
-    //         let res = await request(app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .auth(userToken, { type: 'bearer' }) // <-- userToken.erp == sender_erp
-    //             .send(data);
+            // act
+            let res = await request(app)
+                .patch(`${baseRoute}/${friendRequestId}`)
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingFriendRequest.receiver_erp
+                .send(data);
     
-    //         // assert
-    //         expect(res.status).to.be.equal(200);
-    //         expect(res.body.headers.error).to.be.equal(0);
-    //         expect(res.body.body.rows_matched).to.be.equal(1);
-    //         expect(res.body.body.rows_changed).to.be.equal(1);
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            expect(res.body.body.rows_matched).to.be.equal(1);
+            expect(res.body.body.rows_changed).to.be.equal(1);
             
-    //         // affirm
-    //         const query = `involvement_type=${involvement_type}`;
-    //         res = await request(app)
-    //             .get(`${baseRoute}/${activity_id}/${subRoute}?${query}`)
-    //             .auth(userToken, { type: 'bearer' });
+            // affirm
+            res = await request(app)
+                .get(`${baseRoute}/${friendRequestId}`)
+                .auth(adminToken, { type: 'bearer' });
             
-    //         expect(res.status).to.be.equal(200);
-    //         const studentERPs = res.body.body.map(o => (o.sender_erp));
-    //         expect(studentERPs).to.include(sender_erp);
+            expect(res.status).to.be.equal(200);
+            const studentConnection = {
+                ...existingFriendRequest,
+                student_1_erp: existingFriendRequest.receiver_erp, // 15030, bcz smaller
+                student_2_erp: existingFriendRequest.sender_erp // 17855, bcz greater
+            };
+            studentConnection.accepted_at = data.accepted_at;
+            studentConnection.connection_status = data.connection_status;
+            expect(res.body.body).to.be.eql(studentConnection);
             
-    //         // cleanup
-    //         data.involvement_type = existingFriendRequest.involvement_type;
-    //         res = await request(app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
-    //         expect(res.status).to.be.equal(200);
-    //     });
+            // cleanup
+            data.connection_status = existingFriendRequest.connection_status;
+            data.accepted_at = existingFriendRequest.accepted_at;
+            res = await request(app)
+                .patch(`${baseRoute}/${friendRequestId}`)
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingFriendRequest.receiver_erp
+                .send(data);
+            expect(res.status).to.be.equal(200);
+        });
 
-    //     it("Scenario 2: Update a friend request request is successful (Admin)", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
-    //         const app = this.app;
+        it("Scenario 2: Update a friend request is incorrect", async() => {
+            // arrange
+            const data = {
+                connection_status: 'ignored', // <-- not a valid connection_status
+                accepted_at, // can't specify accepted at unless connection_status === 'friends'
+                sender_erp: '12345' // <-- an invalid update parameter i.e. not allowed
+            };
 
-    //         // act
-    //         let res = await request(app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
+            // act
+            const res = await request(this.app)
+                .patch(`${baseRoute}/${friendRequestId}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
     
-    //         // assert
-    //         expect(res.status).to.be.equal(200);
-    //         expect(res.body.headers.error).to.be.equal(0);
-    //         expect(res.body.body.rows_matched).to.be.equal(1);
-    //         expect(res.body.body.rows_changed).to.be.equal(1);
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include.members(['connection_status', 'accepted_at']);
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include.members(['Invalid updates!']);
+        });
+
+        it("Scenario 3: Update a friend request is forbidden", async() => {
+            // arrange
+            const data = { connection_status, accepted_at };
+
+            // act
+            const res = await request(this.app)
+                .patch(`${baseRoute}/${friendRequestId}`)
+                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingFriendRequest.receiver_erp
+                .send(data);
             
-    //         // affirm
-    //         const query = `involvement_type=${involvement_type}`;
-    //         res = await request(app)
-    //             .get(`${baseRoute}/${activity_id}/${subRoute}?${query}`)
-    //             .auth(userToken, { type: 'bearer' });
-            
-    //         expect(res.status).to.be.equal(200);
-    //         const studentERPs = res.body.body.map(o => (o.sender_erp));
-    //         expect(studentERPs).to.include(sender_erp);
-            
-    //         // cleanup
-    //         data.involvement_type = existingFriendRequest.involvement_type;
-    //         res = await request(app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
-    //         expect(res.status).to.be.equal(200);
-    //     });
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
 
-    //     it("Scenario 3: Update a friend request request is unsuccessful due to unknown activity_id", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
+        it("Scenario 4: Update a friend request is unauthorized", async() => {
+            // arrange
+            const data = { connection_status, accepted_at };
 
-    //         // act
-    //         const res = await request(this.app)
-    //             .patch(`${baseRoute}/${unknownActivityId}/${subRoute}/${sender_erp}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
+            // act
+            const res = await request(this.app)
+                .patch(`${baseRoute}/${friendRequestId}`)
+                .send(data);
     
-    //         // assert
-    //         expect(res.status).to.be.equal(404);
-    //         expect(res.body.headers.error).to.be.equal(1);
-    //         expect(res.body.headers.code).to.be.equal('NotFoundException');
-    //         expect(res.body.headers.message).to.be.equal('Friend request not found');
-    //     });
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
 
-    //     it("Scenario 4: Update a friend request request is unsuccessful due to unknown sender_erp", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
-
-    //         // act
-    //         const res = await request(this.app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${unknownStudentERP}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
-    
-    //         // assert
-    //         expect(res.status).to.be.equal(404);
-    //         expect(res.body.headers.error).to.be.equal(1);
-    //         expect(res.body.headers.code).to.be.equal('NotFoundException');
-    //         expect(res.body.headers.message).to.be.equal('Friend request not found');
-    //     });
-
-    //     it("Scenario 5: Update a friend request request is incorrect", async() => {
-    //         // arrange
-    //         const data = {
-    //             involvement_type: 'not going', // <-- not a valid involvement_type
-    //             erp: '12345' // <-- an invalid update parameter i.e. not allowed
-    //         };
-
-    //         // act
-    //         const res = await request(this.app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .auth(adminToken, { type: 'bearer' })
-    //             .send(data);
-    
-    //         // assert
-    //         expect(res.status).to.be.equal(422);
-    //         expect(res.body.headers.error).to.be.equal(1);
-    //         expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
-    //         const incorrectParams = res.body.headers.data.map(o => (o.param));
-    //         expect(incorrectParams).to.include.members(['involvement_type']);
-    //         const incorrectMsg = res.body.headers.data.map(o => (o.msg));
-    //         expect(incorrectMsg).to.include.members(['Invalid updates!']);
-    //     });
-
-    //     it("Scenario 6: Update a friend request request is forbidden", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
-
-    //         // act
-    //         const res = await request(this.app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${adminERP}`)
-    //             .auth(userToken, { type: 'bearer' }) // <-- adminERP != userToken.erp, can be any other different erp as well
-    //             .send(data);
-            
-    //         // assert
-    //         expect(res.status).to.be.equal(403);
-    //         expect(res.body.headers.error).to.be.equal(1);
-    //         expect(res.body.headers.code).to.be.equal('ForbiddenException');
-    //         expect(res.body.headers.message).to.be.equal('User unauthorized for action');
-    //     });
-
-    //     it("Scenario 7: Update a friend request request is unauthorized", async() => {
-    //         // arrange
-    //         const data = { involvement_type };
-
-    //         // act
-    //         const res = await request(this.app)
-    //             .patch(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
-    //             .send(data);
-    
-    //         // assert
-    //         expect(res.status).to.be.equal(401);
-    //         expect(res.body.headers.error).to.be.equal(1);
-    //         expect(res.body.headers.code).to.be.equal('TokenMissingException');
-    //         expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
-    //     });
-    // });
-
-    // context("DELETE /friend-requests/:sender_erp", () => {
+    // context("DELETE /friend-requests/:id", () => {
     //     const involvement_type = 'will_try';
     //     const activity_id = activityIdWithoutAttendees;
     //     const existingActivityId = existingFriendRequest.activity_id;
     //     const sender_erp = userERP;
 
-    //     it("Scenario 1: Delete a friend request request is successful (Owner)", async() => {
+    //     it("Scenario 1: Delete a friend request is successful (Owner)", async() => {
     //         // prepare
     //         const data = { sender_erp, involvement_type };
     //         const app = this.app;
@@ -379,7 +316,7 @@ describe("Friend Requests API", () => {
 
     //         // act
     //         res = await request(app)
-    //             .delete(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
+    //             .delete(`${baseRoute}/${activity_id}`)
     //             .auth(userToken, { type: 'bearer' }); // <-- userToken.erp == sender_erp
 
     //         // assert
@@ -400,7 +337,7 @@ describe("Friend Requests API", () => {
     //         expect(res.body.headers.message).to.be.equal('Friend requests not found');
     //     });
 
-    //     it("Scenario 2: Delete a friend request request is successful (Admin)", async() => {
+    //     it("Scenario 2: Delete a friend request is successful (Admin)", async() => {
     //         // prepare
     //         const data = { sender_erp, involvement_type };
     //         const app = this.app;
@@ -414,7 +351,7 @@ describe("Friend Requests API", () => {
 
     //         // act
     //         res = await request(app)
-    //             .delete(`${baseRoute}/${activity_id}/${subRoute}/${sender_erp}`)
+    //             .delete(`${baseRoute}/${activity_id}`)
     //             .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp != sender_erp but still bypass ownerCheck
 
     //         // assert
@@ -435,10 +372,10 @@ describe("Friend Requests API", () => {
     //         expect(res.body.headers.message).to.be.equal('Friend requests not found');
     //     });
 
-    //     it("Scenario 3: Delete a friend request request is unsuccessful due to unknown activity_id", async() => {
+    //     it("Scenario 3: Delete a friend request is unsuccessful due to unknown activity_id", async() => {
     //         // act
     //         const res = await request(this.app)
-    //             .delete(`${baseRoute}/${unknownActivityId}/${subRoute}/${sender_erp}`)
+    //             .delete(`${baseRoute}/${unknownActivityId}`)
     //             .auth(adminToken, { type: 'bearer' });
     
     //         // assert
@@ -448,7 +385,7 @@ describe("Friend Requests API", () => {
     //         expect(res.body.headers.message).to.be.equal('Friend request not found');
     //     });
         
-    //     it("Scenario 4: Delete a friend request request is unsuccessful due to unknown sender_erp", async() => {
+    //     it("Scenario 4: Delete a friend request is unsuccessful due to unknown sender_erp", async() => {
     //         // act
     //         const res = await request(this.app)
     //             .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${unknownStudentERP}`)
@@ -461,10 +398,10 @@ describe("Friend Requests API", () => {
     //         expect(res.body.headers.message).to.be.equal('Friend request not found');
     //     });
 
-    //     it("Scenario 5: Delete a friend request request is forbidden", async() => {
+    //     it("Scenario 5: Delete a friend request is forbidden", async() => {
     //         // act
     //         const res = await request(this.app)
-    //             .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${adminERP}`)
+    //             .delete(`${baseRoute}/${existingActivityId}`)
     //             .auth(userToken, { type: 'bearer' }); // <-- adminERP != userToken.erp, can be any other different erp as well
             
     //         // assert
@@ -474,10 +411,10 @@ describe("Friend Requests API", () => {
     //         expect(res.body.headers.message).to.be.equal('User unauthorized for action');
     //     });
 
-    //     it("Scenario 6: Delete a friend request request is unauthorized", async() => {
+    //     it("Scenario 6: Delete a friend request is unauthorized", async() => {
     //         // act
     //         const res = await request(this.app)
-    //             .delete(`${baseRoute}/${existingActivityId}/${subRoute}/${sender_erp}`);
+    //             .delete(`${baseRoute}/${existingActivityId}`);
     
     //         // assert
     //         expect(res.status).to.be.equal(401);

@@ -33,14 +33,22 @@ exports.updateFriendRequestSchema = [
         .trim()
         .exists()
         .withMessage('Connection status is required')
-        .isIn([ConnectionStatus.Friends])
-        .withMessage('Invalid Connection Status'),
+        .isIn([...Object.values(ConnectionStatus)])
+        .withMessage('Invalid Connection Status')
+        .custom((connection_status, {req}) => {
+            if (connection_status === ConnectionStatus.Friends) {
+                return req.body.accepted_at !== undefined;
+            }
+            return true;
+        })
+        .withMessage('\'friends\' connection status requires \'accepted_at\' datetime'),
     body('accepted_at')
+        .optional({ nullable: true })
         .trim()
-        .exists()
-        .withMessage('Accepted datetime is required')
         .matches(datetimeRegex)
-        .withMessage('Accepted datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
+        .withMessage('Accepted datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
+        .custom((accepted_at, {req}) => req.body.connection_status === ConnectionStatus.Friends)
+        .withMessage('\'accepted_at\' datetime can only be set for \'friends\' connection status'),
     body()
         .custom(value => {
             return Object.keys(value).length !== 0;
