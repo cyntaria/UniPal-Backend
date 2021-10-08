@@ -27,6 +27,177 @@ describe("Friend Requests API", () => {
         this.app = require('../../src/server').setup();
     });
 
+    context("GET /friend-requests", () => {
+
+        it("Scenario 1: Get all friend requests is successful (Sent)", async() => {
+            // arrange
+            const sender_erp = userERP;
+            
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .auth(userToken, { type: 'bearer' }); // userToken.erp === sender_erp
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const queryCheck = friendRequest => friendRequest.sender_erp === sender_erp;
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+            expect(resBody[0]).to.include.keys(['sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
+        });
+
+        it("Scenario 2: Get all friend requests is successful (Receiver)", async() => {
+            // arrange
+            const receiver_erp = adminERP;
+            
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .auth(adminToken, { type: 'bearer' }); // adminToken.erp === sender_erp
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const queryCheck = friendRequest => friendRequest.receiver_erp === receiver_erp;
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+            expect(resBody[0]).to.include.keys(['sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
+        });
+
+        it("Scenario 3: Get all friend requests unsuccessful due to no (sent) friend requests", async() => {
+            // arrange
+            const sender_erp = user2ERP;
+            const fakeToken = jwt.sign({erp: sender_erp}, Config.SECRET_JWT);
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .auth(fakeToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Friend requests not found');
+        });
+
+        it("Scenario 4: Get all friend requests unsuccessful due to no (received) friend requests", async() => {
+            // arrange
+            const receiver_erp = user2ERP;
+            const fakeToken = jwt.sign({erp: receiver_erp}, Config.SECRET_JWT);
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .auth(fakeToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Friend requests not found');
+        });
+
+        it("Scenario 5: Get all friend requests is incorrect due to multiple query params", async() => {
+            // arrange
+            const sender_erp = userERP;
+            const receiver_erp = user2ERP;
+
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?sender_erp=${sender_erp}&receiver_erp=${receiver_erp}`) // <-- can't specify both sender_erp and receiver_erp
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('receiver_erp');
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include('Can\'t specify both sender and receiver erp');
+        });
+
+        it("Scenario 6: Get all friend requests is incorrect due to no query params", async() => {
+            // act
+            let res = await request(this.app)
+                .get(baseRoute) // <-- either specify sender_erp or receiver_erp
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include('Either sender or receiver erp is required');
+        });
+
+        it("Scenario 7: Get all friend requests is incorrect due to unknown query params", async() => {
+            // arrange
+            const sender_erp = '123'; // a valid erp is 5 digits
+
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?sender_erp=${sender_erp}&connection_status=friends`) // <-- 'connection_status' is invalid query param
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('sender_erp');
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include('Invalid query params!');
+        });
+
+        it("Scenario 8: Get request is forbidden due to querying other's sent friend requests", async() => {
+            // arrange
+            const sender_erp = userERP;
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp !== sender_erp
+            
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
+
+        it("Scenario 9: Get request is forbidden due to querying other's received friend requests", async() => {
+            // arrange
+            const receiver_erp = userERP;
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp !== receiver_erp
+            
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
+
+        it("Scenario 10: Get all friend requests is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(baseRoute);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
     context("POST /friend-requests", () => {
         const sender_erp = userERP;
         const receiver_erp = user2ERP;
