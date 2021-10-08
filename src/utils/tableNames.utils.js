@@ -11,5 +11,6 @@ exports.tables = {
     CampusSpots: 'campus_spots',
     Activities: 'activities',
     ActivityAttendees: 'activity_attendees',
-    SavedActivities: 'saved_activities'
+    SavedActivities: 'saved_activities',
+    StudentConnections: 'student_connections'
 };

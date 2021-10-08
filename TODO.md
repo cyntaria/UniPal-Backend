@@ -5,13 +5,20 @@
 
 ### Students API
 
-- add connection_status field, where connection status can be:
+- add friend_request field on GET student, where it can be:
 
-    - stranger
-    - friend
-    - friend_request_sent
-    - friend_request_received
+    - null (if stranger)
+    - {
+        student_connection_id: 1,
+        sender_erp: XXXXX,
+        receiver_erp: XXXXX,
+        sent_at: '',
+        accepted_at: '',
+        connection_status: 'friends',
+      }
 
-### Friend Requests API
-
-- make accepted_at nullable in the beginning
+    - we can then simply check the friend request on front end to ensure status
+        - if null -> display send request option
+        - if !null and is_accepted -> display unfriend option
+        - if !null && !is_accepted && sender_erp === erp -> display friend request sent
+        - if !null && !is_accepted && receiver_erp === erp -> display friend request received

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2021 at 08:23 PM
+-- Generation Time: Oct 05, 2021 at 05:53 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -196,30 +196,6 @@ CREATE TABLE `classrooms` (
   `classroom_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(10) NOT NULL,
   `campus_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `friends`
---
-
-CREATE TABLE `friends` (
-  `student_erp` varchar(5) NOT NULL,
-  `friend_erp` varchar(5) NOT NULL,
-  `starting_datetime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `friend_requests`
---
-
-CREATE TABLE `friend_requests` (
-  `sender_erp` varchar(5) NOT NULL,
-  `receiver_erp` varchar(5) NOT NULL,
-  `is_accepted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -419,7 +395,32 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$rzP5uXVlVKUtGw/GGnEr9exWch9Az4ZcqMYuf3bdRLehWZ3u88.xK', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17619', 'Test', 'User', 'male', '+923009999999', 'testuser3@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'test.user.17619@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user'),
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$jzB1GquxxHJ3AbwIGPCdIOXponocRga.5ce80509qENf4ysiumLNe', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_connections`
+--
+
+CREATE TABLE `student_connections` (
+  `student_connection_id` int(11) NOT NULL,
+  `sender_erp` varchar(5) NOT NULL,
+  `receiver_erp` varchar(5) NOT NULL,
+  `connection_status` enum('friends','request_pending') NOT NULL DEFAULT 'request_pending',
+  `sent_at` datetime NOT NULL,
+  `accepted_at` datetime DEFAULT NULL,
+  `student_1_erp` varchar(5) NOT NULL,
+  `student_2_erp` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `student_connections`
+--
+
+INSERT INTO `student_connections` (`student_connection_id`, `sender_erp`, `receiver_erp`, `connection_status`, `sent_at`, `accepted_at`, `student_1_erp`, `student_2_erp`) VALUES
+(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855');
 
 -- --------------------------------------------------------
 
@@ -613,24 +614,6 @@ ALTER TABLE `classrooms`
   ADD KEY `fk_class_rooms_campus_id_idx` (`campus_id`);
 
 --
--- Indexes for table `friends`
---
-ALTER TABLE `friends`
-  ADD PRIMARY KEY (`student_erp`,`friend_erp`),
-  ADD KEY `fk_friends_friend_erp_idx` (`friend_erp`),
-  ADD KEY `fk_friends_student_erp_idx` (`student_erp`),
-  ADD KEY `REVERSE_PK` (`friend_erp`,`student_erp`);
-
---
--- Indexes for table `friend_requests`
---
-ALTER TABLE `friend_requests`
-  ADD PRIMARY KEY (`sender_erp`,`receiver_erp`),
-  ADD KEY `fk_friend_requests_receiver_erp_idx` (`receiver_erp`),
-  ADD KEY `fk_friend_requests_sender_erp_idx` (`sender_erp`),
-  ADD KEY `REVERSE_PK` (`receiver_erp`,`sender_erp`);
-
---
 -- Indexes for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
@@ -716,6 +699,15 @@ ALTER TABLE `students`
   ADD KEY `fk_students_interest_id_3_idx` (`interest_3`),
   ADD KEY `fk_students_program_id_idx` (`program_id`),
   ADD KEY `fk_students_student_status_id_idx` (`current_status`) USING BTREE;
+
+--
+-- Indexes for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  ADD PRIMARY KEY (`student_connection_id`),
+  ADD UNIQUE KEY `unique_sender_receiver` (`student_1_erp`,`student_2_erp`) USING BTREE,
+  ADD KEY `search_by_sender_erp` (`sender_erp`,`receiver_erp`) USING BTREE,
+  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE;
 
 --
 -- Indexes for table `student_statuses`
@@ -855,6 +847,12 @@ ALTER TABLE `reaction_types`
   MODIFY `reaction_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
@@ -934,20 +932,6 @@ ALTER TABLE `classrooms`
   ADD CONSTRAINT `fk_class_rooms_campus_id` FOREIGN KEY (`campus_id`) REFERENCES `campuses` (`campus_id`);
 
 --
--- Constraints for table `friends`
---
-ALTER TABLE `friends`
-  ADD CONSTRAINT `fk_friends_friend_erp` FOREIGN KEY (`friend_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friends_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`);
-
---
--- Constraints for table `friend_requests`
---
-ALTER TABLE `friend_requests`
-  ADD CONSTRAINT `fk_friend_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
-
---
 -- Constraints for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
@@ -1002,6 +986,13 @@ ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_interest_id_3` FOREIGN KEY (`interest_3`) REFERENCES `interests` (`interest_id`),
   ADD CONSTRAINT `fk_students_program_id` FOREIGN KEY (`program_id`) REFERENCES `programs` (`program_id`),
   ADD CONSTRAINT `fk_students_student_status_id` FOREIGN KEY (`current_status`) REFERENCES `student_statuses` (`student_status_id`);
+
+--
+-- Constraints for table `student_connections`
+--
+ALTER TABLE `student_connections`
+  ADD CONSTRAINT `fk_friend_requests_receiver_erp_idx` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `teacher_reviews`
