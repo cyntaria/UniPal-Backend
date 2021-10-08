@@ -9,12 +9,12 @@
 
     - null (if stranger)
     - {
-        friend_request_id: 1,
+        student_connection_id: 1,
         sender_erp: XXXXX,
         receiver_erp: XXXXX,
         sent_at: '',
         accepted_at: '',
-        is_accepted: 1,
+        connection_status: 'friends',
       }
 
     - we can then simply check the friend request on front end to ensure status
