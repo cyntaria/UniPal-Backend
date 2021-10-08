@@ -45,7 +45,7 @@ describe("Friend Requests API", () => {
             expect(resBody).to.be.an('array');
             const queryCheck = friendRequest => friendRequest.sender_erp === sender_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
-            expect(resBody[0]).to.include.keys(['sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
         it("Scenario 2: Get all friend requests is successful (Receiver)", async() => {
@@ -64,7 +64,7 @@ describe("Friend Requests API", () => {
             expect(resBody).to.be.an('array');
             const queryCheck = friendRequest => friendRequest.receiver_erp === receiver_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
-            expect(resBody[0]).to.include.keys(['sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
         it("Scenario 3: Get all friend requests unsuccessful due to no (sent) friend requests", async() => {
