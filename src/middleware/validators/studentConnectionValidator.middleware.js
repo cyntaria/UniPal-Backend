@@ -2,10 +2,10 @@ const { body, query } = require('express-validator');
 const { datetimeRegex, ERPRegex } = require('../../utils/common.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ConnectionStatus } = require('../../utils/enums/connectionStatus.utils');
-const FriendRequestModel = require('../../models/friendRequest.model');
+const StudentConnectionModel = require('../../models/studentConnection.model');
 const { NotFoundException } = require('../../utils/exceptions/database.exception');
 
-exports.createFriendRequestSchema = [
+exports.createConnectionRequestSchema = [
     body('sender_erp')
         .trim()
         .exists()
@@ -28,7 +28,7 @@ exports.createFriendRequestSchema = [
         .withMessage('Sent datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
 ];
 
-exports.updateFriendRequestSchema = [
+exports.updateConnectionRequestSchema = [
     body('connection_status')
         .trim()
         .exists()
@@ -62,7 +62,7 @@ exports.updateFriendRequestSchema = [
         .withMessage('Invalid updates!')
 ];
 
-exports.getFriendRequestQuerySchema = [
+exports.getConnectionRequestQuerySchema = [
     query('sender_erp')
         .optional()
         .trim()
@@ -88,7 +88,23 @@ exports.getFriendRequestQuerySchema = [
         .withMessage('Invalid query params!')
 ];
 
-exports.friendRequestOwnerCheck = async(req) => {
+exports.getStudentConnectionQuerySchema = [
+    query('erp')
+        .trim()
+        .exists()
+        .withMessage('ERP is required')
+        .matches(ERPRegex)
+        .withMessage('ERP must be 5 digits'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['erp'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
+];
+
+exports.connectionRequestOwnerCheck = async(req) => {
     const student = req.currentStudent;
 
     if (req.method === RequestMethods.POST) {
@@ -100,19 +116,24 @@ exports.friendRequestOwnerCheck = async(req) => {
         else if (req.query.receiver_erp) return req.query.receiver_erp === student.erp;
     }
 
-    const friend_request_id = req.params.id;
+    const student_connection_id = req.params.id;
 
-    const friendRequest = await FriendRequestModel.findOne(friend_request_id);
-    if (!friendRequest) {
-        throw new NotFoundException('Friend request not found');
+    const connectionRequest = await StudentConnectionModel.findOne(student_connection_id);
+    if (!connectionRequest) {
+        throw new NotFoundException('Connection request not found');
     }
 
-    const isSender = friendRequest.sender_erp === student.erp;
-    const isReceiver = friendRequest.receiver_erp === student.erp;
+    const isSender = connectionRequest.sender_erp === student.erp;
+    const isReceiver = connectionRequest.receiver_erp === student.erp;
     
     if (req.method === RequestMethods.PATCH) {
         return isReceiver;
     }
 
     return isSender || isReceiver;
+};
+
+exports.studentConnectionsOwnerCheck = async(req) => {
+    const student = req.currentStudent;
+    return req.query.erp === student.erp;
 };

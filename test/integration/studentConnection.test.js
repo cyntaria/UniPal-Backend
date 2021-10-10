@@ -4,13 +4,13 @@ const expect = require('chai').expect;
 const jwt = require('jsonwebtoken');
 const {Config} = require('../../src/configs/config');
 
-describe("Friend Requests API", () => {
+describe("Connection Requests API", () => {
     const API = `/api/${Config.API_VERSION}`;
-    const baseRoute = API + "/friend-requests";
+    const baseRoute = API + "/student-connections";
     const adminERP = '15030';
     const user2ERP = '17619';
     const userERP = '17855';
-    const existingFriendRequest = {
+    const existingConnectionRequest = {
         student_connection_id: 5,
         sender_erp: userERP,
         receiver_erp: adminERP,
@@ -18,7 +18,7 @@ describe("Friend Requests API", () => {
         sent_at: '2021-10-04 17:24:40',
         accepted_at: null
     };
-    const unknownFriendRequestId = 99999;
+    const unknownConnectionRequestId = 99999;
     const unknownStudentERP = 19999;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
     const adminToken = jwt.sign({erp: adminERP}, Config.SECRET_JWT);
@@ -27,15 +27,16 @@ describe("Friend Requests API", () => {
         this.app = require('../../src/server').setup();
     });
 
-    context("GET /friend-requests", () => {
+    context("GET /student-connections/requests", () => {
+        const subRoute = 'requests';
 
-        it("Scenario 1: Get all friend requests is successful (Sent)", async() => {
+        it("Scenario 1: Get all connection Requests is successful (Sent)", async() => {
             // arrange
             const sender_erp = userERP;
             
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .get(`${baseRoute}/${subRoute}?sender_erp=${sender_erp}`)
                 .auth(userToken, { type: 'bearer' }); // userToken.erp === sender_erp
     
             // assert
@@ -43,18 +44,18 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = friendRequest => friendRequest.sender_erp === sender_erp;
+            const queryCheck = studentConnection => studentConnection.sender_erp === sender_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
-        it("Scenario 2: Get all friend requests is successful (Receiver)", async() => {
+        it("Scenario 2: Get all connection Requests is successful (Receiver)", async() => {
             // arrange
             const receiver_erp = adminERP;
             
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .get(`${baseRoute}/${subRoute}?receiver_erp=${receiver_erp}`)
                 .auth(adminToken, { type: 'bearer' }); // adminToken.erp === sender_erp
     
             // assert
@@ -62,53 +63,53 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = friendRequest => friendRequest.receiver_erp === receiver_erp;
+            const queryCheck = studentConnection => studentConnection.receiver_erp === receiver_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
-        it("Scenario 3: Get all friend requests unsuccessful due to no (sent) friend requests", async() => {
+        it("Scenario 3: Get all connection Requests unsuccessful due to no (sent) connection Requests", async() => {
             // arrange
             const sender_erp = user2ERP;
             const fakeToken = jwt.sign({erp: sender_erp}, Config.SECRET_JWT);
 
             // act
             const res = await request(this.app)
-                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .get(`${baseRoute}/${subRoute}?sender_erp=${sender_erp}`)
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend requests not found');
+            expect(res.body.headers.message).to.be.equal('Connection requests not found');
         });
 
-        it("Scenario 4: Get all friend requests unsuccessful due to no (received) friend requests", async() => {
+        it("Scenario 4: Get all connection Requests unsuccessful due to no (received) connection Requests", async() => {
             // arrange
             const receiver_erp = user2ERP;
             const fakeToken = jwt.sign({erp: receiver_erp}, Config.SECRET_JWT);
 
             // act
             const res = await request(this.app)
-                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .get(`${baseRoute}/${subRoute}?receiver_erp=${receiver_erp}`)
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend requests not found');
+            expect(res.body.headers.message).to.be.equal('Connection requests not found');
         });
 
-        it("Scenario 5: Get all friend requests is incorrect due to multiple query params", async() => {
+        it("Scenario 5: Get all connection Requests is incorrect due to multiple query params", async() => {
             // arrange
             const sender_erp = userERP;
             const receiver_erp = user2ERP;
 
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}?sender_erp=${sender_erp}&receiver_erp=${receiver_erp}`) // <-- can't specify both sender_erp and receiver_erp
+                .get(`${baseRoute}/${subRoute}?sender_erp=${sender_erp}&receiver_erp=${receiver_erp}`) // <-- can't specify both sender_erp and receiver_erp
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -121,10 +122,10 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include('Can\'t specify both sender and receiver erp');
         });
 
-        it("Scenario 6: Get all friend requests is incorrect due to no query params", async() => {
+        it("Scenario 6: Get all connection Requests is incorrect due to no query params", async() => {
             // act
             let res = await request(this.app)
-                .get(baseRoute) // <-- either specify sender_erp or receiver_erp
+                .get(`${baseRoute}/${subRoute}`) // <-- either specify sender_erp or receiver_erp
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -135,13 +136,13 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include('Either sender or receiver erp is required');
         });
 
-        it("Scenario 7: Get all friend requests is incorrect due to unknown query params", async() => {
+        it("Scenario 7: Get all connection Requests is incorrect due to unknown query params", async() => {
             // arrange
             const sender_erp = '123'; // a valid erp is 5 digits
 
             // act
             let res = await request(this.app)
-                .get(`${baseRoute}?sender_erp=${sender_erp}&connection_status=friends`) // <-- 'connection_status' is invalid query param
+                .get(`${baseRoute}/${subRoute}?sender_erp=${sender_erp}&connection_status=friends`) // <-- 'connection_status' is invalid query param
                 .auth(userToken, { type: 'bearer' });
     
             // assert
@@ -154,13 +155,13 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include('Invalid query params!');
         });
 
-        it("Scenario 8: Get request is forbidden due to querying other's sent friend requests", async() => {
+        it("Scenario 8: Get request is forbidden due to querying other's sent connection Requests", async() => {
             // arrange
             const sender_erp = userERP;
 
             // act
             const res = await request(this.app)
-                .get(`${baseRoute}?sender_erp=${sender_erp}`)
+                .get(`${baseRoute}/${subRoute}?sender_erp=${sender_erp}`)
                 .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp !== sender_erp
             
             // assert
@@ -170,13 +171,13 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 9: Get request is forbidden due to querying other's received friend requests", async() => {
+        it("Scenario 9: Get request is forbidden due to querying other's received connection Requests", async() => {
             // arrange
             const receiver_erp = userERP;
 
             // act
             const res = await request(this.app)
-                .get(`${baseRoute}?receiver_erp=${receiver_erp}`)
+                .get(`${baseRoute}/${subRoute}?receiver_erp=${receiver_erp}`)
                 .auth(adminToken, { type: 'bearer' }); // <-- adminToken.erp !== receiver_erp
             
             // assert
@@ -186,9 +187,9 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 10: Get all friend requests is unauthorized", async() => {
+        it("Scenario 10: Get all connection Requests is unauthorized", async() => {
             // act
-            let res = await request(this.app).get(baseRoute);
+            let res = await request(this.app).get(`${baseRoute}/${subRoute}`);
     
             // assert
             expect(res.status).to.be.equal(401);
@@ -198,12 +199,12 @@ describe("Friend Requests API", () => {
         });
     });
 
-    context("POST /friend-requests", () => {
+    context("POST /student-connections", () => {
         const sender_erp = userERP;
         const receiver_erp = user2ERP;
-        const sent_at = existingFriendRequest.sent_at;
+        const sent_at = existingConnectionRequest.sent_at;
 
-        it("Scenario 1: Create a friend request is successful (Owner)", async() => {
+        it("Scenario 1: Create a connection request is successful (Owner)", async() => {
             // arrange
             const data = { sender_erp, receiver_erp, sent_at };
             const app = this.app;
@@ -230,7 +231,7 @@ describe("Friend Requests API", () => {
             expect(res.body.body).to.be.eql({
                 student_connection_id: newId,
                 ...data,
-                connection_status: existingFriendRequest.connection_status,
+                connection_status: existingConnectionRequest.connection_status,
                 accepted_at: null,
                 student_1_erp: data.receiver_erp, // 17619, bcz smaller
                 student_2_erp: data.sender_erp // 17855, bcz greater
@@ -243,17 +244,17 @@ describe("Friend Requests API", () => {
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Create a friend request is unsuccessful due to unknown receiver_erp", async() => {
+        it("Scenario 2: Create a connection request is unsuccessful due to unknown receiver_erp", async() => {
             // arrange
             const data = {
-                sender_erp: existingFriendRequest.sender_erp,
+                sender_erp: existingConnectionRequest.sender_erp,
                 receiver_erp: unknownStudentERP,
                 sent_at
             };
             // act
             const res = await request(this.app)
                 .post(baseRoute)
-                .auth(userToken, { type: 'bearer' }) // userToken erp === existingFriendRequest.sender_erp
+                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender_erp
                 .send(data);
     
             // assert
@@ -263,17 +264,17 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.contain('receiver_erp');
         });
 
-        it("Scenario 3: Create a friend request is unsuccessful due to already sent friend request", async() => {
+        it("Scenario 3: Create a connection request is unsuccessful due to already sent connection request", async() => {
             // arrange
             const data = {
-                sender_erp: existingFriendRequest.sender_erp,
-                receiver_erp: existingFriendRequest.receiver_erp,
+                sender_erp: existingConnectionRequest.sender_erp,
+                receiver_erp: existingConnectionRequest.receiver_erp,
                 sent_at
             };
             // act
             const res = await request(this.app)
                 .post(baseRoute)
-                .auth(userToken, { type: 'bearer' }) // userToken erp === existingFriendRequest.sender_erp
+                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender_erp
                 .send(data);
     
             // assert
@@ -282,11 +283,11 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.code).to.be.equal('DuplicateEntryException');
         });
 
-        it("Scenario 4: Create a friend request is unsuccessful due to already received friend request", async() => {
+        it("Scenario 4: Create a connection request is unsuccessful due to already received connection request", async() => {
             // arrange
             const data = {
-                sender_erp: existingFriendRequest.receiver_erp,
-                receiver_erp: existingFriendRequest.sender_erp, // flip receiver and sender
+                sender_erp: existingConnectionRequest.receiver_erp,
+                receiver_erp: existingConnectionRequest.sender_erp, // flip receiver and sender
                 sent_at
             };
             const senderToken = jwt.sign({erp: data.sender_erp}, Config.SECRET_JWT);
@@ -303,7 +304,7 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.code).to.be.equal('DuplicateEntryException');
         });
 
-        it("Scenario 5: Create a friend request is incorrect due to wrong key name in the body", async() => {
+        it("Scenario 5: Create a connection request is incorrect due to wrong key name in the body", async() => {
             // arrange
             const data = { // missing receiver_erp
                 sent_at: 'not going', // <-- not a valid sent_at
@@ -324,7 +325,7 @@ describe("Friend Requests API", () => {
             expect(incorrectParams).to.include.members(['receiver_erp', 'sent_at']);
         });
 
-        it("Scenario 6: Create a friend request is incorrect due to friend request to oneself", async() => {
+        it("Scenario 6: Create a connection request is incorrect due to connection request to oneself", async() => {
             // arrange
             const data = {
                 sender_erp: sender_erp,
@@ -348,7 +349,7 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include('Sender and receiver ERP can\'t be the same');
         });
 
-        it("Scenario 7: Create a friend request is forbidden due to unowned friend request", async() => {
+        it("Scenario 7: Create a connection request is forbidden due to unowned connection request", async() => {
             // arrange
             const data = { sender_erp: adminERP, receiver_erp, sent_at }; // adminERP instead of userERP
 
@@ -365,7 +366,7 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 8: Create a friend request is unauthorized", async() => {
+        it("Scenario 8: Create a connection request is unauthorized", async() => {
             // arrange
             const data = { sender_erp, receiver_erp, sent_at };
 
@@ -382,20 +383,20 @@ describe("Friend Requests API", () => {
         });
     });
 
-    context("PATCH /friend-requests/:id", () => {
+    context("PATCH /student-connections/:id", () => {
         const connection_status = 'friends';
-        const friendRequestId = existingFriendRequest.student_connection_id;
+        const studentConnectionId = existingConnectionRequest.student_connection_id;
         const accepted_at = '2021-10-07 17:30:40';
         
-        it("Scenario 1: Update a friend request is successful (Owner)", async() => {
+        it("Scenario 1: Update a connection request is successful (Owner)", async() => {
             // arrange
             const data = { connection_status, accepted_at };
             const app = this.app;
 
             // act
             let res = await request(app)
-                .patch(`${baseRoute}/${friendRequestId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingFriendRequest.receiver_erp
+                .patch(`${baseRoute}/${studentConnectionId}`)
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver_erp
                 .send(data);
     
             // assert
@@ -406,30 +407,30 @@ describe("Friend Requests API", () => {
             
             // affirm
             res = await request(app)
-                .get(`${baseRoute}/${friendRequestId}`)
+                .get(`${baseRoute}/${studentConnectionId}`)
                 .auth(adminToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
             const studentConnection = {
-                ...existingFriendRequest,
-                student_1_erp: existingFriendRequest.receiver_erp, // 15030, bcz smaller
-                student_2_erp: existingFriendRequest.sender_erp // 17855, bcz greater
+                ...existingConnectionRequest,
+                student_1_erp: existingConnectionRequest.receiver_erp, // 15030, bcz smaller
+                student_2_erp: existingConnectionRequest.sender_erp // 17855, bcz greater
             };
             studentConnection.accepted_at = data.accepted_at;
             studentConnection.connection_status = data.connection_status;
             expect(res.body.body).to.be.eql(studentConnection);
             
             // cleanup
-            data.connection_status = existingFriendRequest.connection_status;
-            data.accepted_at = existingFriendRequest.accepted_at;
+            data.connection_status = existingConnectionRequest.connection_status;
+            data.accepted_at = existingConnectionRequest.accepted_at;
             res = await request(app)
-                .patch(`${baseRoute}/${friendRequestId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingFriendRequest.receiver_erp
+                .patch(`${baseRoute}/${studentConnectionId}`)
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver_erp
                 .send(data);
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Update a friend request is incorrect", async() => {
+        it("Scenario 2: Update a connection request is incorrect", async() => {
             // arrange
             const data = {
                 connection_status: 'ignored', // <-- not a valid connection_status
@@ -439,7 +440,7 @@ describe("Friend Requests API", () => {
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${friendRequestId}`)
+                .patch(`${baseRoute}/${studentConnectionId}`)
                 .auth(adminToken, { type: 'bearer' })
                 .send(data);
     
@@ -453,14 +454,14 @@ describe("Friend Requests API", () => {
             expect(incorrectMsg).to.include.members(['Invalid updates!']);
         });
 
-        it("Scenario 3: Update a friend request is forbidden", async() => {
+        it("Scenario 3: Update a connection request is forbidden", async() => {
             // arrange
             const data = { connection_status, accepted_at };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${friendRequestId}`)
-                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingFriendRequest.receiver_erp
+                .patch(`${baseRoute}/${studentConnectionId}`)
+                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingStudentConnection.receiver_erp
                 .send(data);
             
             // assert
@@ -470,13 +471,13 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Update a friend request is unauthorized", async() => {
+        it("Scenario 4: Update a connection request is unauthorized", async() => {
             // arrange
             const data = { connection_status, accepted_at };
 
             // act
             const res = await request(this.app)
-                .patch(`${baseRoute}/${friendRequestId}`)
+                .patch(`${baseRoute}/${studentConnectionId}`)
                 .send(data);
     
             // assert
@@ -487,13 +488,13 @@ describe("Friend Requests API", () => {
         });
     });
 
-    context("DELETE /friend-requests/:id", () => {
+    context("DELETE /student-connections/:id", () => {
         const sender_erp = userERP;
         const receiver_erp = user2ERP;
-        const sent_at = existingFriendRequest.sent_at;
-        const friendRequestId = existingFriendRequest.student_connection_id;
+        const sent_at = existingConnectionRequest.sent_at;
+        const studentConnectionId = existingConnectionRequest.student_connection_id;
 
-        it("Scenario 1: Delete a friend request is successful (Sender cancels)", async() => {
+        it("Scenario 1: Delete a connection request is successful (Sender cancels)", async() => {
             // prepare
             const data = { sender_erp, receiver_erp, sent_at };
             const app = this.app;
@@ -514,7 +515,7 @@ describe("Friend Requests API", () => {
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
-            expect(res.body.headers.message).to.be.equal('Friend request has been deleted');
+            expect(res.body.headers.message).to.be.equal('Connection request has been deleted');
             expect(res.body.body.rows_removed).to.be.equal(1);
 
             // affirm
@@ -526,10 +527,10 @@ describe("Friend Requests API", () => {
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend request not found');
+            expect(res.body.headers.message).to.be.equal('Connection request not found');
         });
 
-        it("Scenario 2: Delete a friend request is successful (Receiver rejects)", async() => {
+        it("Scenario 2: Delete a connection request is successful (Receiver rejects)", async() => {
             // prepare
             const data = { sender_erp, receiver_erp, sent_at };
             const app = this.app;
@@ -551,7 +552,7 @@ describe("Friend Requests API", () => {
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
-            expect(res.body.headers.message).to.be.equal('Friend request has been deleted');
+            expect(res.body.headers.message).to.be.equal('Connection request has been deleted');
             expect(res.body.body.rows_removed).to.be.equal(1);
 
             // affirm
@@ -563,29 +564,29 @@ describe("Friend Requests API", () => {
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend request not found');
+            expect(res.body.headers.message).to.be.equal('Connection request not found');
         });
 
-        it("Scenario 3: Delete a friend request is unsuccessful due to unknown id", async() => {
+        it("Scenario 3: Delete a connection request is unsuccessful due to unknown id", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${unknownFriendRequestId}`)
+                .delete(`${baseRoute}/${unknownConnectionRequestId}`)
                 .auth(adminToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(404);
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend request not found');
+            expect(res.body.headers.message).to.be.equal('Connection request not found');
         });
 
-        it("Scenario 4: Delete a friend request is forbidden", async() => {
+        it("Scenario 4: Delete a connection request is forbidden", async() => {
             // arrange
             const forbiddenToken = jwt.sign({erp: receiver_erp}, Config.SECRET_JWT);
             
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${friendRequestId}`)
+                .delete(`${baseRoute}/${studentConnectionId}`)
                 .auth(forbiddenToken, { type: 'bearer' }); // forbiddenToken.erp !== receiver_erp or sender_erp
             
             // assert
@@ -595,10 +596,10 @@ describe("Friend Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 5: Delete a friend request is unauthorized", async() => {
+        it("Scenario 5: Delete a connection request is unauthorized", async() => {
             // act
             const res = await request(this.app)
-                .delete(`${baseRoute}/${friendRequestId}`);
+                .delete(`${baseRoute}/${studentConnectionId}`);
     
             // assert
             expect(res.status).to.be.equal(401);

@@ -3,9 +3,9 @@ const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils'
 const { tables } = require('../utils/tableNames.utils');
 const { ConnectionStatus } = require('../utils/enums/connectionStatus.utils');
 
-class FriendRequestModel {
+class StudentConnectionModel {
 
-    findAll = async(filters) => {
+    findAllRequests = async(filters) => {
         let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at
         FROM ${tables.StudentConnections}
         WHERE connection_status = ?`;
@@ -18,6 +18,14 @@ class FriendRequestModel {
         sql += ` AND ${filterSet}`;
 
         return await DBService.query(sql, [ConnectionStatus.RequestPending, ...filterValues]);
+    }
+
+    findAll = async(erp) => {
+        let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at
+        FROM ${tables.StudentConnections}
+        WHERE connection_status = ? AND (sender_erp = ? OR receiver_erp = ?)`;
+
+        return await DBService.query(sql, [ConnectionStatus.Friends, erp, erp]);
     }
 
     findOne = async(id) => {
@@ -38,12 +46,12 @@ class FriendRequestModel {
         student_2_erp = GREATEST(?,?)`;
 
         const result = await DBService.query(sql, [...values, sender_erp, receiver_erp, sender_erp, receiver_erp]);
-        const created_friend_request = !result ? 0 : {
+        const created_connection_request = !result ? 0 : {
             student_connection_id: result.insertId,
             affected_rows: result.affectedRows
         };
 
-        return created_friend_request;
+        return created_connection_request;
     }
 
     update = async({ connection_status, accepted_at = null }, id) => {
@@ -67,4 +75,4 @@ class FriendRequestModel {
     }
 }
 
-module.exports = new FriendRequestModel;
+module.exports = new StudentConnectionModel;
