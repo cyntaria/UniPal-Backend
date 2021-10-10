@@ -19,11 +19,11 @@ class ConnectionRequestRepository {
         return successResponse(connectionRequestList);
     };
 
-    findAll = async(filters = {}) => {
+    findAll = async(query) => {
         
-        let connectionsList = await StudentConnectionModel.findAll(filters);
+        let connectionsList = await StudentConnectionModel.findAll(query);
         if (!connectionsList.length) {
-            throw new NotFoundException('Student connections not found');
+            throw new NotFoundException('Friend connections not found');
         }
 
         return successResponse(connectionsList);

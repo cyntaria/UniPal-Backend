@@ -20,8 +20,8 @@ class StudentConnectionModel {
         return await DBService.query(sql, [ConnectionStatus.RequestPending, ...filterValues]);
     }
 
-    findAll = async(erp) => {
-        let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at
+    findAll = async({erp}) => {
+        let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at, accepted_at
         FROM ${tables.StudentConnections}
         WHERE connection_status = ? AND (sender_erp = ? OR receiver_erp = ?)`;
 

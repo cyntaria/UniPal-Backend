@@ -27,6 +27,105 @@ describe("Connection Requests API", () => {
         this.app = require('../../src/server').setup();
     });
 
+    context("GET /student-connections", () => {
+        it("Scenario 1: Get all friend connections is successful", async() => {
+            // arrange
+            const erp = adminERP;
+            
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?erp=${erp}`)
+                .auth(adminToken, { type: 'bearer' }); // adminToken.erp === erp
+    
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const studentCheck = studentConn => studentConn.sender_erp === erp || studentConn.receiver_erp === erp;
+            const connectionStatusCheck = studentConn => studentConn.connection_status === 'friends';
+            const queryCheck = studentConn => studentCheck(studentConn) && connectionStatusCheck(studentConn);
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
+        });
+
+        it("Scenario 2: Get all student connections unsuccessful due to no friend connections", async() => {
+            // arrange
+            const erp = userERP;
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?erp=${erp}`)
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(404);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('NotFoundException');
+            expect(res.body.headers.message).to.be.equal('Friend connections not found');
+        });
+
+        it("Scenario 3: Get all student connections is incorrect due to no query params", async() => {
+            // act
+            let res = await request(this.app)
+                .get(baseRoute) // <-- must specify erp
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParam = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParam).to.include('erp');
+        });
+
+        it("Scenario 4: Get all student connections is incorrect due to unknown query params", async() => {
+            // arrange
+            const erp = '123'; // a valid erp is 5 digits
+
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}?erp=${erp}&connection_status=friends`) // <-- 'connection_status' is invalid query param
+                .auth(userToken, { type: 'bearer' });
+    
+            // assert
+            expect(res.status).to.be.equal(422);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
+            const incorrectParams = res.body.headers.data.map(o => (o.param));
+            expect(incorrectParams).to.include('erp');
+            const incorrectMsg = res.body.headers.data.map(o => (o.msg));
+            expect(incorrectMsg).to.include('Invalid query params!');
+        });
+
+        it("Scenario 5: Get all student connections is forbidden due to querying other's friend connections", async() => {
+            // arrange
+            const erp = adminERP;
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?erp=${erp}`)
+                .auth(userToken, { type: 'bearer' }); // <-- userToken.erp !== erp
+            
+            // assert
+            expect(res.status).to.be.equal(403);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('ForbiddenException');
+            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
+        });
+
+        it("Scenario 6: Get all student connections is unauthorized", async() => {
+            // act
+            let res = await request(this.app).get(baseRoute);
+    
+            // assert
+            expect(res.status).to.be.equal(401);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('TokenMissingException');
+            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
+        });
+    });
+
     context("GET /student-connections/requests", () => {
         const subRoute = 'requests';
 
