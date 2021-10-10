@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 05:50 PM
+-- Generation Time: Oct 10, 2021 at 07:42 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -420,7 +420,8 @@ CREATE TABLE `student_connections` (
 --
 
 INSERT INTO `student_connections` (`student_connection_id`, `sender_erp`, `receiver_erp`, `connection_status`, `sent_at`, `accepted_at`, `student_1_erp`, `student_2_erp`) VALUES
-(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855');
+(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855'),
+(6, '15030', '17619', 'friends', '2021-10-10 18:38:15', '2021-10-10 18:38:15', '15030', '17619');
 
 -- --------------------------------------------------------
 
@@ -707,7 +708,8 @@ ALTER TABLE `student_connections`
   ADD PRIMARY KEY (`student_connection_id`),
   ADD UNIQUE KEY `unique_sender_receiver` (`student_1_erp`,`student_2_erp`) USING BTREE,
   ADD KEY `search_by_sender_erp` (`sender_erp`,`receiver_erp`) USING BTREE,
-  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE;
+  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE,
+  ADD KEY `fk_friend_requests_student_2_erp` (`student_2_erp`);
 
 --
 -- Indexes for table `student_statuses`
@@ -850,7 +852,7 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_connections`
 --
 ALTER TABLE `student_connections`
-  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `student_statuses`
@@ -992,7 +994,9 @@ ALTER TABLE `students`
 --
 ALTER TABLE `student_connections`
   ADD CONSTRAINT `fk_friend_requests_receiver_erp_idx` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
+  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_1_erp` FOREIGN KEY (`student_1_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_2_erp` FOREIGN KEY (`student_2_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `teacher_reviews`

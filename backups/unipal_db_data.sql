@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 05:51 PM
+-- Generation Time: Oct 10, 2021 at 07:42 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -130,7 +130,8 @@ INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `
 --
 
 INSERT INTO `student_connections` (`student_connection_id`, `sender_erp`, `receiver_erp`, `connection_status`, `sent_at`, `accepted_at`, `student_1_erp`, `student_2_erp`) VALUES
-(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855');
+(5, '17855', '15030', 'request_pending', '2021-10-04 17:24:40', NULL, '15030', '17855'),
+(6, '15030', '17619', 'friends', '2021-10-10 18:38:15', '2021-10-10 18:38:15', '15030', '17619');
 
 --
 -- Dumping data for table `student_statuses`
