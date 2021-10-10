@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 05:50 PM
+-- Generation Time: Oct 10, 2021 at 07:42 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -588,7 +588,8 @@ ALTER TABLE `student_connections`
   ADD PRIMARY KEY (`student_connection_id`),
   ADD UNIQUE KEY `unique_sender_receiver` (`student_1_erp`,`student_2_erp`) USING BTREE,
   ADD KEY `search_by_sender_erp` (`sender_erp`,`receiver_erp`) USING BTREE,
-  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE;
+  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE,
+  ADD KEY `fk_friend_requests_student_2_erp` (`student_2_erp`);
 
 --
 -- Indexes for table `student_statuses`
@@ -873,7 +874,9 @@ ALTER TABLE `students`
 --
 ALTER TABLE `student_connections`
   ADD CONSTRAINT `fk_friend_requests_receiver_erp_idx` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
+  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_1_erp` FOREIGN KEY (`student_1_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_2_erp` FOREIGN KEY (`student_2_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `teacher_reviews`
