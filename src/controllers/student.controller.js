@@ -2,7 +2,7 @@ const StudentRepository = require('../repositories/student.repository');
 
 class StudentController {
     getAllStudents = async(req, res, next) => {
-        const response = await StudentRepository.findAll(req.query);
+        const response = await StudentRepository.findAll(req.query, req.currentStudent.erp);
         res.send(response);
     };
 

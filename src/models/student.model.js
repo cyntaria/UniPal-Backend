@@ -5,17 +5,17 @@ const { tables } = require('../utils/tableNames.utils');
 
 class StudentModel {
 
-    findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.Students}`;
+    findAll = async(filters, myERP) => {
+        let sql = `SELECT * FROM ${tables.Students} WHERE erp != ?`;
 
         if (!Object.keys(filters).length) {
-            return await DBService.query(sql);
+            return await DBService.query(sql, [myERP]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
-        sql += ` WHERE ${filterSet}`;
+        sql += ` AND ${filterSet}`;
 
-        return await DBService.query(sql, [...filterValues]);
+        return await DBService.query(sql, [myERP, ...filterValues]);
     }
 
     findOne = async(filters) => {

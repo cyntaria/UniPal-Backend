@@ -8,9 +8,9 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class StudentRepository {
-    findAll = async(filters = {}) => {
+    findAll = async(filters = {}, myERP) => {
         
-        let studentList = await StudentModel.findAll(filters);
+        let studentList = await StudentModel.findAll(filters, myERP);
         if (!studentList.length) {
             throw new NotFoundException('Students not found');
         }
