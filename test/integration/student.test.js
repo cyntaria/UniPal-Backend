@@ -57,21 +57,34 @@ describe("Students API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            expect(resBody[0]).to.include.keys(Object.keys(existingStudent)); // contain all params
+
+            // contain all params along with connection details
+            expect(resBody[0]).to.include.all.keys([...Object.keys(existingStudent), 'student_connection']);
+            const studentsWithConnection = resBody.filter(o => o.student_connection !== null);
+
+            // connection details should have these
+            expect(studentsWithConnection[0].student_connection).to.include.all.keys([
+                'student_connection_id',
+                'sender_erp',
+                'receiver_erp',
+                'connection_status',
+                'sent_at',
+                'accepted_at'
+            ]);
         });
 
         it("Scenario 2: Get all students request successful (using query params)", async() => {
             // act
             let res = await request(this.app)
                 .get(`${baseRoute}?first_name=${existingStudent.first_name}`)
-                .auth(userToken, { type: 'bearer' });
+                .auth(adminToken, { type: 'bearer' });
     
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            expect(resBody[0].first_name).to.be.equal(existingStudent.first_name); // deep compare two objects using 'eql'
+            expect(resBody[0].first_name).to.be.equal(existingStudent.first_name);
         });
 
         it("Scenario 3: Get all students request unsuccessful", async() => {
@@ -107,20 +120,34 @@ describe("Students API", () => {
     });
 
     context("GET /students/:erp", () => {
-        it("Scenario 1: Get a student request successful", async() => {
+        it("Scenario 1: Get a student request successful (Profile)", async() => {
             // act
             let res = await request(this.app)
                 .get(`${baseRoute}/${existingStudent.erp}`)
-                .auth(userToken, { type: 'bearer' });
+                .auth(userToken, { type: 'bearer' }); // userToken.erp === existingStudent.erp
 
             // assert
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
-            expect(resBody.erp).to.be.eql(existingStudent.erp); // should match initially sent id
+            expect(resBody.erp).to.be.equal(existingStudent.erp); // should match initially sent id
         });
 
-        it("Scenario 2: Get a student request is unsuccessful", async() => {
+        it("Scenario 2: Get a student request successful (Others)", async() => {
+            // act
+            let res = await request(this.app)
+                .get(`${baseRoute}/${adminERP}`)
+                .auth(userToken, { type: 'bearer' }); // userToken.erp !== adminERP
+
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody.erp).to.be.equal(adminERP); // should match initially sent id
+            expect(resBody.student_connection).to.exist; // should contain connection details
+        });
+
+        it("Scenario 3: Get a student request is unsuccessful", async() => {
             // act
             const res = await request(this.app)
                 .get(`${baseRoute}/${unregisteredERP}`)
@@ -133,7 +160,7 @@ describe("Students API", () => {
             expect(res.body.headers.message).to.be.equal('Student not found');
         });
 
-        it("Scenario 3: Get a student request is unauthorized", async() => {
+        it("Scenario 4: Get a student request is unauthorized", async() => {
             // act
             let res = await request(this.app).get(`${baseRoute}/${existingStudent.erp}`);
     

@@ -8,30 +8,92 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class StudentRepository {
-    findAll = async(filters = {}) => {
+    findAll = async(filters = {}, myERP) => {
         
-        let studentList = await StudentModel.findAll(filters);
+        let studentList = await StudentModel.findAll(filters, myERP);
         if (!studentList.length) {
             throw new NotFoundException('Students not found');
         }
 
         studentList = studentList.map(student => {
-            const { password, ...studentWithoutPassword } = student;
-            return studentWithoutPassword;
+            const {
+                password,
+                student_connection_id,
+                sender_erp,
+                receiver_erp,
+                connection_status,
+                sent_at,
+                accepted_at,
+                student_1_erp,
+                student_2_erp,
+                ...restOfStudent
+            } = student;
+
+            restOfStudent.student_connection = student_connection_id === null ? null : {
+                student_connection_id,
+                sender_erp,
+                receiver_erp,
+                connection_status,
+                sent_at,
+                accepted_at
+            };
+            return restOfStudent;
         });
 
         return successResponse(studentList);
     };
 
-    findOne = async(filters) => {
-        const student = await StudentModel.findOne(filters);
+    findOne = async(erp, myERP) => {
+        let student;
+
+        if (erp === myERP) student = await this.#findMyProfile(erp);
+        else student = await this.#findOthersProfile(erp, myERP);
+
+        return successResponse(student);
+    };
+
+    #findMyProfile = async(erp) => {
+        const student = await StudentModel.findOne(erp);
+
+        if (!student) {
+            throw new NotFoundException('Profile not found');
+        }
+
+        delete student.password;
+
+        return student;
+    };
+
+    #findOthersProfile = async(erp, myERP) => {
+        const student = await StudentModel.findOtherStudent(erp, myERP);
+
         if (!student) {
             throw new NotFoundException('Student not found');
         }
 
-        const { password, ...studentWithoutPassword } = student;
+        const {
+            password,
+            student_connection_id,
+            sender_erp,
+            receiver_erp,
+            connection_status,
+            sent_at,
+            accepted_at,
+            student_1_erp,
+            student_2_erp,
+            ...restOfStudent
+        } = student;
 
-        return successResponse(studentWithoutPassword);
+        restOfStudent.student_connection = student_connection_id === null ? null : {
+            student_connection_id,
+            sender_erp,
+            receiver_erp,
+            connection_status,
+            sent_at,
+            accepted_at
+        };
+
+        return restOfStudent;
     };
 
     findAllOrganizedActivitiesByStudent = async(erp, filters) => {
