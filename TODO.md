@@ -22,3 +22,7 @@
         - if !null and is_accepted -> display unfriend option
         - if !null && !is_accepted && sender_erp === erp -> display friend request sent
         - if !null && !is_accepted && receiver_erp === erp -> display friend request received
+
+### SQL Queries
+
+  - Add LIMIT 1 to "findOne" methods
