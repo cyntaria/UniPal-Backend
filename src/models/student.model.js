@@ -6,25 +6,43 @@ const { tables } = require('../utils/tableNames.utils');
 class StudentModel {
 
     findAll = async(filters, myERP) => {
-        let sql = `SELECT * FROM ${tables.Students} WHERE erp != ?`;
+        let sql = `SELECT *
+        FROM ${tables.Students} AS S
+        LEFT OUTER JOIN ${tables.StudentConnections} AS SC
+        ON (S.erp = SC.sender_erp AND SC.receiver_erp = ?) OR (S.erp = SC.receiver_erp AND SC.sender_erp = ?)
+        WHERE S.erp != ?`;
 
         if (!Object.keys(filters).length) {
-            return await DBService.query(sql, [myERP]);
+            return await DBService.query(sql, [myERP, myERP, myERP]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` AND ${filterSet}`;
 
-        return await DBService.query(sql, [myERP, ...filterValues]);
+        return await DBService.query(sql, [myERP, myERP, myERP, ...filterValues]);
     }
 
-    findOne = async(filters) => {
-        const { filterSet, filterValues } = multipleFilterSet(filters);
+    findOne = async(erp) => {
+        const sql = `SELECT * 
+        FROM ${tables.Students}
+        WHERE erp = ?
+        LIMIT 1`;
 
-        const sql = `SELECT * FROM ${tables.Students}
-        WHERE ${filterSet}`;
+        const result = await DBService.query(sql, [erp]);
 
-        const result = await DBService.query(sql, [...filterValues]);
+        // return back the first row (student)
+        return result[0];
+    }
+
+    findOtherStudent = async(erp, myERP) => {
+        const sql = `SELECT *
+        FROM ${tables.Students} AS S
+        LEFT OUTER JOIN ${tables.StudentConnections} AS SC
+        ON (S.erp = SC.sender_erp AND SC.receiver_erp = ?) OR (S.erp = SC.receiver_erp AND SC.sender_erp = ?)
+        WHERE S.erp = ?
+        LIMIT 1`;
+
+        const result = await DBService.query(sql, [myERP, myERP, erp]);
 
         // return back the first row (student)
         return result[0];

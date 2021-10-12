@@ -32,7 +32,7 @@ exports.auth = (...allowedRoles) => {
                     }
                 } else decoded_erp = decoded.erp;
             });
-            const student = await StudentModel.findOne({ erp: decoded_erp });
+            const student = await StudentModel.findOne(decoded_erp);
 
             if (!student) {
                 throw new TokenVerificationException();

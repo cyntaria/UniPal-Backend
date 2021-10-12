@@ -39,7 +39,7 @@ class AuthRepository {
     };
 
     login = async(erp, pass, is_register = false) => {
-        const student = await StudentModel.findOne({ erp });
+        const student = await StudentModel.findOne(erp);
         if (!student) {
             throw new InvalidCredentialsException('ERP not registered');
         }
@@ -70,7 +70,7 @@ class AuthRepository {
 
     refreshToken = async(body) => {
         const { erp, password: pass, old_token } = body;
-        const student = await StudentModel.findOne({ erp });
+        const student = await StudentModel.findOne(erp);
         if (!student) {
             throw new InvalidCredentialsException('ERP not registered');
         }
@@ -110,7 +110,7 @@ class AuthRepository {
 
     changePassword = async(body) => {
         const { erp, old_password, new_password } = body;
-        const student = await StudentModel.findOne({ erp });
+        const student = await StudentModel.findOne(erp);
 
         if (!student) {
             throw new InvalidCredentialsException('ERP not registered');
@@ -128,7 +128,7 @@ class AuthRepository {
     };
 
     sendOTP = async(body) => {
-        let student = await StudentModel.findOne(body); // body contains "erp" : ...
+        let student = await StudentModel.findOne(body.erp); // body contains "erp" : ...
         
         if (!student) {
             throw new InvalidCredentialsException('ERP not registered');
