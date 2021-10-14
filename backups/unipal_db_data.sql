@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2021 at 07:42 PM
+-- Generation Time: Oct 14, 2021 at 09:40 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- Dumping data for table `activities`
 --
 
-INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_directions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
-(1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
+INSERT INTO `activities` (`activity_id`, `title`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_instructions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
+(1, 'Daily Campus Activity', 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(2, 'One Time Campus Activity', 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(3, 'Custom Campus Activity', 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
 
 --
 -- Dumping data for table `activity_attendees`
