@@ -10,6 +10,12 @@ const { NotFoundException } = require('../../utils/exceptions/database.exception
 const { ForbiddenException } = require('../../utils/exceptions/auth.exception');
 
 exports.createActivitySchema = [
+    body('title')
+        .trim()
+        .exists()
+        .withMessage('Title is required')
+        .isLength({ max: 50 })
+        .withMessage('Title should be less than 50 characters'),
     body('location')
         .trim()
         .exists()
@@ -88,7 +94,7 @@ exports.createActivitySchema = [
         .withMessage('Activity happening time is required')
         .matches(timeRegex)
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
-    body('additional_directions')
+    body('additional_instructions')
         .optional()
         .trim()
         .isLength({ max: 100 })
@@ -125,6 +131,11 @@ exports.createActivitySchema = [
 ];
 
 exports.updateActivitySchema = [
+    body('title')
+        .optional()
+        .trim()
+        .isLength({ max: 50 })
+        .withMessage('Title should be less than 50 characters'),
     body('location')
         .optional()
         .trim()
@@ -190,7 +201,7 @@ exports.updateActivitySchema = [
         .trim()
         .matches(timeRegex)
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
-    body('additional_directions')
+    body('additional_instructions')
         .optional()
         .trim()
         .isLength({ max: 100 })
@@ -217,9 +228,9 @@ exports.updateActivitySchema = [
         .withMessage('Please provide required fields to update')
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ['location', 'privacy', 'frequency',
+            const allowUpdates = ['title', 'location', 'privacy', 'frequency',
                 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
-                'month_number', 'group_size', 'happens_at', 'additional_directions',
+                'month_number', 'group_size', 'happens_at', 'additional_instructions',
                 'activity_type_id', 'activity_status_id', 'campus_spot_id'];
             return updates.every(update => allowUpdates.includes(update));
         })
