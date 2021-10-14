@@ -28,7 +28,8 @@ class ActivityModel {
             WHERE activity_id = ?
         ) AS num_of_attendees
         FROM ${tables.Activities}
-        WHERE ${filterSet}`;
+        WHERE ${filterSet}
+        LIMIT 1`;
 
         const result = await DBService.query(sql, [activity_id, ...filterValues]);
 

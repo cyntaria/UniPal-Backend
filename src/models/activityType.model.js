@@ -21,7 +21,8 @@ class ActivityTypeModel {
         const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `SELECT * FROM ${tables.ActivityTypes}
-        WHERE ${filterSet}`;
+        WHERE ${filterSet}
+        LIMIT 1`;
 
         const result = await DBService.query(sql, [...filterValues]);
 
