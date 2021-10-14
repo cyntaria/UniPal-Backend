@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2021 at 09:40 AM
+-- Generation Time: Oct 14, 2021 at 10:43 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -206,12 +206,14 @@ CREATE TABLE `classrooms` (
 --
 
 CREATE TABLE `hangout_requests` (
+  `hangout_request_id` int(10) UNSIGNED NOT NULL,
   `sender_erp` varchar(5) NOT NULL,
   `receiver_erp` varchar(5) NOT NULL,
+  `request_status` enum('request_pending','accepted','rejected') NOT NULL DEFAULT 'request_pending',
+  `purpose` varchar(150) NOT NULL,
   `meeting_at` datetime NOT NULL,
-  `meetup_spot` int(10) UNSIGNED NOT NULL,
-  `purpose` int(10) UNSIGNED NOT NULL,
-  `is_accepted` tinyint(1) NOT NULL DEFAULT 0
+  `meetup_spot_id` int(10) UNSIGNED NOT NULL,
+  `accepted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -619,9 +621,8 @@ ALTER TABLE `classrooms`
 -- Indexes for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
-  ADD PRIMARY KEY (`sender_erp`,`receiver_erp`,`meeting_at`),
-  ADD KEY `fk_hangout_requests_activity_type_id_idx` (`purpose`),
-  ADD KEY `fk_hangout_requests_campus_spot_id_idx` (`meetup_spot`),
+  ADD PRIMARY KEY (`hangout_request_id`),
+  ADD KEY `fk_hangout_requests_campus_spot_id_idx` (`meetup_spot_id`),
   ADD KEY `fk_hangout_requests_receiver_erp_idx` (`receiver_erp`),
   ADD KEY `fk_hangout_requests_sender_erp_idx` (`sender_erp`);
 
@@ -820,6 +821,12 @@ ALTER TABLE `classrooms`
   MODIFY `classroom_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `hangout_requests`
+--
+ALTER TABLE `hangout_requests`
+  MODIFY `hangout_request_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `hobbies`
 --
 ALTER TABLE `hobbies`
@@ -938,8 +945,7 @@ ALTER TABLE `classrooms`
 -- Constraints for table `hangout_requests`
 --
 ALTER TABLE `hangout_requests`
-  ADD CONSTRAINT `fk_hangout_requests_activity_type_id` FOREIGN KEY (`purpose`) REFERENCES `activity_types` (`activity_type_id`),
-  ADD CONSTRAINT `fk_hangout_requests_campus_spot_id` FOREIGN KEY (`meetup_spot`) REFERENCES `campus_spots` (`campus_spot_id`),
+  ADD CONSTRAINT `fk_hangout_requests_campus_spot_id` FOREIGN KEY (`meetup_spot_id`) REFERENCES `campus_spots` (`campus_spot_id`),
   ADD CONSTRAINT `fk_hangout_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
   ADD CONSTRAINT `fk_hangout_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
 
