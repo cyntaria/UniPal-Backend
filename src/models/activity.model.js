@@ -28,7 +28,8 @@ class ActivityModel {
             WHERE activity_id = ?
         ) AS num_of_attendees
         FROM ${tables.Activities}
-        WHERE ${filterSet}`;
+        WHERE ${filterSet}
+        LIMIT 1`;
 
         const result = await DBService.query(sql, [activity_id, ...filterValues]);
 
@@ -56,16 +57,16 @@ class ActivityModel {
     }
 
     create = async({
-        location, privacy, frequency,
+        title, location, privacy, frequency,
         monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0, sunday = 0,
-        month_number, group_size, happens_at, additional_directions = null,
+        month_number, group_size, happens_at, additional_instructions = null,
         activity_type_id, activity_status_id, campus_spot_id = null, organizer_erp, created_at
     }) => {
         
         const valueSet = {
-            location, privacy, frequency,
+            title, location, privacy, frequency,
             monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            month_number, group_size, happens_at, additional_directions,
+            month_number, group_size, happens_at, additional_instructions,
             activity_type_id, activity_status_id, campus_spot_id, organizer_erp, created_at
         };
         const { columnSet, values } = multipleColumnSet(valueSet);

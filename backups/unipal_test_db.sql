@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2021 at 07:51 PM
+-- Generation Time: Oct 14, 2021 at 09:45 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `activities` (
   `activity_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(50) NOT NULL,
   `location` enum('on_campus','external') NOT NULL,
   `privacy` enum('public','private','limited') NOT NULL,
   `frequency` enum('daily','weekly','one_time','combo') NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE `activities` (
   `month_number` tinyint(2) UNSIGNED NOT NULL,
   `group_size` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
   `happens_at` time NOT NULL,
-  `additional_directions` varchar(100) DEFAULT NULL,
+  `additional_instructions` varchar(100) DEFAULT NULL,
   `activity_type_id` int(10) UNSIGNED NOT NULL,
   `activity_status_id` int(10) UNSIGNED NOT NULL,
   `campus_spot_id` int(10) UNSIGNED DEFAULT NULL,
@@ -54,10 +55,10 @@ CREATE TABLE `activities` (
 -- Dumping data for table `activities`
 --
 
-INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_directions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
-(1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
+INSERT INTO `activities` (`activity_id`, `title`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_instructions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
+(1, 'Daily Campus Activity', 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(2, 'One Time Campus Activity', 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(3, 'Custom Campus Activity', 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
 
 -- --------------------------------------------------------
 
@@ -396,7 +397,7 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
 ('17619', 'Test', 'User', 'male', '+923009999999', 'testuser3@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'test.user.17619@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$LHr409fmxHfT04OZ2jVYR.ek8T0Z73wC0LMezanHoBUJvtsaU7f1a', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$ghCdz5wvanyGqGaKdULgTOtxwGmB2agxwypvzzIYY63UL8I.D0326', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 -- --------------------------------------------------------
 
@@ -708,7 +709,8 @@ ALTER TABLE `student_connections`
   ADD PRIMARY KEY (`student_connection_id`),
   ADD UNIQUE KEY `unique_sender_receiver` (`student_1_erp`,`student_2_erp`) USING BTREE,
   ADD KEY `search_by_sender_erp` (`sender_erp`,`receiver_erp`) USING BTREE,
-  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE;
+  ADD KEY `search_by_receiver_erp` (`receiver_erp`,`sender_erp`) USING BTREE,
+  ADD KEY `fk_friend_requests_student_2_erp` (`student_2_erp`);
 
 --
 -- Indexes for table `student_statuses`
@@ -785,31 +787,31 @@ ALTER TABLE `tsr_members`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `activity_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `activity_statuses`
 --
 ALTER TABLE `activity_statuses`
-  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `activity_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `activity_types`
 --
 ALTER TABLE `activity_types`
-  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `activity_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `campuses`
 --
 ALTER TABLE `campuses`
-  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `campus_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `campus_spots`
 --
 ALTER TABLE `campus_spots`
-  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `campus_spot_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `classrooms`
@@ -827,7 +829,7 @@ ALTER TABLE `hobbies`
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
-  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `interest_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -839,7 +841,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `program_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `reaction_types`
@@ -851,13 +853,13 @@ ALTER TABLE `reaction_types`
 -- AUTO_INCREMENT for table `student_connections`
 --
 ALTER TABLE `student_connections`
-  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `student_connection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `student_statuses`
 --
 ALTER TABLE `student_statuses`
-  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `student_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `teachers`
@@ -993,7 +995,9 @@ ALTER TABLE `students`
 --
 ALTER TABLE `student_connections`
   ADD CONSTRAINT `fk_friend_requests_receiver_erp_idx` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
-  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`);
+  ADD CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_1_erp` FOREIGN KEY (`student_1_erp`) REFERENCES `students` (`erp`),
+  ADD CONSTRAINT `fk_friend_requests_student_2_erp` FOREIGN KEY (`student_2_erp`) REFERENCES `students` (`erp`);
 
 --
 -- Constraints for table `teacher_reviews`

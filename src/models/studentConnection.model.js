@@ -30,7 +30,8 @@ class StudentConnectionModel {
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.StudentConnections}
-        WHERE student_connection_id = ?`;
+        WHERE student_connection_id = ?
+        LIMIT 1`;
 
         const result = await DBService.query(sql, [id]);
 

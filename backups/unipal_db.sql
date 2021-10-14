@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2021 at 07:42 PM
+-- Generation Time: Oct 14, 2021 at 09:40 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `activities` (
   `activity_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(50) NOT NULL,
   `location` enum('on_campus','external') NOT NULL,
   `privacy` enum('public','private','limited') NOT NULL,
   `frequency` enum('daily','weekly','one_time','combo') NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE `activities` (
   `month_number` tinyint(2) UNSIGNED NOT NULL,
   `group_size` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
   `happens_at` time NOT NULL,
-  `additional_directions` varchar(100) DEFAULT NULL,
+  `additional_instructions` varchar(100) DEFAULT NULL,
   `activity_type_id` int(10) UNSIGNED NOT NULL,
   `activity_status_id` int(10) UNSIGNED NOT NULL,
   `campus_spot_id` int(10) UNSIGNED DEFAULT NULL,
@@ -54,10 +55,10 @@ CREATE TABLE `activities` (
 -- Dumping data for table `activities`
 --
 
-INSERT INTO `activities` (`activity_id`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_directions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
-(1, 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(2, 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
-(3, 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
+INSERT INTO `activities` (`activity_id`, `title`, `location`, `privacy`, `frequency`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `month_number`, `group_size`, `happens_at`, `additional_instructions`, `activity_type_id`, `activity_status_id`, `campus_spot_id`, `organizer_erp`, `created_at`) VALUES
+(1, 'Daily Campus Activity', 'on_campus', 'public', 'daily', 1, 1, 1, 1, 1, 1, 1, 10, 100, '04:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(2, 'One Time Campus Activity', 'on_campus', 'public', 'one_time', 1, 0, 0, 0, 0, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '17855', '2021-09-17 15:53:40'),
+(3, 'Custom Campus Activity', 'on_campus', 'limited', 'combo', 1, 0, 0, 0, 1, 0, 0, 10, 3, '05:30:00', NULL, 1, 1, 2, '15030', '2021-09-17 15:53:40');
 
 -- --------------------------------------------------------
 

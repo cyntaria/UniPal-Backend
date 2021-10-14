@@ -12,6 +12,7 @@ describe("Activities API", () => {
     const userERP = '17855';
     const existingActivity = {
         activity_id: 1,
+        title: 'Daily Campus Activity',
         location: "on_campus",
         privacy: "public",
         frequency: "daily",
@@ -25,7 +26,7 @@ describe("Activities API", () => {
         month_number: 10,
         group_size: 100,
         happens_at: "4:30:00",
-        additional_directions: "near the stairs",
+        additional_instructions: "near the stairs",
         activity_type_id: 1,
         activity_status_id: 1,
         campus_spot_id: 2,
@@ -58,7 +59,7 @@ describe("Activities API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            expect(resBody[0]).to.include.keys(Object.keys(existingActivity)); // contain all params
+            expect(resBody[0]).to.include.all.keys(Object.keys(existingActivity)); // contain all params
         });
 
         it("Scenario 2: Get all activities request successful (using query params)", async() => {
