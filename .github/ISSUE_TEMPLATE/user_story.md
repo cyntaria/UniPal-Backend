@@ -3,7 +3,7 @@ name: User Story
 about: Use this template to help streamline the information you track about a functionality
   or an interaction between a user and the system
 title: As a end_user, I should be able to action, so that I can benefit
-labels: user story
+labels: 'Priority: Medium, Status: Pending, Type: Feature, user story'
 assignees: ''
 
 ---
