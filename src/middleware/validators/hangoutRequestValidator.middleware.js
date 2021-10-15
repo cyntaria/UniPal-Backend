@@ -52,13 +52,16 @@ exports.updateHangoutRequestSchema = [
             }
             return true;
         })
-        .withMessage('\'accepeted\'/\'rejected\' request status requires \'accepted_at\' datetime'),
+        .withMessage('\'accepted\'/\'rejected\' request status requires \'accepted_at\' datetime'),
     body('accepted_at')
         .optional({ nullable: true })
         .trim()
         .matches(datetimeRegex)
         .withMessage('Accepted datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
-        .custom((accepted_at, {req}) => req.body.request_status !== HangoutRequestStatus.RequestPending)
+        .custom((accepted_at, {req}) => {
+            return req.body.request_status === HangoutRequestStatus.Accepted ||
+                req.body.request_status === HangoutRequestStatus.Rejected;
+        })
         .withMessage('\'accepted_at\' datetime can only be set for \'accepeted\'/\'rejected\' request status'),
     body()
         .custom(value => {
