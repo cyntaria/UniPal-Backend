@@ -339,7 +339,7 @@ CREATE TABLE `reaction_types` (
   `reaction_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `reaction_type` varchar(45) NOT NULL,
   PRIMARY KEY (`reaction_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,4 +621,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-15  5:26:32
+-- Dump completed on 2021-10-15 13:41:18

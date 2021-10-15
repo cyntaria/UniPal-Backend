@@ -174,6 +174,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `reaction_types` WRITE;
 /*!40000 ALTER TABLE `reaction_types` DISABLE KEYS */;
+INSERT INTO `reaction_types` VALUES (1,'Laugh'),(2,'Sad'),(3,'Angry'),(4,'Like'),(5,'Love'),(6,'Care');
 /*!40000 ALTER TABLE `reaction_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,4 +298,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-15  5:26:32
+-- Dump completed on 2021-10-15 13:41:18
