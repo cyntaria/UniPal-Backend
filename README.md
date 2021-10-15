@@ -18,6 +18,7 @@ The documentation was generated using Postman and is divided into collections at
 - Campus Spots - https://documenter.getpostman.com/view/13348269/U16nJNvi
 - Activities - https://documenter.getpostman.com/view/13348269/
 - Student Connections - https://documenter.getpostman.com/view/13348269/UUy7bjZY
+- Hangout Requests - https://documenter.getpostman.com/view/13348269/UV5WCHBi
 
 ### :dvd: Installation
 #### 1. Getting Started

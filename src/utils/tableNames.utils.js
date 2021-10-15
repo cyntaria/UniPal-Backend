@@ -12,5 +12,6 @@ exports.tables = {
     Activities: 'activities',
     ActivityAttendees: 'activity_attendees',
     SavedActivities: 'saved_activities',
-    StudentConnections: 'student_connections'
+    StudentConnections: 'student_connections',
+    HangoutRequests: 'hangout_requests'
 };
