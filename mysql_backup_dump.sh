@@ -4,26 +4,35 @@ DBUSER=root
 
 read -sp "Enter password for ${DBUSER} user: " DBPASS
 
-
+echo
 echo "======= STARTING MAIN DB EXPORT ======="
 
+echo
 echo "Dumping (FULL SQL) for MAIN database"
-mysqldump --opt --user=$DBUSER --password=$DBPASS $DBNAME > backups/$DBNAME.sql
+mysqldump --user=$DBUSER --password=$DBPASS --single-transaction $DBNAME > "backups/${DBNAME}.sql"
 
+echo
 echo "Dumping (SCHEMA ONLY) for MAIN database"
-mysqldump --opt --user=$DBUSER --password=$DBPASS --no-data $DBNAME > backups/$DBNAME_schema.sql # -d also works the same
+mysqldump --user=$DBUSER --password=$DBPASS --single-transaction --no-data $DBNAME > "backups/${DBNAME}_schema.sql" # -d also works the same
 
+echo
 echo "Dumping (DATA ONLY) for MAIN database"
-mysqldump --opt --user=$DBUSER --password=$DBPASS --no-create-info $DBNAME > backups/$DBNAME_data.sql # -t also works the same
+mysqldump --user=$DBUSER --password=$DBPASS --single-transaction --no-create-info $DBNAME > "backups/${DBNAME}_data.sql" # -t also works the same
 
-echo "========== EXPORT COMPLETE =========="\n
+echo
+echo "========== EXPORT COMPLETE =========="
 
+echo
 echo "======= STARTING TEST DB EXPORT ======="
 
+echo
 echo "Dumping (FULL SQL) for TEST database"
-mysqldump --opt --user=$DBUSER --password=$DBPASS $DBNAME > backups/$TESTDBNAME.sql
+mysqldump --user=$DBUSER --password=$DBPASS --single-transaction $DBNAME > "backups/${TESTDBNAME}.sql"
 
+echo
 echo "Dumping (DATA ONLY) for TEST database"
-mysqldump --opt --user=$DBUSER --password=$DBPASS --no-create-info $DBNAME > backups/$TESTDBNAME_data.sql # -t also works the same
+mysqldump --user=$DBUSER --password=$DBPASS --single-transaction --no-create-info $DBNAME > "backups/${TESTDBNAME}_data.sql" # -t also works the same
 
-echo "========== EXPORT COMPLETE =========="\n
+echo
+echo "========== EXPORT COMPLETE =========="
+read
