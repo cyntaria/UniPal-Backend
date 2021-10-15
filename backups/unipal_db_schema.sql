@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2021 at 10:43 AM
+-- Generation Time: Oct 15, 2021 at 01:05 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -152,7 +152,7 @@ CREATE TABLE `hangout_requests` (
   `receiver_erp` varchar(5) NOT NULL,
   `request_status` enum('request_pending','accepted','rejected') NOT NULL DEFAULT 'request_pending',
   `purpose` varchar(150) NOT NULL,
-  `meeting_at` datetime NOT NULL,
+  `meetup_at` datetime NOT NULL,
   `meetup_spot_id` int(10) UNSIGNED NOT NULL,
   `accepted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

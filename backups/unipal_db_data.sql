@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2021 at 09:40 AM
+-- Generation Time: Oct 15, 2021 at 01:05 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -79,6 +79,14 @@ INSERT INTO `campus_spots` (`campus_spot_id`, `campus_spot`, `campus_id`) VALUES
 (7, 'Student Center (SC)', 1),
 (8, 'Auditorium', 1),
 (9, 'Auditorium', 2);
+
+--
+-- Dumping data for table `hangout_requests`
+--
+
+INSERT INTO `hangout_requests` (`hangout_request_id`, `sender_erp`, `receiver_erp`, `request_status`, `purpose`, `meetup_at`, `meetup_spot_id`, `accepted_at`) VALUES
+(1, '17855', '15030', 'request_pending', 'Some purpose', '2021-10-04 17:24:40', 7, NULL),
+(2, '17855', '15030', 'accepted', 'Some other purpose', '2021-10-04 17:24:40', 2, '2021-10-04 17:24:40');
 
 --
 -- Dumping data for table `hobbies`

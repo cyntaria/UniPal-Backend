@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2021 at 09:45 AM
+-- Generation Time: Oct 15, 2021 at 01:16 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -81,6 +81,14 @@ INSERT INTO `campus_spots` (`campus_spot_id`, `campus_spot`, `campus_id`) VALUES
 (9, 'Auditorium', 2);
 
 --
+-- Dumping data for table `hangout_requests`
+--
+
+INSERT INTO `hangout_requests` (`hangout_request_id`, `sender_erp`, `receiver_erp`, `request_status`, `purpose`, `meetup_at`, `meetup_spot_id`, `accepted_at`) VALUES
+(1, '17855', '15030', 'request_pending', 'Some purpose', '2021-10-04 17:24:40', 7, NULL),
+(2, '17855', '15030', 'accepted', 'Some other purpose', '2021-10-04 17:24:40', 2, '2021-10-04 17:24:40');
+
+--
 -- Dumping data for table `hobbies`
 --
 
@@ -123,7 +131,7 @@ INSERT INTO `saved_activities` (`student_erp`, `activity_id`, `saved_at`) VALUES
 INSERT INTO `students` (`erp`, `first_name`, `last_name`, `gender`, `contact`, `email`, `birthday`, `password`, `profile_picture_url`, `graduation_year`, `uni_email`, `hobby_1`, `hobby_2`, `hobby_3`, `interest_1`, `interest_2`, `interest_3`, `program_id`, `campus_id`, `favourite_campus_hangout_spot`, `favourite_campus_activity`, `current_status`, `is_active`, `role`) VALUES
 ('15030', 'Mohammad Rafay', 'Siddiqui', 'male', '+923009999999', 'rafaysiddiqui58@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'm.rafay.15030@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'admin'),
 ('17619', 'Test', 'User', 'male', '+923009999999', 'testuser3@gmail.com', '1999-09-18', '$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'test.user.17619@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user'),
-('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$ghCdz5wvanyGqGaKdULgTOtxwGmB2agxwypvzzIYY63UL8I.D0326', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
+('17855', 'Abdur Rafay', 'Saleem', 'male', '+923009999999', 'arafaysaleem@gmail.com', '1999-09-18', '$2a$08$sk8Bbk.qgy/pjrGQi0Jz5.FKEnLWLrK0XVY5MlJSXeYJba7Xt1Y8y', 'https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg', 2022, 'a.rafay.17855@iba.khi.edu.pk', 1, 2, 3, 1, 2, 3, 1, 1, 'CED', 'Lifting', 1, 1, 'api_user');
 
 --
 -- Dumping data for table `student_connections`
