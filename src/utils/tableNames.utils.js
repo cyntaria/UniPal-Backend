@@ -14,5 +14,8 @@ exports.tables = {
     SavedActivities: 'saved_activities',
     StudentConnections: 'student_connections',
     HangoutRequests: 'hangout_requests',
-    ReactionTypes: 'reaction_types'
+    ReactionTypes: 'reaction_types',
+    Posts: 'posts',
+    PostUploads: 'post_uploads',
+    PostReactions: 'post_reactions'
 };
