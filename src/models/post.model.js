@@ -63,11 +63,9 @@ class PostModel {
         return result[0];
     }
 
-    findAllAttendeesByPost = async(post_id, filters) => {
-        let sql = `SELECT post_id, student_erp, first_name, last_name, profile_picture_url, involvement_type 
-        FROM ${tables.PostAttendees} AS a
-        INNER JOIN ${tables.Students} AS s
-        ON a.student_erp = s.erp
+    findAllReactionsByPost = async(post_id, filters) => {
+        let sql = `SELECT post_id, reaction_type_id, student_erp, reacted_at 
+        FROM ${tables.PostReactions}
         WHERE post_id = ?`;
 
         if (!Object.keys(filters).length) {
@@ -82,19 +80,9 @@ class PostModel {
         return result;
     }
 
-    create = async({
-        title, location, privacy, frequency,
-        monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0, sunday = 0,
-        month_number, group_size, happens_at, additional_instructions = null,
-        post_type_id, post_status_id, campus_spot_id = null, organizer_erp, created_at
-    }) => {
+    create = async({ body, privacy, author_erp, posted_at }) => {
         
-        const valueSet = {
-            title, location, privacy, frequency,
-            monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            month_number, group_size, happens_at, additional_instructions,
-            post_type_id, post_status_id, campus_spot_id, organizer_erp, created_at
-        };
+        const valueSet = { body, privacy, author_erp, posted_at };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
         const sql = `INSERT INTO ${tables.Posts} SET ${columnSet}`;
