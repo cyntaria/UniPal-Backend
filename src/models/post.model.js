@@ -24,7 +24,7 @@ class PostModel {
                 GROUP BY post_id, reaction_type_id
             ) AS PR
             ON P.post_id = PR.post_id
-            WHERE PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions}
+            WHERE (PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions})
         `;
 
         if (!Object.keys(filters).length) {
@@ -45,6 +45,18 @@ class PostModel {
         const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `
+            SELECT *
+            FROM ${tables.Posts}
+            WHERE ${filterSet}
+        `;
+
+        const result = await DBService.query(sql, [...filterValues]);
+
+        return result[0];
+    }
+
+    findOneWithDetails = async(post_id) => {
+        const sql = `
             SELECT 
                 P.post_id, P.body, P.privacy, P.author_erp, P.posted_at,
                 PR.reaction_type_id, PR.reaction_count, 
@@ -61,29 +73,22 @@ class PostModel {
                 GROUP BY post_id, reaction_type_id
             ) AS PR
             ON P.post_id = PR.post_id
-            WHERE ${filterSet} AND PR.rank <= ${PostModel.topNReactions}
+            WHERE P.post_id = ? AND (PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions})
             ORDER BY PR.reaction_count DESC
         `;
 
-        const result = await DBService.query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [post_id]);
 
         return result;
     }
 
-    findAllReactionsByPost = async(post_id, filters) => {
-        let sql = `SELECT post_id, reaction_type_id, student_erp, reacted_at 
+    findAllReactionsByPost = async(post_id) => {
+        let sql = `SELECT * 
         FROM ${tables.PostReactions}
         WHERE post_id = ?
         ORDER BY reacted_at DESC`;
 
-        if (!Object.keys(filters).length) {
-            return await DBService.query(sql, [post_id]);
-        }
-
-        const { filterSet, filterValues } = multipleFilterSet(filters);
-        sql += ` AND ${filterSet}`;
-
-        const result = await DBService.query(sql, [post_id, ...filterValues]);
+        const result = await DBService.query(sql, [post_id]);
 
         return result;
     }
