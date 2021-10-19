@@ -18,8 +18,8 @@ class PostRepository {
             throw new NotFoundException('Posts not found');
         }
 
-        let postsActualMap = {};
-        let postsDuplicatesMap = {};
+        let postsActualMap = new Map();
+        let postsDuplicatesMap = new Map();
 
         for (const post of postDuplicates) {
             const { post_id } = post;
@@ -29,68 +29,76 @@ class PostRepository {
                 ...postDetails
             } = post;
 
-            if (!postsDuplicatesMap[post_id]) { // if post not added to the object
+            if (!postsDuplicatesMap.has(post_id)) { // if post not added to the object
                 // mark true under the post_id
-                postsDuplicatesMap[post_id] = {...postDetails};
+                postsDuplicatesMap.set(post_id, {...postDetails});
 
                 // add it to the object
-                postsActualMap[post_id] = {...postDetails};
+                postsActualMap.set(post_id, {...postDetails});
 
                 // initialize post reactions
-                if (reaction_type_id === null) postsActualMap[post_id].top_3_reactions = null;
+                if (reaction_type_id === null) postsActualMap.get(post_id).top_3_reactions = null;
                 else {
-                    postsActualMap[post_id].top_3_reactions = []; // for actual objects
-                    postsDuplicatesMap[post_id].reactionsMap = {}; // for duplicate checks
+                    postsActualMap.get(post_id).top_3_reactions = []; // for actual objects
+                    postsDuplicatesMap.get(post_id).reactionsMap = new Map(); // for duplicate checks
                 };
 
                 // initialize post resources
-                if (resource_id === null) postsActualMap[post_id].resources = null;
+                if (resource_id === null) postsActualMap.get(post_id).resources = null;
                 else {
-                    postsActualMap[post_id].resources = []; // for actual objects
-                    postsDuplicatesMap[post_id].resourcesMap = {}; // for duplicate checks
+                    postsActualMap.get(post_id).resources = []; // for actual objects
+                    postsDuplicatesMap.get(post_id).resourcesMap = new Map(); // for duplicate checks
                 };
             }
 
             // load post reactions
-            // if reaction not already inserted
-            const reactionNotInserted = !postsDuplicatesMap[post_id].reactionsMap[reaction_type_id];
-            if (reaction_type_id !== null && reactionNotInserted) {
-                // mark true under the reaction_type_id
-                postsDuplicatesMap[post_id].reactionsMap[reaction_type_id] = true;
+            if (reaction_type_id !== null) {
+                // if reaction not already inserted
+                const reactionNotInserted = !postsDuplicatesMap.get(post_id).reactionsMap.has(reaction_type_id);
 
-                // insert reaction into list
-                postsActualMap[post_id].top_3_reactions.push({
-                    reaction_type_id,
-                    reaction_count
-                });
+                if (reactionNotInserted) {
+                    // mark true under the reaction_type_id
+                    postsDuplicatesMap.get(post_id).reactionsMap.set(reaction_type_id, true);
+    
+                    // insert reaction into list
+                    postsActualMap.get(post_id).top_3_reactions.push({
+                        reaction_type_id,
+                        reaction_count
+                    });
+                }
             }
 
             // load post resources
-            // if resource not already inserted
-            const resourceNotInserted = !postsDuplicatesMap[post_id].resourcesMap[resource_id];
-            if (resource_id !== null && resourceNotInserted) {
-                // mark true under the resource_id
-                postsDuplicatesMap[post_id].resourcesMap[resource_id] = true;
+            if (resource_id !== null) {
+                // if resource not already inserted
+                const resourceNotInserted = !postsDuplicatesMap.get(post_id).resourcesMap.has(resource_id);
 
-                // insert resource into list
-                postsActualMap[post_id].resources.push({
-                    resource_id,
-                    resource_url,
-                    resource_type
-                });
+                if (resourceNotInserted) {
+                    // mark true under the resource_id
+                    postsDuplicatesMap.get(post_id).resourcesMap.set(resource_id, true);
+    
+                    // insert resource into list
+                    postsActualMap.get(post_id).resources.push({
+                        resource_id,
+                        resource_url,
+                        resource_type
+                    });
+                }
+
             }
         }
 
-        const postsList = Object.values(postsActualMap);
+        const postsList = [...postsActualMap.values()];
 
         return successResponse(postsList);
     };
 
-    findOne = async(filters) => {
-        const postDuplicates = await PostModel.findOne(filters);
+    findOne = async(id) => {
+        const postDuplicates = await PostModel.findOneWithDetails(id);
         if (!postDuplicates) {
             throw new NotFoundException('Post not found');
         }
+        console.log(postDuplicates);
 
         let postBody = {};
 
@@ -101,49 +109,58 @@ class PostRepository {
                 ...postDetails
             } = post;
     
-            if (Object.keys(postBody).length === 0) postBody = postDetails;
+            if (Object.keys(postBody).length === 0) { // if post details not added
+                // add post details
+                postBody = postDetails;
 
-            // initialize post reactions
-            if (reaction_type_id === null) postBody.top_3_reactions = null;
-            else {
-                postBody.top_3_reactions = []; // for actual objects
-                postBody.reactionsMap = {}; // for duplicate checks
-            };
-    
-            // initialize post resources
-            if (resource_id === null) postBody.resources = null;
-            else {
-                postBody.resources = []; // for actual objects
-                postBody.resourcesMap = {}; // for duplicate checks
-            };
+                // initialize post reactions
+                if (reaction_type_id === null) postBody.top_3_reactions = null;
+                else {
+                    postBody.top_3_reactions = []; // for actual objects
+                    postBody.reactionsMap = new Map(); // for duplicate checks
+                };
+        
+                // initialize post resources
+                if (resource_id === null) postBody.resources = null;
+                else {
+                    postBody.resources = []; // for actual objects
+                    postBody.resourcesMap = new Map(); // for duplicate checks
+                };
+            }
     
             // load post reactions
-            // if reaction not already inserted
-            const reactionNotInserted = !postBody.reactionsMap[reaction_type_id];
-            if (reaction_type_id !== null && reactionNotInserted) {
-                // mark true under the reaction_type_id
-                postBody.reactionsMap[reaction_type_id] = true;
-    
-                // insert reaction into list
-                postBody.top_3_reactions.push({
-                    reaction_type_id,
-                    reaction_count
-                });
+            if (reaction_type_id !== null) {
+                // if reaction not already inserted
+                const reactionNotInserted = !postBody.reactionsMap.has(reaction_type_id);
+
+                if (reactionNotInserted) {
+                    // mark true under the reaction_type_id
+                    postBody.reactionsMap.set(reaction_type_id, true);
+        
+                    // insert reaction into list
+                    postBody.top_3_reactions.push({
+                        reaction_type_id,
+                        reaction_count
+                    });
+                }
             }
     
             // load post resources
-            // if resource not already inserted
-            const resourceNotInserted = !postBody.resourcesMap[resource_id];
-            if (resource_id !== null && resourceNotInserted) {
-                // mark true under the resource_id
-                postBody.resourcesMap[resource_id] = true;
-    
-                // insert resource into list
-                postBody.resources.push({
-                    resource_id,
-                    resource_url,
-                    resource_type
-                });
+            if (resource_id !== null) {
+                // if resource not already inserted
+                const resourceNotInserted = !postBody.resourcesMap.has(resource_id);
+
+                if (resourceNotInserted) {
+                    // mark true under the resource_id
+                    postBody.resourcesMap.set(resource_id, true);
+        
+                    // insert resource into list
+                    postBody.resources.push({
+                        resource_id,
+                        resource_url,
+                        resource_type
+                    });
+                }
             }
         }
 
@@ -153,8 +170,8 @@ class PostRepository {
         return successResponse(postBody);
     };
 
-    findAllReactionsByPost = async(id, filters) => {
-        let postReactions = await PostModel.findAllReactionsByPost(id, filters);
+    findAllReactionsByPost = async(id) => {
+        let postReactions = await PostModel.findAllReactionsByPost(id);
         if (!postReactions.length) {
             throw new NotFoundException('Post reactions not found');
         }
