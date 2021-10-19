@@ -2,7 +2,7 @@ const { successResponse } = require('../utils/responses.utils');
 
 const { DBService } = require('../db/db-service');
 const PostModel = require('../models/post.model');
-const PostUploadModel = require('../models/postUpload.model');
+const PostResourceModel = require('../models/postResource.model');
 const {
     NotFoundException,
     CreateFailedException,
@@ -183,7 +183,7 @@ class PostRepository {
                 resource_type: resource.resource_type
             };
             try {
-                const success = await PostUploadModel.create(postResource);
+                const success = await PostResourceModel.create(postResource);
                 if (!success) {
                     await DBService.rollback();
                     throw new CreateFailedException(`Post resource(id: ${resource.resource_url}, resource_type: ${resource.resource_type}) failed to be created`);

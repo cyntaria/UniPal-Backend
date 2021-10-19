@@ -10,11 +10,11 @@ class PostModel {
         let sql = `
             SELECT 
                 P.post_id, P.body, P.privacy, P.author_erp, P.posted_at,
-                PR.reaction_type_id, PR.reaction_count
-                PU.resource_id, PU.resource_type, PU.resource_url,
+                PR.reaction_type_id, PR.reaction_count,
+                PRes.resource_id, PRes.resource_type, PRes.resource_url
             FROM ${tables.Posts} AS P
-            LEFT OUTER JOIN ${tables.PostUploads} AS PU
-            ON P.post_id = PU.post_id
+            LEFT OUTER JOIN ${tables.PostResources} AS PRes
+            ON P.post_id = PRes.post_id
             LEFT OUTER JOIN (
                 SELECT 
                     post_id, reaction_type_id,
@@ -25,15 +25,18 @@ class PostModel {
             ) AS PR
             ON P.post_id = PR.post_id
             WHERE PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions}
-            ORDER BY P.posted_at DESC, P.post_id, PR.reaction_count DESC
         `;
 
         if (!Object.keys(filters).length) {
+            sql += ` ORDER BY P.posted_at DESC, P.post_id, PR.reaction_count DESC`;
             return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
-        sql += ` WHERE ${filterSet}`;
+        sql += `
+            AND ${filterSet}
+            ORDER BY P.posted_at DESC, P.post_id, PR.reaction_count DESC
+        `;
 
         return await DBService.query(sql, [...filterValues]);
     }
@@ -44,11 +47,11 @@ class PostModel {
         const sql = `
             SELECT 
                 P.post_id, P.body, P.privacy, P.author_erp, P.posted_at,
-                PR.reaction_type_id, PR.reaction_count
-                PU.resource_id, PU.resource_type, PU.resource_url,
+                PR.reaction_type_id, PR.reaction_count, 
+                PRes.resource_id, PRes.resource_type, PRes.resource_url
             FROM ${tables.Posts} AS P
-            LEFT OUTER JOIN ${tables.PostUploads} AS PU
-            ON P.post_id = PU.post_id
+            LEFT OUTER JOIN ${tables.PostResources} AS PRes
+            ON P.post_id = PRes.post_id
             LEFT OUTER JOIN (
                 SELECT 
                     post_id, reaction_type_id,

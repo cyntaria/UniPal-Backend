@@ -16,6 +16,6 @@ exports.tables = {
     HangoutRequests: 'hangout_requests',
     ReactionTypes: 'reaction_types',
     Posts: 'posts',
-    PostUploads: 'post_uploads',
+    PostResources: 'post_resources',
     PostReactions: 'post_reactions'
 };

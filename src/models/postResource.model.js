@@ -2,13 +2,13 @@ const { DBService } = require('../db/db-service');
 const { multipleColumnSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
-class PostUploadModel {
+class PostResourceModel {
 
     create = async({ post_id, resource_url, resource_type }) => {
         const valueSet = { post_id, resource_url, resource_type };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const sql = `INSERT INTO ${tables.PostUploads} SET ${columnSet}`;
+        const sql = `INSERT INTO ${tables.PostResources} SET ${columnSet}`;
 
         const result = await DBService.query(sql, [...values]);
         const created_resource = !result ? 0 : {
@@ -22,7 +22,7 @@ class PostUploadModel {
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
 
-        const sql = `UPDATE ${tables.PostUploads} 
+        const sql = `UPDATE ${tables.PostResources} 
         SET ${columnSet} 
         WHERE resource_id = ?`;
 
@@ -32,7 +32,7 @@ class PostUploadModel {
     }
 
     delete = async(id) => {
-        const sql = `DELETE FROM ${tables.PostUploads}
+        const sql = `DELETE FROM ${tables.PostResources}
         WHERE resource_id = ?`;
 
         const result = await DBService.query(sql, [id]);
@@ -42,4 +42,4 @@ class PostUploadModel {
     }
 }
 
-module.exports = new PostUploadModel;
+module.exports = new PostResourceModel;
