@@ -15,6 +15,8 @@ const savedActivityRouter = require('../routes/savedActivity.routes');
 const studentConnectionRouter = require('../routes/studentConnection.routes');
 const hangoutRequestRouter = require('../routes/hangoutRequest.routes');
 const reactionTypeRouter = require('../routes/reactionType.routes');
+const postReactionRouter = require('../routes/postReaction.routes');
+const postRouter = require('../routes/post.routes');
 const healthCheckRouter = require('../routes/healthCheck.routes');
 
 class RoutesLoader {
@@ -35,6 +37,8 @@ class RoutesLoader {
         app.use(`/api/${version}/student-connections`, studentConnectionRouter);
         app.use(`/api/${version}/hangout-requests`, hangoutRequestRouter);
         app.use(`/api/${version}/reaction-types`, reactionTypeRouter);
+        app.use(`/api/${version}/posts`, postRouter);
+        app.use(`/api/${version}/posts`, postReactionRouter);
         app.use(`/api/${version}/health`, healthCheckRouter);
     }
 }
