@@ -1,6 +1,8 @@
 const { successResponse } = require('../utils/responses.utils');
 
+const { DBService } = require('../db/db-service');
 const PostModel = require('../models/post.model');
+const PostUploadModel = require('../models/postUpload.model');
 const {
     NotFoundException,
     CreateFailedException,
@@ -161,11 +163,37 @@ class PostRepository {
     };
 
     create = async(body) => {
-        const result = await PostModel.create(body);
+        const {resources, ...postBody} = body;
+
+        await DBService.beginTransaction();
+
+        const result = await PostModel.create(postBody);
 
         if (!result) {
+            await DBService.rollback();
             throw new CreateFailedException('Post failed to be created');
         }
+
+        const { post_id } = result;
+
+        for (const resource of resources) {
+            const postResource = {
+                post_id,
+                resource_url: resource.resource_url,
+                resource_type: resource.resource_type
+            };
+            try {
+                const success = await PostUploadModel.create(postResource);
+                if (!success) {
+                    await DBService.rollback();
+                    throw new CreateFailedException(`Post resource(id: ${resource.resource_url}, resource_type: ${resource.resource_type}) failed to be created`);
+                }
+            } catch (ex) {
+                await DBService.rollback();
+            }
+        }
+
+        await DBService.commit();
 
         return successResponse(result, 'Post was created!');
     };
