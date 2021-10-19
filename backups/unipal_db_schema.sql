@@ -267,32 +267,33 @@ CREATE TABLE `post_reactions` (
   `post_id` int(10) unsigned NOT NULL,
   `reaction_type_id` int(10) unsigned NOT NULL,
   `student_erp` varchar(5) NOT NULL,
+  `reacted_at` datetime NOT NULL,
   PRIMARY KEY (`post_id`,`student_erp`) USING BTREE,
   KEY `fk_post_reactions_post_id_idx` (`post_id`),
   KEY `fk_post_reactions_student_erp_idx` (`student_erp`),
   KEY `fk_post_reactions_reaction_type_id` (`reaction_type_id`),
-  CONSTRAINT `fk_post_reactions_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`),
+  CONSTRAINT `fk_post_reactions_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_post_reactions_reaction_type_id` FOREIGN KEY (`reaction_type_id`) REFERENCES `reaction_types` (`reaction_type_id`),
-  CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`)
+  CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `post_uploads`
+-- Table structure for table `post_resources`
 --
 
-DROP TABLE IF EXISTS `post_uploads`;
+DROP TABLE IF EXISTS `post_resources`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `post_uploads` (
+CREATE TABLE `post_resources` (
   `post_id` int(10) unsigned NOT NULL,
-  `resource_id` int(10) unsigned NOT NULL,
+  `resource_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `resource_type` enum('image','video') NOT NULL,
   `resource_url` text NOT NULL,
-  PRIMARY KEY (`post_id`,`resource_id`) USING BTREE,
+  PRIMARY KEY (`resource_id`),
   KEY `fk_post_uploads_post_id_idx` (`post_id`),
-  CONSTRAINT `fk_post_uploads_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `fk_post_uploads_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -310,8 +311,8 @@ CREATE TABLE `posts` (
   `author_erp` varchar(5) NOT NULL,
   PRIMARY KEY (`post_id`),
   KEY `fk_posts_student_erp_idx` (`author_erp`),
-  CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`erp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,4 +622,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-15 13:41:18
+-- Dump completed on 2021-10-19 14:39:14
