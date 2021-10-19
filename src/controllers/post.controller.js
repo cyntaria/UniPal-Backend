@@ -7,12 +7,12 @@ class PostController {
     };
 
     getPostById = async(req, res, next) => {
-        const response = await PostRepository.findOne({post_id: req.params.id});
+        const response = await PostRepository.findOne(req.params.id);
         res.send(response);
     };
 
     getPostReactions = async(req, res, next) => {
-        const response = await PostRepository.findAllReactionsByPost(req.params.id, req.query);
+        const response = await PostRepository.findAllReactionsByPost(req.params.id);
         res.send(response);
     };
 
