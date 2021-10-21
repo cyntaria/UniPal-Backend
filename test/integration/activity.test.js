@@ -750,7 +750,7 @@ describe("Activities API", () => {
             // act
             res = await request(app)
                 .delete(`${baseRoute}/${newId}`)
-                .auth(userToken, { type: 'bearer' }); // admin can delete other's activities even if token erp != newActivity.organizer_erp
+                .auth(adminToken, { type: 'bearer' }); // admin can delete other's activities even if token erp != newActivity.organizer_erp
 
             // assert
             expect(res.status).to.be.equal(200);
