@@ -95,10 +95,9 @@ class PostRepository {
 
     findOne = async(id) => {
         const postDuplicates = await PostModel.findOneWithDetails(id);
-        if (!postDuplicates) {
+        if (!postDuplicates.length) {
             throw new NotFoundException('Post not found');
         }
-        console.log(postDuplicates);
 
         let postBody = {};
 
