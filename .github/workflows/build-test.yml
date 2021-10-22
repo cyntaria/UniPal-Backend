@@ -37,7 +37,6 @@ jobs:
         while ! mysqladmin ping -h $DB_HOST -p$DB_PASS --silent; do
           sleep 1
         done
-        mysql -h $DB_HOST -p$DB_PASS -D ${{ secrets.DB_TEST_DATABASE }} -e 'SELECT VERSION()'
     - name: Prepare MySQL
       env:
         DB_PORT: 3306
@@ -47,6 +46,7 @@ jobs:
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
       run: |
+        mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_DATABASE -e 'SELECT VERSION()'
         mysql --host=$DB_HOST --port=$DB_PORT --database=$DB_DATABASE --user=$DB_USER --password=$DB_PASS < $DB_SCRIPT
       # run: |
       #   sudo /etc/init.d/mysql start
