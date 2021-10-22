@@ -48,8 +48,8 @@ class DatabaseService {
                 }
                 resolve(result);
             };
-            if (Config.NODE_ENV === 'dev') console.log(`[SQL] ${sql}`);
-            if (Config.NODE_ENV === 'dev') console.log(`[VALUES] ${values}`);
+            if (Config.NODE_ENV === 'test') console.log(`[SQL] ${sql}`);
+            if (Config.NODE_ENV === 'test') console.log(`[VALUES] ${values}`);
             this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
