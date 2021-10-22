@@ -34,7 +34,7 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PASS: ${{ secrets.DB_PASS }}
       run: |
-        while ! mysqladmin ping --host=$DB_HOST --password=$DB_PASS --silent; do
+        while ! mysqladmin ping -h 127.0.0.1 -p$DB_PASS --silent; do
           sleep 1
         done
     - name: Prepare MySQL
