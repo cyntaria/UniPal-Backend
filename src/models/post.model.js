@@ -19,7 +19,7 @@ class PostModel {
                 SELECT 
                     post_id, reaction_type_id,
                     COUNT(reaction_type_id) AS reaction_count,
-                    ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY reaction_count DESC) as rank
+                    ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY reaction_count DESC) AS rank
                 FROM ${tables.PostReactions}
                 GROUP BY post_id, reaction_type_id
             ) AS PR
@@ -68,7 +68,7 @@ class PostModel {
                 SELECT 
                     post_id, reaction_type_id,
                     COUNT(reaction_type_id) AS reaction_count,
-                    ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY reaction_count DESC) as rank
+                    ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY reaction_count DESC) AS rank
                 FROM ${tables.PostReactions}
                 GROUP BY post_id, reaction_type_id
             ) AS PR
