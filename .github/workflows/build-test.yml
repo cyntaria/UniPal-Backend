@@ -65,5 +65,5 @@ jobs:
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
         SECRET_JWT: ${{ secrets.SECRET_JWT }}
-        # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-        # SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
