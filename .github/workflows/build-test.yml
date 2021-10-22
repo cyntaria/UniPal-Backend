@@ -37,6 +37,7 @@ jobs:
         while ! mysqladmin ping -h $DB_HOST -p$DB_PASS --silent; do
           sleep 1
         done
+        mysql -V
     - name: Prepare MySQL
       env:
         DB_PORT: 3306
