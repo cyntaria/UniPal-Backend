@@ -34,14 +34,14 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PASS: ${{ secrets.DB_PASS }}
       run: |
-        while ! mysqladmin ping -h 127.0.0.1 -p$DB_PASS --silent; do
+        while ! mysqladmin ping -h $DB_HOST -p$DB_PASS --silent; do
           sleep 1
         done
     - name: Prepare MySQL
       env:
         DB_PORT: 3306
-        DB_HOST: 127.0.0.1
         DB_SCRIPT: './backups/unipal_test_db.sql'
+        DB_HOST: ${{ secrets.DB_HOST }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
