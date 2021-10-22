@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-      name: Setup MariaDB MySQL
+    - name: Setup MariaDB MySQL
       uses: getong/mariadb-action@v1.1
       with:
         mysql database: ${{ secrets.DB_TEST_DATABASE }}
