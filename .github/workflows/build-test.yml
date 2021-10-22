@@ -28,6 +28,7 @@ jobs:
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql database: ${{ secrets.DB_TEST_DATABASE }}
+        mysql root password: ${{ secrets.DB_PASS }}
     - name: Wait for MySQL
       env:
         DB_HOST: ${{ secrets.DB_HOST }}
