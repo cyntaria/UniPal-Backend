@@ -37,7 +37,7 @@ jobs:
         while ! mysqladmin ping -h $DB_HOST -p$DB_PASS --silent; do
           sleep 1
         done
-        mysql -D ${{ secrets.DB_TEST_DATABASE }} -e 'SELECT VERSION()'
+        mysql -h $DB_HOST -p$DB_PASS -D ${{ secrets.DB_TEST_DATABASE }} -e 'SELECT VERSION()'
     - name: Prepare MySQL
       env:
         DB_PORT: 3306
