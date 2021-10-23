@@ -14,17 +14,17 @@ const {
 
 router.post('/:id/attendees',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.ApiUser], activityAttendeeOwnerCheck),
     createActivityAttendeeSchema,
     checkValidation,
+    ownerAuth([Roles.ApiUser], activityAttendeeOwnerCheck),
     awaitHandlerFactory(activityAttendeeController.createActivityAttendee)
 ); // localhost:3000/api/API_VERSION/activities/1/attendees
 
 router.patch('/:id/attendees/:student_erp',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.ApiUser], activityAttendeeOwnerCheck),
     updateActivityAttendeeSchema,
     checkValidation,
+    ownerAuth([Roles.ApiUser], activityAttendeeOwnerCheck),
     awaitHandlerFactory(activityAttendeeController.updateActivityAttendee)
 ); // localhost:3000/api/API_VERSION/activities/1/attendees/17855
 

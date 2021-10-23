@@ -35,17 +35,17 @@ router.get('/:id/attendees',
 
 router.post('/',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.ApiUser], activityOwnerCheck),
     createActivitySchema,
     checkValidation,
+    ownerAuth([Roles.ApiUser], activityOwnerCheck),
     awaitHandlerFactory(activityController.createActivity)
 ); // localhost:3000/api/API_VERSION/activities
 
 router.patch('/:id',
     auth(Roles.Admin, Roles.ApiUser),
-    ownerAuth([Roles.ApiUser], activityOwnerCheck),
     updateActivitySchema,
     checkValidation,
+    ownerAuth([Roles.ApiUser], activityOwnerCheck),
     awaitHandlerFactory(activityController.updateActivity)
 ); // localhost:3000/api/API_VERSION/activities/1
 

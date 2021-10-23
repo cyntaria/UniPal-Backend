@@ -1,0 +1,1 @@
+- Update docs of activities API for optional properties

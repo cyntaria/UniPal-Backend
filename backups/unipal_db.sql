@@ -384,13 +384,14 @@ CREATE TABLE `post_reactions` (
   `post_id` int(10) unsigned NOT NULL,
   `reaction_type_id` int(10) unsigned NOT NULL,
   `student_erp` varchar(5) NOT NULL,
+  `reacted_at` datetime NOT NULL,
   PRIMARY KEY (`post_id`,`student_erp`) USING BTREE,
   KEY `fk_post_reactions_post_id_idx` (`post_id`),
   KEY `fk_post_reactions_student_erp_idx` (`student_erp`),
   KEY `fk_post_reactions_reaction_type_id` (`reaction_type_id`),
-  CONSTRAINT `fk_post_reactions_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`),
+  CONSTRAINT `fk_post_reactions_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_post_reactions_reaction_type_id` FOREIGN KEY (`reaction_type_id`) REFERENCES `reaction_types` (`reaction_type_id`),
-  CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`)
+  CONSTRAINT `fk_post_reactions_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -400,34 +401,36 @@ CREATE TABLE `post_reactions` (
 
 LOCK TABLES `post_reactions` WRITE;
 /*!40000 ALTER TABLE `post_reactions` DISABLE KEYS */;
+INSERT INTO `post_reactions` VALUES (1,2,'15030','2021-09-17 15:53:40'),(1,2,'17619','2021-09-17 15:53:40'),(2,4,'15030','2021-09-17 15:53:40'),(2,4,'17619','2021-09-17 15:53:40'),(2,2,'17855','2021-09-17 15:53:40'),(3,2,'15030','2021-09-17 15:53:40'),(3,2,'17855','2021-09-17 15:53:40'),(4,1,'17619','2021-09-17 15:53:40'),(4,2,'17855','2021-09-17 15:53:40'),(5,2,'15030','2021-09-17 15:53:40'),(6,2,'15030','2021-09-17 15:53:40'),(6,4,'17619','2021-09-17 15:53:40'),(6,2,'17855','2021-09-17 15:53:40'),(7,5,'15030','2021-09-17 15:53:40'),(7,5,'17619','2021-09-17 15:53:40'),(7,5,'17855','2021-09-17 15:53:40'),(8,2,'15030','2021-09-17 15:53:40'),(8,1,'17619','2021-09-17 15:53:40'),(8,2,'17855','2021-09-17 15:53:40');
 /*!40000 ALTER TABLE `post_reactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `post_uploads`
+-- Table structure for table `post_resources`
 --
 
-DROP TABLE IF EXISTS `post_uploads`;
+DROP TABLE IF EXISTS `post_resources`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `post_uploads` (
+CREATE TABLE `post_resources` (
   `post_id` int(10) unsigned NOT NULL,
-  `resource_id` int(10) unsigned NOT NULL,
+  `resource_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `resource_type` enum('image','video') NOT NULL,
   `resource_url` text NOT NULL,
-  PRIMARY KEY (`post_id`,`resource_id`) USING BTREE,
+  PRIMARY KEY (`resource_id`),
   KEY `fk_post_uploads_post_id_idx` (`post_id`),
-  CONSTRAINT `fk_post_uploads_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `fk_post_uploads_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `post_uploads`
+-- Dumping data for table `post_resources`
 --
 
-LOCK TABLES `post_uploads` WRITE;
-/*!40000 ALTER TABLE `post_uploads` DISABLE KEYS */;
-/*!40000 ALTER TABLE `post_uploads` ENABLE KEYS */;
+LOCK TABLES `post_resources` WRITE;
+/*!40000 ALTER TABLE `post_resources` DISABLE KEYS */;
+INSERT INTO `post_resources` VALUES (1,1,'image','www.google.com/images'),(1,2,'video','www.youtube.com'),(2,3,'image','www.google.com/images'),(2,4,'video','www.youtube.com'),(3,5,'image','www.google.com/images'),(3,6,'video','www.youtube.com'),(5,7,'image','www.google.com/images'),(5,8,'video','www.youtube.com'),(6,9,'image','www.google.com/images'),(6,10,'video','www.youtube.com'),(7,11,'image','www.google.com/images'),(7,12,'video','www.youtube.com'),(8,13,'image','www.google.com/images'),(8,14,'video','www.youtube.com');
+/*!40000 ALTER TABLE `post_resources` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -445,8 +448,8 @@ CREATE TABLE `posts` (
   `author_erp` varchar(5) NOT NULL,
   PRIMARY KEY (`post_id`),
   KEY `fk_posts_student_erp_idx` (`author_erp`),
-  CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`erp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `fk_posts_student_erp` FOREIGN KEY (`author_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -455,6 +458,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
+INSERT INTO `posts` VALUES (1,'Some post content body','public','2021-09-17 15:53:40','17855'),(2,'Some post content body','public','2021-09-17 16:53:40','17855'),(3,'Some post content body','public','2021-09-17 17:53:40','17855'),(4,'Some post content body','private','2021-09-17 15:55:40','15030'),(5,'Some post content body','public','2021-09-17 17:55:40','15030'),(6,'Some post content body','limited','2021-09-17 18:55:40','15030'),(7,'Some post content body','public','2021-09-17 16:56:40','17619'),(8,'Some post content body','public','2021-09-17 18:58:40','17619'),(9,'Some post content body','public','2021-09-17 18:58:40','17619');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -897,4 +901,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-15 13:41:17
+-- Dump completed on 2021-10-22 18:13:45

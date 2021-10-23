@@ -2,7 +2,6 @@ const { body } = require('express-validator');
 const { InvolvementType } = require('../../utils/enums/involvementType.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ERPRegex } = require('../../utils/common.utils');
-const { ForbiddenException } = require('../../utils/exceptions/auth.exception');
 
 exports.createActivityAttendeeSchema = [
     body('student_erp')
@@ -47,6 +46,5 @@ exports.activityAttendeeOwnerCheck = (req) => {
 
     const student_erp = req.params.student_erp;
 
-    if (student.erp !== student_erp) throw new ForbiddenException();
-    else return true;
+    return student.erp === student_erp;
 };

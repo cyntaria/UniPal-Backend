@@ -61,6 +61,8 @@ class DatabaseService {
 
             console.log(`[DBError] ${err}`);
             console.log(`[Code] ${err.code}`);
+            console.log(`[SQL] ${sql}`);
+            console.log(`[VALUES] ${values}`);
             throw new InternalServerException();
             // throw err;
         });

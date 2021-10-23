@@ -24,11 +24,20 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Installing npm
-      run: npm install
-    - name: Code linting
-      run: npm run lint
-    - name: Setup MySQL
+    - name: Setup MariaDB MySQL
+      uses: getong/mariadb-action@v1.1
+      with:
+        mysql database: ${{ secrets.DB_TEST_DATABASE }}
+        mysql root password: ${{ secrets.DB_PASS }}
+    - name: Wait for MySQL
+      env:
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+      run: |
+        while ! mysqladmin ping -h $DB_HOST -p$DB_PASS --silent; do
+          sleep 1
+        done
+    - name: Prepare MySQL
       env:
         DB_PORT: 3306
         DB_SCRIPT: './backups/unipal_test_db.sql'
@@ -37,9 +46,16 @@ jobs:
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
       run: |
-        sudo /etc/init.d/mysql start
-        mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
+        mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_DATABASE -e 'SELECT VERSION()'
         mysql --host=$DB_HOST --port=$DB_PORT --database=$DB_DATABASE --user=$DB_USER --password=$DB_PASS < $DB_SCRIPT
+      # run: |
+      #   sudo /etc/init.d/mysql start
+      #   mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
+      #   mysql --host=$DB_HOST --port=$DB_PORT --database=$DB_DATABASE --user=$DB_USER --password=$DB_PASS < $DB_SCRIPT
+    - name: Installing npm
+      run: npm install
+    - name: Code linting
+      run: npm run lint
     - name: Running tests
       run: npm test
       env:
@@ -50,5 +66,5 @@ jobs:
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_DATABASE: ${{ secrets.DB_TEST_DATABASE }}
         SECRET_JWT: ${{ secrets.SECRET_JWT }}
-        # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-        # SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}

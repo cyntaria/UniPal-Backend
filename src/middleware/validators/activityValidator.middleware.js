@@ -7,7 +7,6 @@ const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ERPRegex, timeRegex, datetimeRegex } = require('../../utils/common.utils');
 const ActivityModel = require('../../models/activity.model');
 const { NotFoundException } = require('../../utils/exceptions/database.exception');
-const { ForbiddenException } = require('../../utils/exceptions/auth.exception');
 
 exports.createActivitySchema = [
     body('title')
@@ -363,6 +362,5 @@ exports.activityOwnerCheck = async(req) => {
         throw new NotFoundException('Activity not found');
     }
 
-    if (activity.organizer_erp !== organizer_erp) throw new ForbiddenException();
-    else return true;
+    return activity.organizer_erp === organizer_erp;
 };
