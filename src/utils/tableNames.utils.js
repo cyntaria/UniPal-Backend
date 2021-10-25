@@ -17,5 +17,7 @@ exports.tables = {
     ReactionTypes: 'reaction_types',
     Posts: 'posts',
     PostResources: 'post_resources',
-    PostReactions: 'post_reactions'
+    PostReactions: 'post_reactions',
+    Subjects: 'subjects',
+    Timeslots: 'timeslots'
 };
