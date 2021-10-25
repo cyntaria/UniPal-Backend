@@ -15,7 +15,6 @@ exports.updateActivityStatusSchema = [
     body('activity_status')
         .exists()
         .withMessage('New activity status is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Activity status should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})

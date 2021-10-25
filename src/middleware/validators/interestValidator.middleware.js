@@ -15,7 +15,6 @@ exports.updateInterestSchema = [
     body('interest')
         .exists()
         .withMessage('New interest name is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Interest name should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})

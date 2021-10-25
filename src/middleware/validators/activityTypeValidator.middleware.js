@@ -15,7 +15,6 @@ exports.updateActivityTypeSchema = [
     body('activity_type')
         .exists()
         .withMessage('New activity type is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Activity type should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})
