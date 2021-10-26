@@ -15,7 +15,6 @@ exports.updateReactionTypeSchema = [
     body('reaction_type')
         .exists()
         .withMessage('New reaction type is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Reaction type should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})

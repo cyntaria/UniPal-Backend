@@ -15,7 +15,6 @@ exports.updateProgramSchema = [
     body('program')
         .exists()
         .withMessage('New program name is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Program name should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})

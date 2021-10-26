@@ -227,6 +227,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
+INSERT INTO `subjects` VALUES ('FIN201','Introduction to Business Finance'),('HUM201','Speech Communication'),('MKT201','Principles of Marketing'),('MTS101','Calculus 1'),('MTS232','Calculus 2'),('SCI102','Physics');
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -301,4 +302,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-22 18:13:47
+-- Dump completed on 2021-10-26  0:58:31

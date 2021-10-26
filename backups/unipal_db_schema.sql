@@ -146,7 +146,7 @@ CREATE TABLE `classes` (
   `class_erp` varchar(5) NOT NULL,
   `semester` varchar(45) NOT NULL,
   `classroom_id` int(10) unsigned NOT NULL,
-  `subject_code` varchar(10) NOT NULL,
+  `subject_code` varchar(6) NOT NULL,
   `teacher_id` int(10) unsigned NOT NULL,
   `parent_class_erp` varchar(5) DEFAULT NULL,
   `timeslot_1` int(10) unsigned NOT NULL,
@@ -467,7 +467,7 @@ DROP TABLE IF EXISTS `subjects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subjects` (
-  `subject_code` varchar(10) NOT NULL,
+  `subject_code` varchar(6) NOT NULL,
   `subject` varchar(45) NOT NULL,
   PRIMARY KEY (`subject_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -490,7 +490,7 @@ CREATE TABLE `teacher_reviews` (
   `overall_rating` decimal(2,1) NOT NULL,
   `comment` text NOT NULL,
   `reviewed_at` datetime NOT NULL,
-  `subject_code` varchar(10) NOT NULL,
+  `subject_code` varchar(6) NOT NULL,
   `teacher_id` int(10) unsigned NOT NULL,
   `reviewed_by_erp` varchar(5) NOT NULL,
   PRIMARY KEY (`review_id`),
@@ -622,4 +622,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-22 18:13:45
+-- Dump completed on 2021-10-26  0:58:30

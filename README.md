@@ -21,6 +21,7 @@ The documentation was generated using Postman and is divided into collections at
 - Hangout Requests - https://documenter.getpostman.com/view/13348269/UV5WCHBi
 - Reaction Types - https://documenter.getpostman.com/view/13348269/UV5WCdMP
 - Posts - https://documenter.getpostman.com/view/13348269/UV5ZAw6H
+- Subjects - https://documenter.getpostman.com/view/13348269/UV5cAbDZ
 
 ### :dvd: Installation
 #### 1. Getting Started
