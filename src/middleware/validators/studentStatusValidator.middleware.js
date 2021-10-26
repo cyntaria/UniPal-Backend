@@ -15,7 +15,6 @@ exports.updateStudentStatusSchema = [
     body('student_status')
         .exists()
         .withMessage('New student status is required')
-        .exists()
         .isLength({min: 3})
         .withMessage('Student status should be atleast 3 letters')
         .isAlpha('en-US', {ignore: ' -'})
