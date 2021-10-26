@@ -9,12 +9,12 @@ const subjectController = require('../controllers/subject.controller');
 const { createSubjectSchema, updateSubjectSchema } = require('../middleware/validators/subjectValidator.middleware');
 
 router.get('/',
-    auth(),
+    auth(Roles.Admin),
     awaitHandlerFactory(subjectController.getAllSubjects)
 ); // localhost:3000/api/API_VERSION/subjects
 
 router.get('/:code',
-    auth(),
+    auth(Roles.Admin),
     awaitHandlerFactory(subjectController.getSubjectById)
 ); // localhost:3000/api/API_VERSION/subjects/PKT151
 
