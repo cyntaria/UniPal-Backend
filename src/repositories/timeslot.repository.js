@@ -6,6 +6,7 @@ const {
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
 const { successResponse } = require('../utils/responses.utils');
+const { parseTime } = require('../utils/common.utils');
 
 class TimeslotRepository {
     findAll = async(filters = {}) => {
@@ -13,6 +14,11 @@ class TimeslotRepository {
         let timeslotList = await TimeslotModel.findAll(filters);
         if (!timeslotList.length) {
             throw new NotFoundException('Timeslots not found');
+        }
+
+        for (const timeslot of timeslotList) {
+            timeslot.start_time = parseTime(timeslot.start_time);
+            timeslot.end_time = parseTime(timeslot.end_time);
         }
 
         return successResponse(timeslotList, "Success");
@@ -23,6 +29,9 @@ class TimeslotRepository {
         if (!result) {
             throw new NotFoundException('Timeslot not found');
         }
+
+        result.start_time = parseTime(result.start_time);
+        result.end_time = parseTime(result.end_time);
 
         return successResponse(result, "Success");
     };
@@ -42,7 +51,7 @@ class TimeslotRepository {
     };
 
     update = async(body, id) => {
-        if (body.start_time !== undefined) {
+        if (body.start_time !== undefined || body.end_time !== undefined) {
             const conflicts = await TimeslotModel.findTimeConflicts(body);
 
             if (conflicts !== 0) {

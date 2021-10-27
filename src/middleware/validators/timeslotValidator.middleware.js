@@ -13,7 +13,9 @@ exports.createTimeslotSchema = [
         .exists()
         .withMessage('End time is required')
         .matches(timeRegex)
-        .withMessage('End time must be of valid format \'hh:mm:ss\''),
+        .withMessage('End time must be of valid format \'hh:mm:ss\'')
+        .custom((end_time, {req}) => req.body.start_time < end_time)
+        .withMessage('End time should be greater than start time'),
     body('slot_number')
         .trim()
         .exists()
@@ -32,7 +34,11 @@ exports.updateTimeslotSchema = [
         .optional()
         .trim()
         .matches(timeRegex)
-        .withMessage('End time must be of valid format \'hh:mm:ss\''),
+        .withMessage('End time must be of valid format \'hh:mm:ss\'')
+        .custom((end_time, {req}) => {
+            if (req.body.start_time) return req.body.start_time < end_time;
+        })
+        .withMessage('End time should be greater than start time'),
     body('slot_number')
         .optional()
         .trim()

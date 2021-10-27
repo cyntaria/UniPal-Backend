@@ -18,12 +18,21 @@ class TimeslotModel {
     }
 
     findTimeConflicts = async({start_time, end_time}) => {
-        const sql = `SELECT COUNT(*) FROM ${tables.Timeslots}
-        WHERE ? BETWEEN start_time AND end_time
-        OR ? BETWEEN start_time AND end_time
-        OR (start_time AND end_time) BETWEEN ? AND ?`;
+        let sql = `SELECT COUNT(*) FROM ${tables.Timeslots}
+        WHERE ? BETWEEN start_time AND end_time`;
+        const values = [];
 
-        const result = await DBService.query(sql, [start_time, end_time, start_time, end_time]);
+        if (start_time && end_time) {
+            sql += ` OR ? BETWEEN start_time AND end_time
+            OR (start_time AND end_time) BETWEEN ? AND ?`;
+            values.push(start_time, end_time, start_time, end_time);
+        } else if (start_time && !end_time) {
+            values.push(start_time);
+        } else if (end_time && !start_time) {
+            values.push(end_time);
+        }
+
+        const result = await DBService.query(sql, [...values]);
 
         return result[0]['COUNT(*)'];
     }

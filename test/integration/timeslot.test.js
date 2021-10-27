@@ -13,8 +13,8 @@ describe("Timeslots API", () => {
     const userERP = '17855';
     const existingTimeslot = {
         timeslot_id: 1,
-        start_time: '08:30',
-        end_time: '09:45',
+        start_time: '08:30:00',
+        end_time: '09:45:00',
         slot_number: 1
     };
     const unknownTimeslotId = 9999;
@@ -180,12 +180,29 @@ describe("Timeslots API", () => {
             expect(res.status).to.be.equal(200);
         });
 
-        it("Scenario 2: Create a timeslot request is incorrect", async() => {
+        it("Scenario 2: Create a timeslot request is unsuccessful due to timeslot conflicts", async() => {
+            // arrange
+            const data = { start_time: existingTimeslot.start_time, end_time, slot_number }; // start_time conflict
+
+            // act
+            const res = await request(this.app)
+                .post(baseRoute)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+    
+            // assert
+            expect(res.status).to.be.equal(500);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('CreateFailedException');
+            expect(res.body.headers.message).to.be.equal('Timeslot conflicts found');
+        });
+        
+        it("Scenario 3: Create a timeslot request is incorrect", async() => {
             // arrange
             const data = {
-                timeslots: timeslot, // <-- a valid parameter name is 'start_time'
+                timeslots: start_time, // <-- a valid parameter name is 'start_time'
                 end_time,
-                slot_number: '222' // has to be an int
+                slot_number: 'asb' // has to be an int
             };
 
             // act
@@ -199,10 +216,10 @@ describe("Timeslots API", () => {
             expect(res.body.headers.error).to.be.equal(1);
             expect(res.body.headers.code).to.be.equal('InvalidPropertiesException');
             const incorrectParams = res.body.headers.data.map(o => (o.param));
-            expect(incorrectParams).to.include.all.keys(['start_time', 'slot_number']);
+            expect(incorrectParams).to.include.all.members(['start_time', 'slot_number']);
         });
 
-        it("Scenario 3: Create a timeslot request is forbidden", async() => {
+        it("Scenario 4: Create a timeslot request is forbidden", async() => {
             // arrange
             const data = { start_time, end_time, slot_number };
 
@@ -219,7 +236,7 @@ describe("Timeslots API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 4: Create a timeslot request is unauthorized", async() => {
+        it("Scenario 5: Create a timeslot request is unauthorized", async() => {
             // arrange
             const data = { start_time, end_time, slot_number };
 
@@ -271,7 +288,7 @@ describe("Timeslots API", () => {
             });
             
             // cleanup
-            data.timeslot = existingTimeslot.timeslot;
+            data.slot_number = existingTimeslot.slot_number;
             res = await request(app)
                 .patch(`${baseRoute}/${existingTimeslot.timeslot_id}`)
                 .auth(adminToken, { type: 'bearer' })
@@ -296,7 +313,24 @@ describe("Timeslots API", () => {
             expect(res.body.headers.message).to.be.equal('Timeslot not found');
         });
 
-        it("Scenario 3: Update a timeslot request is incorrect", async() => {
+        it("Scenario 3: Update a timeslot request is unsuccessful due to timeslot conflicts", async() => {
+            // arrange
+            const data = { start_time: existingTimeslot.end_time }; // can't be the same time
+
+            // act
+            const res = await request(this.app)
+                .patch(`${baseRoute}/${existingTimeslot.timeslot_id}`)
+                .auth(adminToken, { type: 'bearer' })
+                .send(data);
+    
+            // assert
+            expect(res.status).to.be.equal(500);
+            expect(res.body.headers.error).to.be.equal(1);
+            expect(res.body.headers.code).to.be.equal('UpdateFailedException');
+            expect(res.body.headers.message).to.be.equal('Timeslot conflicts found');
+        });
+
+        it("Scenario 4: Update a timeslot request is incorrect", async() => {
             // arrange
             const data = {
                 timeslots: newTimeslotNumber // <-- a invalid update parameter
@@ -316,7 +350,7 @@ describe("Timeslots API", () => {
             expect(incorrectMsg).to.include('Invalid updates!');
         });
 
-        it("Scenario 4: Update a timeslot request is forbidden", async() => {
+        it("Scenario 5: Update a timeslot request is forbidden", async() => {
             // arrange
             const data = { slot_number: newTimeslotNumber };
 
@@ -333,7 +367,7 @@ describe("Timeslots API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 5: Update a timeslot request is unauthorized", async() => {
+        it("Scenario 6: Update a timeslot request is unauthorized", async() => {
             // arrange
             const data = { slot_number: newTimeslotNumber };
 
