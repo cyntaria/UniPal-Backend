@@ -769,7 +769,7 @@ CREATE TABLE `timeslots` (
   `slot_number` tinyint(2) unsigned NOT NULL,
   PRIMARY KEY (`timeslot_id`),
   UNIQUE KEY `ind_383` (`end_time`,`start_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -778,6 +778,7 @@ CREATE TABLE `timeslots` (
 
 LOCK TABLES `timeslots` WRITE;
 /*!40000 ALTER TABLE `timeslots` DISABLE KEYS */;
+INSERT INTO `timeslots` VALUES ('08:30:00',1,'09:45:00',1),('10:00:00',2,'11:15:00',2),('11:30:00',3,'12:45:00',3),('13:00:00',4,'14:15:00',4),('14:30:00',5,'15:45:00',5),('16:00:00',6,'17:15:00',6),('17:30:00',7,'18:45:00',7);
 /*!40000 ALTER TABLE `timeslots` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -902,4 +903,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-26  0:58:30
+-- Dump completed on 2021-10-27 11:20:37
