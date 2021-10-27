@@ -534,7 +534,7 @@ CREATE TABLE `timeslots` (
   `slot_number` tinyint(2) unsigned NOT NULL,
   PRIMARY KEY (`timeslot_id`),
   UNIQUE KEY `ind_383` (`end_time`,`start_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -622,4 +622,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-26  0:58:30
+-- Dump completed on 2021-10-27 11:20:37
