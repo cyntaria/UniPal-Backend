@@ -19,5 +19,6 @@ exports.tables = {
     PostResources: 'post_resources',
     PostReactions: 'post_reactions',
     Subjects: 'subjects',
-    Timeslots: 'timeslots'
+    Timeslots: 'timeslots',
+    Classrooms: 'classrooms'
 };
