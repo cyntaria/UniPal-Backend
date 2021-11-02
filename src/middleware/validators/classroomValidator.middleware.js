@@ -5,8 +5,8 @@ exports.createClassroomSchema = [
         .trim()
         .exists()
         .withMessage('Classroom name is required')
-        .isLength({ max: 10 })
-        .withMessage('Classroom name should be less than 10 characters'),
+        .isLength({ min: 2, max: 10 })
+        .withMessage('Classroom name should between 2-10 characters'),
     body('campus_id')
         .trim()
         .exists()
