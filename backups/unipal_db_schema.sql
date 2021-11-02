@@ -178,12 +178,12 @@ DROP TABLE IF EXISTS `classrooms`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classrooms` (
   `classroom_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
+  `classroom` varchar(10) NOT NULL,
   `campus_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`classroom_id`),
   KEY `fk_class_rooms_campus_id_idx` (`campus_id`),
   CONSTRAINT `fk_class_rooms_campus_id` FOREIGN KEY (`campus_id`) REFERENCES `campuses` (`campus_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -622,4 +622,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-27 11:20:37
+-- Dump completed on 2021-11-02  2:57:23

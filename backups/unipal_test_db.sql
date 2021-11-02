@@ -247,12 +247,12 @@ DROP TABLE IF EXISTS `classrooms`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classrooms` (
   `classroom_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
+  `classroom` varchar(10) NOT NULL,
   `campus_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`classroom_id`),
   KEY `fk_class_rooms_campus_id_idx` (`campus_id`),
   CONSTRAINT `fk_class_rooms_campus_id` FOREIGN KEY (`campus_id`) REFERENCES `campuses` (`campus_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,6 +261,7 @@ CREATE TABLE `classrooms` (
 
 LOCK TABLES `classrooms` WRITE;
 /*!40000 ALTER TABLE `classrooms` DISABLE KEYS */;
+INSERT INTO `classrooms` VALUES (1,'MTC1',1),(2,'MAC1',1),(3,'MCC1',1),(4,'MTL4',1),(5,'MTS2',1),(6,'MTC21-A',1),(7,'AUDITORIUM',1),(8,'EVENT HALL',1);
 /*!40000 ALTER TABLE `classrooms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -903,4 +904,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-27 11:20:39
+-- Dump completed on 2021-11-02  2:57:24
