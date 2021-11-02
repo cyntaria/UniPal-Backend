@@ -1,5 +1,4 @@
 const { body } = require('express-validator');
-const { timeRegex } = require('../../utils/common.utils');
 
 exports.createClassroomSchema = [
     body('classroom')
