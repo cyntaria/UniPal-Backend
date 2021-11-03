@@ -20,5 +20,6 @@ exports.tables = {
     PostReactions: 'post_reactions',
     Subjects: 'subjects',
     Timeslots: 'timeslots',
-    Classrooms: 'classrooms'
+    Classrooms: 'classrooms',
+    Teachers: 'teachers'
 };
