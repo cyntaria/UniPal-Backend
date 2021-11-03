@@ -24,8 +24,9 @@ exports.createTeacherSchema = [
 
 exports.updateTeacherSchema = [
     body('full_name')
-        .optional()
         .trim()
+        .exists()
+        .withMessage('Full name is required')
         .isLength({ min: 2 })
         .withMessage('Full name must be at least 2 chars long')
         .isAlpha('en-US', {ignore: ' '})

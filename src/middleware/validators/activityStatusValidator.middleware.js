@@ -13,6 +13,7 @@ exports.createActivityStatusSchema = [
 
 exports.updateActivityStatusSchema = [
     body('activity_status')
+        .trim()
         .exists()
         .withMessage('New activity status is required')
         .isLength({min: 3})

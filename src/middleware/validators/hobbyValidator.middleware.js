@@ -13,6 +13,7 @@ exports.createHobbySchema = [
 
 exports.updateHobbySchema = [
     body('hobby')
+        .trim()
         .exists()
         .withMessage('New hobby name is required')
         .isLength({min: 3})

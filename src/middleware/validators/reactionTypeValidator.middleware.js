@@ -13,6 +13,7 @@ exports.createReactionTypeSchema = [
 
 exports.updateReactionTypeSchema = [
     body('reaction_type')
+        .trim()
         .exists()
         .withMessage('New reaction type is required')
         .isLength({min: 3})

@@ -13,6 +13,7 @@ exports.createInterestSchema = [
 
 exports.updateInterestSchema = [
     body('interest')
+        .trim()
         .exists()
         .withMessage('New interest name is required')
         .isLength({min: 3})
