@@ -14,7 +14,7 @@ describe("Teachers API", () => {
     const existingTeacher = {
         teacher_id: 1,
         full_name: 'Waseem Arain',
-        average_rating: 0.0,
+        average_rating: "0.0",
         total_reviews: 0
     };
     const unknownTeacherId = 9999;
@@ -167,7 +167,7 @@ describe("Teachers API", () => {
             expect(res.status).to.be.equal(200);
             expect(res.body.body).to.be.eql({
                 teacher_id: newId,
-                average_rating: 0.0,
+                average_rating: "0.0",
                 total_reviews: 0,
                 ...data
             });

@@ -7,7 +7,7 @@ exports.createTeacherSchema = [
         .withMessage('Full name is required')
         .isLength({ min: 2 })
         .withMessage('Full name must be at least 2 chars long')
-        .isAlpha('en-US', {ignore: ' '})
+        .isAlpha('en-US', {ignore: ' .'})
         .withMessage('Full name should be all alphabets'),
     body()
         .custom(value => {
@@ -29,7 +29,7 @@ exports.updateTeacherSchema = [
         .withMessage('Full name is required')
         .isLength({ min: 2 })
         .withMessage('Full name must be at least 2 chars long')
-        .isAlpha('en-US', {ignore: ' '})
+        .isAlpha('en-US', {ignore: ' .'})
         .withMessage('Full name should be all alphabets'),
     body()
         .custom(value => {
