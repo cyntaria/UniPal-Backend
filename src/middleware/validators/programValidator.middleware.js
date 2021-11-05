@@ -13,6 +13,7 @@ exports.createProgramSchema = [
 
 exports.updateProgramSchema = [
     body('program')
+        .trim()
         .exists()
         .withMessage('New program name is required')
         .isLength({min: 3})

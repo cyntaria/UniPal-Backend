@@ -13,6 +13,7 @@ exports.createActivityTypeSchema = [
 
 exports.updateActivityTypeSchema = [
     body('activity_type')
+        .trim()
         .exists()
         .withMessage('New activity type is required')
         .isLength({min: 3})

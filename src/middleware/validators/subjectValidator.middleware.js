@@ -20,6 +20,7 @@ exports.createSubjectSchema = [
 
 exports.updateSubjectSchema = [
     body('subject')
+        .trim()
         .exists()
         .withMessage('New subject name is required')
         .isLength({min: 3})

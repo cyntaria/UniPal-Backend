@@ -13,6 +13,7 @@ exports.createStudentStatusSchema = [
 
 exports.updateStudentStatusSchema = [
     body('student_status')
+        .trim()
         .exists()
         .withMessage('New student status is required')
         .isLength({min: 3})

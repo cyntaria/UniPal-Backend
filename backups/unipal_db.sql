@@ -741,10 +741,10 @@ DROP TABLE IF EXISTS `teachers`;
 CREATE TABLE `teachers` (
   `teacher_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `full_name` varchar(45) NOT NULL,
-  `average_rating` decimal(2,1) unsigned NOT NULL,
-  `total_reviews` int(10) unsigned NOT NULL,
+  `average_rating` decimal(2,1) unsigned NOT NULL DEFAULT 0.0,
+  `total_reviews` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -753,6 +753,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
+INSERT INTO `teachers` VALUES (1,'Waseem Arain',0.0,0),(2,'Faisal Iradat',0.0,0);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -904,4 +905,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-02  2:57:23
+-- Dump completed on 2021-11-05  3:26:14

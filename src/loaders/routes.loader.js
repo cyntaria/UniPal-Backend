@@ -20,6 +20,7 @@ const postRouter = require('../routes/post.routes');
 const subjectRouter = require('../routes/subject.routes');
 const timeslotRouter = require('../routes/timeslot.routes');
 const classroomRouter = require('../routes/classroom.routes');
+const teacherRouter = require('../routes/teacher.routes');
 const healthCheckRouter = require('../routes/healthCheck.routes');
 
 class RoutesLoader {
@@ -45,6 +46,7 @@ class RoutesLoader {
         app.use(`/api/${version}/subjects`, subjectRouter);
         app.use(`/api/${version}/timeslots`, timeslotRouter);
         app.use(`/api/${version}/classrooms`, classroomRouter);
+        app.use(`/api/${version}/teachers`, teacherRouter);
         app.use(`/api/${version}/health`, healthCheckRouter);
     }
 }
