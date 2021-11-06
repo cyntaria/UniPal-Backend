@@ -703,8 +703,7 @@ CREATE TABLE `teacher_reviews` (
   `learning` tinyint(1) NOT NULL,
   `grading` tinyint(1) NOT NULL,
   `attendance` tinyint(1) NOT NULL,
-  `strictness` tinyint(1) NOT NULL,
-  `toughness` tinyint(1) NOT NULL,
+  `difficulty` tinyint(1) NOT NULL,
   `overall_rating` decimal(2,1) NOT NULL,
   `comment` text NOT NULL,
   `reviewed_at` datetime NOT NULL,
@@ -712,7 +711,7 @@ CREATE TABLE `teacher_reviews` (
   `teacher_id` int(10) unsigned NOT NULL,
   `reviewed_by_erp` varchar(5) NOT NULL,
   PRIMARY KEY (`review_id`),
-  UNIQUE KEY `unique_review` (`teacher_id`,`reviewed_by_erp`) USING BTREE,
+  UNIQUE KEY `unique_review` (`teacher_id`,`reviewed_by_erp`,`subject_code`) USING BTREE,
   KEY `fk_teacher_reviews_student_erp_idx` (`reviewed_by_erp`),
   KEY `fk_teacher_reviews_teacher_id_idx` (`teacher_id`),
   KEY `fk_teacher_reviews_subject_code` (`subject_code`),
@@ -905,4 +904,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-05  3:26:15
+-- Dump completed on 2021-11-06  5:40:34
