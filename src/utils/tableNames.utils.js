@@ -21,5 +21,6 @@ exports.tables = {
     Subjects: 'subjects',
     Timeslots: 'timeslots',
     Classrooms: 'classrooms',
-    Teachers: 'teachers'
+    Teachers: 'teachers',
+    TeacherReviews: 'teacher_reviews'
 };
