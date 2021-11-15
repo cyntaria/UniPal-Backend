@@ -5,7 +5,12 @@ const { tables } = require('../utils/tableNames.utils');
 class TeacherReviewModel {
 
     findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.TeacherReviews}`;
+        let sql = `
+            SELECT * FROM ${tables.TeacherReviews}
+            NATURAL JOIN ${tables.Teachers}
+            NATURAL JOIN ${tables.Subjects}
+            NATURAL JOIN ${tables.Students}
+        `;
 
         if (!Object.keys(filters).length) {
             return await DBService.query(sql);
@@ -19,8 +24,10 @@ class TeacherReviewModel {
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.TeacherReviews}
-        WHERE review_id = ?
-        LIMIT 1`;
+        NATURAL JOIN ${tables.Teachers}
+        NATURAL JOIN ${tables.Subjects}
+        NATURAL JOIN ${tables.Students}
+        WHERE review_id = ?`;
 
         const result = await DBService.query(sql, [id]);
 
