@@ -16,13 +16,8 @@ class TeacherReviewController {
         res.status(201).send(response);
     };
 
-    updateTeacherReview = async(req, res, next) => {
-        const response = await TeacherReviewRepository.update(req.body, req.params.id);
-        res.send(response);
-    };
-
     deleteTeacherReview = async(req, res, next) => {
-        const response = await TeacherReviewRepository.delete(req.params.id);
+        const response = await TeacherReviewRepository.delete(req.body, req.params.id);
         res.send(response);
     };
 }

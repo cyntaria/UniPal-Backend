@@ -8,7 +8,7 @@ const teacherReviewController = require('../controllers/teacherReview.controller
 const { Roles } = require('../utils/enums/roles.utils');
 const {
     createTeacherReviewSchema,
-    updateTeacherReviewSchema,
+    deleteTeacherReviewSchema,
     getTeacherReviewsQuerySchema,
     teacherReviewOwnerCheck
 } = require('../middleware/validators/teacherReviewValidator.middleware');
@@ -33,16 +33,10 @@ router.post('/',
     awaitHandlerFactory(teacherReviewController.createTeacherReview)
 ); // localhost:3000/api/API_VERSION/teacher-reviews
 
-router.patch('/:id',
-    auth(Roles.Admin, Roles.ApiUser),
-    updateTeacherReviewSchema,
-    checkValidation,
-    ownerAuth([Roles.ApiUser], teacherReviewOwnerCheck),
-    awaitHandlerFactory(teacherReviewController.updateTeacherReview)
-); // localhost:3000/api/API_VERSION/teacher-reviews/1
-
 router.delete('/:id',
     auth(Roles.Admin, Roles.ApiUser),
+    deleteTeacherReviewSchema,
+    checkValidation,
     ownerAuth([Roles.ApiUser], teacherReviewOwnerCheck),
     awaitHandlerFactory(teacherReviewController.deleteTeacherReview)
 ); // localhost:3000/api/API_VERSION/teacher-reviews/1

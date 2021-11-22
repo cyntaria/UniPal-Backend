@@ -6,10 +6,13 @@ class TeacherReviewModel {
 
     findAll = async(filters) => {
         let sql = `
-            SELECT * FROM ${tables.TeacherReviews}
+            SELECT 
+                review_id, learning, grading, attendance, difficulty,
+                overall_rating, comment, reviewed_at, subject_code, teacher_id, reviewed_by_erp
+            FROM ${tables.TeacherReviews} AS TR
             NATURAL JOIN ${tables.Teachers}
             NATURAL JOIN ${tables.Subjects}
-            NATURAL JOIN ${tables.Students}
+            INNER JOIN ${tables.Students} AS ST ON TR.reviewed_by_erp = ST.erp
         `;
 
         if (!Object.keys(filters).length) {
@@ -23,11 +26,16 @@ class TeacherReviewModel {
     }
 
     findOne = async(id) => {
-        const sql = `SELECT * FROM ${tables.TeacherReviews}
-        NATURAL JOIN ${tables.Teachers}
-        NATURAL JOIN ${tables.Subjects}
-        NATURAL JOIN ${tables.Students}
-        WHERE review_id = ?`;
+        const sql = `
+            SELECT
+                review_id, learning, grading, attendance, difficulty,
+                overall_rating, comment, reviewed_at, subject_code, teacher_id, reviewed_by_erp
+            FROM ${tables.TeacherReviews} AS TR
+            NATURAL JOIN ${tables.Teachers}
+            NATURAL JOIN ${tables.Subjects}
+            INNER JOIN ${tables.Students} AS ST ON TR.reviewed_by_erp = ST.erp
+            WHERE review_id = ?
+        `;
 
         const result = await DBService.query(sql, [id]);
 
@@ -54,16 +62,6 @@ class TeacherReviewModel {
         };
 
         return created_activity;
-    }
-
-    update = async(columns, id) => {
-        const { columnSet, values } = multipleColumnSet(columns);
-
-        const sql = `UPDATE ${tables.TeacherReviews} SET ${columnSet} WHERE review_id = ?`;
-
-        const result = await DBService.query(sql, [...values, id]);
-
-        return result;
     }
 
     delete = async(id) => {

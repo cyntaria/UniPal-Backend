@@ -1,46 +1,30 @@
 const { body, query } = require('express-validator');
-const { TeacherReviewLocation } = require('../../utils/enums/teacherReviewLocation.utils');
-const { Privacy } = require('../../utils/enums/privacy.utils');
-const { TeacherReviewFrequency } = require('../../utils/enums/teacherReviewFrequency.utils');
-const { InvolvementType } = require('../../utils/enums/involvementType.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
-const { ERPRegex, timeRegex, datetimeRegex } = require('../../utils/common.utils');
+const { ERPRegex, datetimeRegex, CourseCodeRegex } = require('../../utils/common.utils');
 const TeacherReviewModel = require('../../models/teacherReview.model');
-const { NotFoundException } = require('../../utils/exceptions/database.exception');
+const { NotFoundException, UnexpectedException } = require('../../utils/exceptions/database.exception');
 
 exports.createTeacherReviewSchema = [
     body('learning')
-        .trim()
         .exists()
         .withMessage('Learning score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid learning score. Should be between 1-5'),
     body('grading')
-        .trim()
         .exists()
         .withMessage('Grading score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid grading score. Should be between 1-5'),
     body('attendance')
-        .trim()
         .exists()
         .withMessage('Attendance score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid attendance score. Should be between 1-5'),
     body('difficulty')
-        .trim()
         .exists()
         .withMessage('Difficulty score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid difficulty score. Should be between 1-5'),
-    body('overall_rating')
-        .trim()
-        .exists()
-        .withMessage('Overall rating is required')
-        .isDecimal({force_decimal: true, decimal_digits: '1'})
-        .withMessage('Rating should a valid decimal (0.0)')
-        .isFloat({min: 0.1, max: 5.0})
-        .withMessage('Rating should in range [0.1 - 5.0]'),
     body('comment')
         .trim()
         .exists()
@@ -69,96 +53,79 @@ exports.createTeacherReviewSchema = [
         .exists()
         .withMessage('Review datetime is required')
         .matches(datetimeRegex)
-        .withMessage('Review datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
+        .withMessage('Review datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
+    body('old_teacher_rating')
+        .exists()
+        .withMessage('Teacher\'s old rating is required')
+        .isDecimal({force_decimal: false, decimal_digits: '1'})
+        .withMessage('Rating should a valid decimal (0.0)')
+        .isFloat({min: 0.0, max: 5.0})
+        .withMessage('Rating should in range [0.1 - 5.0]'),
+    body('old_total_reviews')
+        .exists()
+        .withMessage('Teacher\'s old total number of reviews is required')
+        .isInt({ min: 0 })
+        .withMessage('Old total reviews should be an int')
 ];
 
-exports.updateTeacherReviewSchema = [
-    body('learning')
-        .optional()
-        .trim()
-        .withMessage('Learning score is required')
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid learning score. Should be between 1-5'),
-    body('grading')
-        .optional()
-        .trim()
-        .withMessage('Grading score is required')
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid grading score. Should be between 1-5'),
-    body('attendance')
-        .optional()
-        .trim()
-        .withMessage('Attendance score is required')
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid attendance score. Should be between 1-5'),
-    body('difficulty')
-        .optional()
-        .trim()
-        .withMessage('Difficulty score is required')
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid difficulty score. Should be between 1-5'),
-    body('overall_rating')
-        .optional()
-        .trim()
-        .withMessage('Overall rating is required')
-        .isDecimal({force_decimal: true, decimal_digits: '1'})
+exports.deleteTeacherReviewSchema = [
+    body('teacher_id')
+        .exists()
+        .withMessage('TeacherID is required for the teacherReview')
+        .isInt({ min: 1 })
+        .withMessage('Invalid Teacher ID found'),
+    body('teacher_rating')
+        .exists()
+        .withMessage('Teacher\'s old rating is required')
+        .isDecimal({force_decimal: false, decimal_digits: '1'})
         .withMessage('Rating should a valid decimal (0.0)')
-        .isFloat({min: 0.1, max: 5.0})
+        .isFloat({min: 0.0, max: 5.0})
         .withMessage('Rating should in range [0.1 - 5.0]'),
-    body('comment')
-        .optional()
-        .trim()
-        .isLength({ max: 100 })
-        .withMessage('Comment should be less than 100 characters'),
-    body('reviewed_at')
-        .optional()
-        .trim()
-        .withMessage('Review datetime is required')
-        .matches(datetimeRegex)
-        .withMessage('Review datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
+    body('review_rating')
+        .exists()
+        .withMessage('Teacher\'s old rating is required')
+        .isDecimal({force_decimal: false, decimal_digits: '1'})
+        .withMessage('Rating should a valid decimal (0.0)')
+        .isFloat({min: 0.0, max: 5.0})
+        .withMessage('Rating should in range [0.1 - 5.0]'),
+    body('total_reviews')
+        .exists()
+        .withMessage('Teacher\'s old total number of reviews is required')
+        .isInt({ min: 0 })
+        .withMessage('Old total reviews should be an int'),
     body()
         .custom(value => {
             return Object.keys(value).length !== 0;
         })
-        .withMessage('Please provide required fields to update')
+        .withMessage('Please provide required fields to delete')
         .custom(value => {
-            const updates = Object.keys(value);
-            const allowUpdates = ['learning', 'grading', 'attendance', 'difficulty',
-                'overall_rating', 'comment', 'reviewed_at'];
-            return updates.every(update => allowUpdates.includes(update));
+            const deleteKeys = Object.keys(value);
+            const allowedDeletes = ['teacher_id', 'teacher_rating', 'review_rating', 'total_reviews'];
+            return deleteKeys.every(deleteKey => allowedDeletes.includes(deleteKey));
         })
-        .withMessage('Invalid updates!')
+        .withMessage('Invalid delete fields!')
 ];
 
 exports.getTeacherReviewsQuerySchema = [
     query('learning')
         .optional()
-        .trim()
-        .withMessage('Learning score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid learning score. Should be between 1-5'),
     query('grading')
         .optional()
-        .trim()
-        .withMessage('Grading score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid grading score. Should be between 1-5'),
     query('attendance')
         .optional()
-        .trim()
-        .withMessage('Attendance score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid attendance score. Should be between 1-5'),
     query('difficulty')
         .optional()
         .trim()
-        .withMessage('Difficulty score is required')
         .isInt({min: 1, max: 5})
         .withMessage('Invalid difficulty score. Should be between 1-5'),
     query('overall_rating')
         .optional()
-        .trim()
-        .withMessage('Overall rating is required')
         .isDecimal({force_decimal: true, decimal_digits: '1'})
         .withMessage('Rating should a valid decimal (0.0)')
         .isFloat({min: 0.1, max: 5.0})
@@ -184,6 +151,15 @@ exports.teacherReviewOwnerCheck = async(req) => {
     const teacherReview = await TeacherReviewModel.findOne(review_id);
     if (!teacherReview) {
         throw new NotFoundException('Teacher review not found');
+    }
+
+    if (req.method === RequestMethods.DELETE) {
+        const teacherCheck = req.body.teacher_id === teacherReview.teacher_id;
+        // eslint-disable-next-line eqeqeq
+        const ratingCheck = req.body.review_rating == teacherReview.overall_rating;
+        if (!teacherCheck || !ratingCheck) {
+            throw new UnexpectedException('Teacher failed to be deleted. Inconsistent details found');
+        }
     }
 
     return teacherReview.reviewed_by_erp === student.erp;
