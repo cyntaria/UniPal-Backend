@@ -44,6 +44,12 @@ class CreateFailedException extends DatabaseException {
     }
 }
 
+class DeleteFailedException extends DatabaseException {
+    constructor(message, data){
+        super(message, data, true, ErrorStatusCodes.InternalServerError);
+    }
+}
+
 class UnexpectedException extends DatabaseException {
     constructor(message = "Something went wrong", data){
         super(message, data);
@@ -57,5 +63,6 @@ module.exports = {
     ForeignKeyViolationException,
     UnexpectedException,
     UpdateFailedException,
-    CreateFailedException
+    CreateFailedException,
+    DeleteFailedException
 };

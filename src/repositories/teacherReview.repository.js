@@ -6,7 +6,7 @@ const TeacherModel = require('../models/teacher.model');
 const {
     NotFoundException,
     CreateFailedException,
-    UnexpectedException
+    DeleteFailedException
 } = require('../utils/exceptions/database.exception');
 const { round } = require('../utils/common.utils');
 
@@ -98,7 +98,7 @@ class TeacherReviewRepository {
             }, teacher_id);
             if (!success) {
                 await DBService.rollback();
-                throw new UnexpectedException(`Teacher review failed to be deleted. Failure to update teacher rating`);
+                throw new DeleteFailedException(`Teacher review failed to be deleted. Failure to update teacher rating`);
             }
         } catch (ex) {
             await DBService.rollback();

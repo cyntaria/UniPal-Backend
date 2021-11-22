@@ -2,7 +2,7 @@ const { body, query } = require('express-validator');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
 const { ERPRegex, datetimeRegex, CourseCodeRegex } = require('../../utils/common.utils');
 const TeacherReviewModel = require('../../models/teacherReview.model');
-const { NotFoundException, UnexpectedException } = require('../../utils/exceptions/database.exception');
+const { NotFoundException, DeleteFailedException } = require('../../utils/exceptions/database.exception');
 
 exports.createTeacherReviewSchema = [
     body('learning')
@@ -158,7 +158,7 @@ exports.teacherReviewOwnerCheck = async(req) => {
         // eslint-disable-next-line eqeqeq
         const ratingCheck = req.body.review_rating == teacherReview.overall_rating;
         if (!teacherCheck || !ratingCheck) {
-            throw new UnexpectedException('Teacher failed to be deleted. Inconsistent details found');
+            throw new DeleteFailedException('Teacher failed to be deleted. Inconsistent details found');
         }
     }
 
