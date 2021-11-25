@@ -14,8 +14,8 @@ describe("Teachers API", () => {
     const existingTeacher = {
         teacher_id: 1,
         full_name: 'Waseem Arain',
-        average_rating: "0.0",
-        total_reviews: 0
+        average_rating: "5.0",
+        total_reviews: 1
     };
     const unknownTeacherId = 9999;
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
