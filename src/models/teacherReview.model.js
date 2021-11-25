@@ -16,11 +16,12 @@ class TeacherReviewModel {
         `;
 
         if (!Object.keys(filters).length) {
+            sql += ` ORDER BY reviewed_at DESC`;
             return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
-        sql += ` WHERE ${filterSet}`;
+        sql += ` WHERE ${filterSet} ORDER BY reviewed_at DESC`;
 
         return await DBService.query(sql, [...filterValues]);
     }

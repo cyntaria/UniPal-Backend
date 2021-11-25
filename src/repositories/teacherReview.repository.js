@@ -30,24 +30,29 @@ class TeacherReviewRepository {
         return successResponse(teacherReview);
     };
 
-    #calculate_average = (body) => {
+    #calculateAverageRating = (body) => {
         const { learning, grading, attendance, difficulty } = body;
         const rating = (learning + grading + attendance + difficulty) / 4;
         return round(rating, 1);
     };
 
-    #increment_teacher_rating_bezhanov = (newRating, oldRating, numOfReviewsOld) => {
+    // uses bezhanov algorithm
+    incrementTeacherRating = (newRating, oldRating, numOfReviewsOld) => {
+        newRating = parseFloat(newRating);
+        oldRating = parseFloat(oldRating);
         const rating = (oldRating * numOfReviewsOld + newRating) / (numOfReviewsOld + 1);
         return round(rating, 1);
     };
 
-    #decrement_teacher_rating_bezhanov = (reviewRating, teacher_rating, numOfReviews) => {
+    decrementTeacherRating = (reviewRating, teacher_rating, numOfReviews) => {
+        teacher_rating = parseFloat(teacher_rating);
+        reviewRating = parseFloat(reviewRating);
         const oldRating = (teacher_rating * numOfReviews - reviewRating) / (numOfReviews - 1);
         return round(oldRating, 1);
     };
 
     create = async(body) => {
-        const review_rating = this.#calculate_average(body);
+        const review_rating = this.#calculateAverageRating(body);
         body.overall_rating = review_rating;
 
         await DBService.beginTransaction();
@@ -61,7 +66,7 @@ class TeacherReviewRepository {
 
         try {
             const { old_teacher_rating, old_total_reviews, teacher_id } = body;
-            const newTeacherRating = this.#increment_teacher_rating_bezhanov(review_rating, old_teacher_rating, old_total_reviews);
+            const newTeacherRating = this.incrementTeacherRating(review_rating, old_teacher_rating, old_total_reviews);
             const success = await TeacherModel.update({
                 average_rating: newTeacherRating,
                 total_reviews: old_total_reviews + 1
@@ -91,7 +96,7 @@ class TeacherReviewRepository {
 
         try {
             const { review_rating, teacher_rating, total_reviews, teacher_id } = body;
-            const oldTeacherRating = this.#decrement_teacher_rating_bezhanov(review_rating, teacher_rating, total_reviews);
+            const oldTeacherRating = this.decrementTeacherRating(review_rating, teacher_rating, total_reviews);
             const success = await TeacherModel.update({
                 average_rating: oldTeacherRating,
                 total_reviews: total_reviews - 1

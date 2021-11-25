@@ -107,34 +107,25 @@ exports.deleteTeacherReviewSchema = [
 ];
 
 exports.getTeacherReviewsQuerySchema = [
-    query('learning')
-        .optional()
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid learning score. Should be between 1-5'),
-    query('grading')
-        .optional()
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid grading score. Should be between 1-5'),
-    query('attendance')
-        .optional()
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid attendance score. Should be between 1-5'),
-    query('difficulty')
+    query('subject_code')
         .optional()
         .trim()
-        .isInt({min: 1, max: 5})
-        .withMessage('Invalid difficulty score. Should be between 1-5'),
-    query('overall_rating')
+        .matches(CourseCodeRegex)
+        .withMessage('Subject code should be of format \'AAA000\''),
+    query('teacher_id')
+        .exists()
+        .withMessage('TeacherID is required for the teacherReview')
+        .isInt({ min: 1 })
+        .withMessage('Invalid Teacher ID found'),
+    query('reviewed_at')
         .optional()
-        .isDecimal({force_decimal: true, decimal_digits: '1'})
-        .withMessage('Rating should a valid decimal (0.0)')
-        .isFloat({min: 0.1, max: 5.0})
-        .withMessage('Rating should in range [0.1 - 5.0]'),
+        .trim()
+        .matches(datetimeRegex)
+        .withMessage('Review datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
     query()
         .custom(value => {
             const queryParams = Object.keys(value);
-            const allowParams = ['learning', 'grading', 'attendance',
-                'difficulty', 'overall_rating'];
+            const allowParams = ['teacher_id', 'subject_code', 'reviewed_at'];
             return queryParams.every(param => allowParams.includes(param));
         })
         .withMessage('Invalid query params!')
