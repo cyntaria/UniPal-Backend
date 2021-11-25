@@ -500,7 +500,7 @@ CREATE TABLE `teacher_reviews` (
   CONSTRAINT `fk_teacher_reviews_student_erp` FOREIGN KEY (`reviewed_by_erp`) REFERENCES `students` (`erp`),
   CONSTRAINT `fk_teacher_reviews_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   CONSTRAINT `fk_teacher_reviews_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,4 +621,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-06  5:55:01
+-- Dump completed on 2021-11-25  2:08:40

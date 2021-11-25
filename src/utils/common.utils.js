@@ -23,6 +23,11 @@ exports.parseTime = (time) => {
     return `${hours}:${times[1]}:${times[2]}`;
 };
 
+exports.round = (value, precision) => {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+};
+
 exports.multipleFilterSet = (object) => {
     if (typeof object !== 'object') {
         throw new Error('Invalid input');

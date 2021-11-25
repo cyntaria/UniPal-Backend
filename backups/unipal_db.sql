@@ -718,7 +718,7 @@ CREATE TABLE `teacher_reviews` (
   CONSTRAINT `fk_teacher_reviews_student_erp` FOREIGN KEY (`reviewed_by_erp`) REFERENCES `students` (`erp`),
   CONSTRAINT `fk_teacher_reviews_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   CONSTRAINT `fk_teacher_reviews_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -727,6 +727,7 @@ CREATE TABLE `teacher_reviews` (
 
 LOCK TABLES `teacher_reviews` WRITE;
 /*!40000 ALTER TABLE `teacher_reviews` DISABLE KEYS */;
+INSERT INTO `teacher_reviews` VALUES (1,3,4,3,5,3.8,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','MKT201',2,'17855'),(2,5,5,5,5,5.0,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','FIN201',1,'17855'),(3,3,4,4,2,3.3,'Not worth it. Poor experience','2021-11-22 21:20:40','MKT201',2,'15030');
 /*!40000 ALTER TABLE `teacher_reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -752,7 +753,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'Waseem Arain',0.0,0),(2,'Faisal Iradat',0.0,0);
+INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.0,1),(2,'Faisal Iradat',3.6,2);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -904,4 +905,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-06  5:55:01
+-- Dump completed on 2021-11-25  2:08:39

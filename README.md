@@ -25,6 +25,7 @@ The documentation was generated using Postman and is divided into collections at
 - Timeslots - https://documenter.getpostman.com/view/13348269/UV5cAvrF
 - Classrooms - https://documenter.getpostman.com/view/13348269/UVBzmUFC
 - Teachers - https://documenter.getpostman.com/view/13348269/UVC2HUx5
+- Teacher Reviews - https://documenter.getpostman.com/view/13348269/UVJZmxLn
 
 ### :dvd: Installation
 #### 1. Getting Started
