@@ -15,7 +15,7 @@ echo "SET FOREIGN_KEY_CHECKS = 0;" > $TEMP_FILE_PATH
 ( mysqldump --add-drop-table --no-data --user=$DBUSER --password=$DBPASS $TESTDBNAME | findstr "DROP" ) >> $TEMP_FILE_PATH
 echo "SET FOREIGN_KEY_CHECKS = 1;" >> $TEMP_FILE_PATH
 mysql --user=$DBUSER --password=$DBPASS $TESTDBNAME < $TEMP_FILE_PATH
-Del $TEMP_FILE_PATH
+rm $TEMP_FILE_PATH
 
 echo "========== DROP COMPLETE =========="
 echo
