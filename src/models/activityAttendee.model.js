@@ -16,7 +16,7 @@ class ActivityAttendeeModel {
         };
 
         return created_activity_attendee;
-    }
+    };
 
     update = async(columns, filters) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -29,7 +29,7 @@ class ActivityAttendeeModel {
         const result = await DBService.query(sql, [...values, ...filterValues]);
 
         return result;
-    }
+    };
 
     delete = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -41,7 +41,7 @@ class ActivityAttendeeModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ActivityAttendeeModel;

@@ -32,17 +32,17 @@ class AuthController {
     sendOTP = async(req, res, next) => {
         const response = await AuthRepository.sendOTP(req.body);
         res.send(response);
-    }
+    };
 
     verifyOTP = async(req, res, next) => {
         const response = await AuthRepository.verifyOTP(req.body);
         res.send(response);
-    }
+    };
 
     resetPassword = async(req, res, next) => {
         const response = await AuthRepository.resetPassword(req.body);
         res.send(response);
-    }
+    };
 }
 
 module.exports = new AuthController;

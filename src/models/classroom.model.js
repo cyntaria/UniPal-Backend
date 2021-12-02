@@ -15,7 +15,7 @@ class ClassroomModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.Classrooms}
@@ -25,7 +25,7 @@ class ClassroomModel {
         const result = await DBService.query(sql, [id]);
 
         return result[0];
-    }
+    };
 
     create = async({ classroom, campus_id }) => {
         const valueSet = { classroom, campus_id };
@@ -40,7 +40,7 @@ class ClassroomModel {
         };
 
         return created_Classroom;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -50,7 +50,7 @@ class ClassroomModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Classrooms}
@@ -59,7 +59,7 @@ class ClassroomModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ClassroomModel;

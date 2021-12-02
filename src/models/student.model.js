@@ -20,7 +20,7 @@ class StudentModel {
         sql += ` AND ${filterSet}`;
 
         return await DBService.query(sql, [myERP, myERP, myERP, ...filterValues]);
-    }
+    };
 
     findOne = async(erp) => {
         const sql = `SELECT * 
@@ -32,7 +32,7 @@ class StudentModel {
 
         // return back the first row (student)
         return result[0];
-    }
+    };
 
     findOtherStudent = async(erp, myERP) => {
         const sql = `SELECT *
@@ -46,7 +46,7 @@ class StudentModel {
 
         // return back the first row (student)
         return result[0];
-    }
+    };
 
     findAllOrganizedActivitiesByStudent = async(organizer_erp, filters) => {
 
@@ -64,7 +64,7 @@ class StudentModel {
         const result = await DBService.query(sql, [organizer_erp, ...filterValues]);
 
         return result;
-    }
+    };
 
     findAllAttendedActivitiesByStudent = async(student_erp, filters) => {
         let sql = `SELECT *
@@ -82,7 +82,7 @@ class StudentModel {
         const result = await DBService.query(sql, [student_erp, ...filterValues]);
 
         return result;
-    }
+    };
 
     findAllSavedActivitiesByStudent = async(student_erp, filters) => {
         let sql = `SELECT * 
@@ -101,7 +101,7 @@ class StudentModel {
         const result = await DBService.query(sql, [student_erp, ...filterValues]);
 
         return result;
-    }
+    };
 
     // 24 fields
     create = async({ erp, first_name, last_name, gender, contact, birthday, password,
@@ -126,7 +126,7 @@ class StudentModel {
         };
 
         return created_student;
-    }
+    };
 
     update = async(columns, erp) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -136,7 +136,7 @@ class StudentModel {
         const result = await DBService.query(sql, [...values, erp]);
 
         return result;
-    }
+    };
 
     delete = async(erp) => {
         const sql = `DELETE FROM ${tables.Students}
@@ -145,7 +145,7 @@ class StudentModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new StudentModel;

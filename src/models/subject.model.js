@@ -15,7 +15,7 @@ class SubjectModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(subject_code) => {
         const sql = `SELECT * FROM ${tables.Subjects}
@@ -25,7 +25,7 @@ class SubjectModel {
         const result = await DBService.query(sql, [subject_code]);
 
         return result[0];
-    }
+    };
 
     create = async({ subject_code, subject }) => {
         const valueSet = { subject_code, subject };
@@ -39,7 +39,7 @@ class SubjectModel {
         };
 
         return created_subject;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -49,7 +49,7 @@ class SubjectModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Subjects}
@@ -58,7 +58,7 @@ class SubjectModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new SubjectModel;

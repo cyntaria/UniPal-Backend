@@ -15,7 +15,7 @@ class ActivityModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const {activity_id} = filters;
@@ -35,7 +35,7 @@ class ActivityModel {
 
         // return back the first row (activity)
         return result[0];
-    }
+    };
 
     findAllAttendeesByActivity = async(activity_id, filters) => {
         let sql = `SELECT activity_id, student_erp, first_name, last_name, profile_picture_url, involvement_type 
@@ -54,7 +54,7 @@ class ActivityModel {
         const result = await DBService.query(sql, [activity_id, ...filterValues]);
 
         return result;
-    }
+    };
 
     create = async({
         title, location, privacy, frequency,
@@ -80,7 +80,7 @@ class ActivityModel {
         };
 
         return created_activity;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -90,7 +90,7 @@ class ActivityModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Activities}
@@ -99,7 +99,7 @@ class ActivityModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ActivityModel;

@@ -15,7 +15,7 @@ class ActivityStatusModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -27,7 +27,7 @@ class ActivityStatusModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     create = async({ activity_status }) => {
         const valueSet = { activity_status };
@@ -42,7 +42,7 @@ class ActivityStatusModel {
         };
 
         return created_activity_status;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -52,7 +52,7 @@ class ActivityStatusModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.ActivityStatuses}
@@ -61,7 +61,7 @@ class ActivityStatusModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ActivityStatusModel;

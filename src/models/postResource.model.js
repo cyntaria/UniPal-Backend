@@ -17,7 +17,7 @@ class PostResourceModel {
         };
 
         return created_resource;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -29,7 +29,7 @@ class PostResourceModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.PostResources}
@@ -39,7 +39,7 @@ class PostResourceModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new PostResourceModel;

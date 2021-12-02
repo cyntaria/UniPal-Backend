@@ -15,7 +15,7 @@ class TimeslotModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findTimeConflicts = async({start_time, end_time}) => {
         let sql = `SELECT COUNT(*) FROM ${tables.Timeslots}
@@ -35,7 +35,7 @@ class TimeslotModel {
         const result = await DBService.query(sql, [...values]);
 
         return result[0]['COUNT(*)'];
-    }
+    };
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.Timeslots}
@@ -45,7 +45,7 @@ class TimeslotModel {
         const result = await DBService.query(sql, [id]);
 
         return result[0];
-    }
+    };
 
     create = async({ start_time, end_time, slot_number }) => {
         const valueSet = { start_time, end_time, slot_number };
@@ -60,7 +60,7 @@ class TimeslotModel {
         };
 
         return created_timeslot;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -70,7 +70,7 @@ class TimeslotModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Timeslots}
@@ -79,7 +79,7 @@ class TimeslotModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new TimeslotModel;

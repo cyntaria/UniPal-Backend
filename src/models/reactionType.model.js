@@ -15,7 +15,7 @@ class ReactionTypeModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -27,7 +27,7 @@ class ReactionTypeModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     create = async({ reaction_type }) => {
         const valueSet = { reaction_type };
@@ -42,7 +42,7 @@ class ReactionTypeModel {
         };
 
         return created_reaction_type;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -52,7 +52,7 @@ class ReactionTypeModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.ReactionTypes}
@@ -61,7 +61,7 @@ class ReactionTypeModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ReactionTypeModel;

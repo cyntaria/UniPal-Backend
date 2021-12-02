@@ -16,7 +16,7 @@ class PostReactionModel {
         };
 
         return created_resource;
-    }
+    };
 
     update = async(columns, filters) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -29,7 +29,7 @@ class PostReactionModel {
         const result = await DBService.query(sql, [...values, ...filterValues]);
 
         return result;
-    }
+    };
 
     delete = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -41,7 +41,7 @@ class PostReactionModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new PostReactionModel;

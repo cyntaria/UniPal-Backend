@@ -24,7 +24,7 @@ class TeacherReviewModel {
         sql += ` WHERE ${filterSet} ORDER BY reviewed_at DESC`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(id) => {
         const sql = `
@@ -41,7 +41,7 @@ class TeacherReviewModel {
         const result = await DBService.query(sql, [id]);
 
         return result[0];
-    }
+    };
 
     create = async({
         learning, grading, attendance, difficulty,
@@ -63,7 +63,7 @@ class TeacherReviewModel {
         };
 
         return created_activity;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.TeacherReviews}
@@ -72,7 +72,7 @@ class TeacherReviewModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new TeacherReviewModel;

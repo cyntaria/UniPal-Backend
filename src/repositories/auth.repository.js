@@ -143,11 +143,11 @@ class AuthRepository {
         await sendOTPEmail(student, OTP);
 
         return successResponse({}, 'OTP generated and sent via email');
-    }
+    };
 
     generateOTP = () => {
         return `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
-    }
+    };
 
     saveOTP = async(erp, OTP, expiry_hours) => {
         const OTPHash = await bcrypt.hash(OTP, 8);
@@ -159,7 +159,7 @@ class AuthRepository {
         const result = await OTPModel.create(body);
 
         if (!result || !result.affected_rows) throw new OTPGenerationException();
-    }
+    };
 
     removeExpiredOTP = async(erp) => {
         const result = await OTPModel.findOne({erp});
@@ -171,7 +171,7 @@ class AuthRepository {
                 throw new OTPGenerationException('Expired OTP could not be deleted');
             }
         }
-    }
+    };
 
     verifyOTP = async(body) => {
         const {otp, erp} = body;
@@ -203,7 +203,7 @@ class AuthRepository {
         }
 
         return successResponse({}, 'OTP verified succesfully');
-    }
+    };
 
     resetPassword = async(body) => {
         body.new_password = await hashPassword(body.new_password);
@@ -227,7 +227,7 @@ class AuthRepository {
         };
 
         return successResponse(responseBody, 'Password reset successfully');
-    }
+    };
 }
 
 module.exports = new AuthRepository;

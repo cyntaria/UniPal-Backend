@@ -15,7 +15,7 @@ class ProgramModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -27,7 +27,7 @@ class ProgramModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     create = async({ program }) => {
         const valueSet = { program };
@@ -42,7 +42,7 @@ class ProgramModel {
         };
 
         return created_program;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -52,7 +52,7 @@ class ProgramModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Programs}
@@ -61,7 +61,7 @@ class ProgramModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new ProgramModel;

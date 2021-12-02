@@ -16,7 +16,7 @@ class SavedActivityModel {
         };
 
         return created_saved_activity;
-    }
+    };
 
     delete = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -28,7 +28,7 @@ class SavedActivityModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new SavedActivityModel;

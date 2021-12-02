@@ -66,7 +66,7 @@ class DatabaseService {
             throw new InternalServerException();
             // throw err;
         });
-    }
+    };
 
     beginTransaction = async() => {
         return new Promise((resolve, reject) => {
@@ -93,7 +93,7 @@ class DatabaseService {
                 }
             });
         });
-    }
+    };
 
     rollback = async() => {
         return new Promise((resolve, reject) => {
@@ -107,7 +107,7 @@ class DatabaseService {
             this.dbConnection.rollback(callback);
             this.dbConnection.release();
         });
-    }
+    };
 
     commit = async() => {
         return new Promise((resolve, reject) => {
@@ -122,7 +122,7 @@ class DatabaseService {
             this.dbConnection.commit(callback);
             this.dbConnection.release();
         });
-    }
+    };
 }
 
 // ENUM of mysql errors mapped to http status codes

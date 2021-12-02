@@ -14,7 +14,7 @@ class HobbyModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -26,7 +26,7 @@ class HobbyModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     create = async({ hobby }) => {
         const valueSet = { hobby };
@@ -41,7 +41,7 @@ class HobbyModel {
         };
 
         return created_hobby;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -51,7 +51,7 @@ class HobbyModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Hobbies}
@@ -60,7 +60,7 @@ class HobbyModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new HobbyModel;

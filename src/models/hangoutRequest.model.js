@@ -16,7 +16,7 @@ class HangoutRequestModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.HangoutRequests}
@@ -26,7 +26,7 @@ class HangoutRequestModel {
         const result = await DBService.query(sql, [id]);
 
         return result[0];
-    }
+    };
 
     create = async({ sender_erp, receiver_erp, purpose, meetup_at, meetup_spot_id }) => {
         const valueSet = {
@@ -49,7 +49,7 @@ class HangoutRequestModel {
         };
 
         return created_hangout_request;
-    }
+    };
 
     update = async({ request_status, accepted_at = null }, id) => {
         const columns = { request_status, accepted_at };
@@ -60,7 +60,7 @@ class HangoutRequestModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.HangoutRequests} WHERE hangout_request_id = ?`;
@@ -69,7 +69,7 @@ class HangoutRequestModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new HangoutRequestModel;

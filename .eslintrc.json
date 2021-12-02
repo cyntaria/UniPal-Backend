@@ -3,7 +3,9 @@
     "env": {
         "browser": false,
         "es6": true,
-        "node": true
+        "node": true,
+        "commonjs": true,
+        "es2021": true
     },
     "parser": "@babel/eslint-parser",
     "parserOptions": {
@@ -21,6 +23,7 @@
         "keyword-spacing": ["error", {"before":true,"after":true}],
         "no-trailing-spaces": ["error", { "skipBlankLines": true }],
         "eol-last": ["error", "never"],
-        "space-before-function-paren": ["error", "never"]
+        "space-before-function-paren": ["error", "never"],
+        "semi": [1, "always"]
     }
 }

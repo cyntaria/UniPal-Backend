@@ -39,7 +39,7 @@ class PostModel {
         `;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -53,7 +53,7 @@ class PostModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     findOneWithDetails = async(post_id) => {
         const sql = `
@@ -80,7 +80,7 @@ class PostModel {
         const result = await DBService.query(sql, [post_id]);
 
         return result;
-    }
+    };
 
     findAllReactionsByPost = async(post_id) => {
         let sql = `SELECT * 
@@ -91,7 +91,7 @@ class PostModel {
         const result = await DBService.query(sql, [post_id]);
 
         return result;
-    }
+    };
 
     create = async({ body, privacy, author_erp, posted_at }) => {
         
@@ -107,7 +107,7 @@ class PostModel {
         };
 
         return created_post;
-    }
+    };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
@@ -117,7 +117,7 @@ class PostModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.Posts}
@@ -126,7 +126,7 @@ class PostModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new PostModel;

@@ -18,7 +18,7 @@ class StudentConnectionModel {
         sql += ` AND ${filterSet}`;
 
         return await DBService.query(sql, [ConnectionStatus.RequestPending, ...filterValues]);
-    }
+    };
 
     findAll = async({erp}) => {
         let sql = `SELECT student_connection_id, sender_erp, receiver_erp, connection_status, sent_at, accepted_at
@@ -26,7 +26,7 @@ class StudentConnectionModel {
         WHERE connection_status = ? AND (sender_erp = ? OR receiver_erp = ?)`;
 
         return await DBService.query(sql, [ConnectionStatus.Friends, erp, erp]);
-    }
+    };
 
     findOne = async(id) => {
         const sql = `SELECT * FROM ${tables.StudentConnections}
@@ -36,7 +36,7 @@ class StudentConnectionModel {
         const result = await DBService.query(sql, [id]);
 
         return result[0];
-    }
+    };
 
     create = async({ sender_erp, receiver_erp, sent_at }) => {
         const valueSet = { sender_erp, receiver_erp, sent_at };
@@ -53,7 +53,7 @@ class StudentConnectionModel {
         };
 
         return created_connection_request;
-    }
+    };
 
     update = async({ connection_status, accepted_at = null }, id) => {
         const columns = { connection_status, accepted_at };
@@ -64,7 +64,7 @@ class StudentConnectionModel {
         const result = await DBService.query(sql, [...values, id]);
 
         return result;
-    }
+    };
 
     delete = async(id) => {
         const sql = `DELETE FROM ${tables.StudentConnections} WHERE student_connection_id = ?`;
@@ -73,7 +73,7 @@ class StudentConnectionModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new StudentConnectionModel;

@@ -15,7 +15,7 @@ class OTPModel {
         sql += ` WHERE ${filterSet}`;
 
         return await DBService.query(sql, [...filterValues]);
-    }
+    };
 
     findOne = async(filters) => {
         const { filterSet, filterValues } = multipleFilterSet(filters);
@@ -27,7 +27,7 @@ class OTPModel {
         const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
-    }
+    };
 
     create = async({ erp, OTP, expiration_datetime }) => {
         const valueSet = { erp, OTP, expiration_datetime };
@@ -41,7 +41,7 @@ class OTPModel {
         };
 
         return created_OTP;
-    }
+    };
 
     update = async(expiration_datetime, erp) => {
 
@@ -52,7 +52,7 @@ class OTPModel {
         const result = await DBService.query(sql, [expiration_datetime, erp]);
 
         return result;
-    }
+    };
 
     delete = async(filters) => {
         const { columnSet, values } = multipleColumnSet(filters);
@@ -64,7 +64,7 @@ class OTPModel {
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
-    }
+    };
 }
 
 module.exports = new OTPModel;
