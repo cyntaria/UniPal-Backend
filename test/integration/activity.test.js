@@ -277,6 +277,8 @@ describe("Activities API", () => {
                 .auth(userToken, { type: 'bearer' });
 
             expect(res.status).to.be.equal(200);
+            delete res.body.body.happens_at;
+            delete data.happens_at;
             expect(res.body.body).to.be.eql({
                 activity_id: newId,
                 num_of_attendees: 0,
@@ -318,6 +320,8 @@ describe("Activities API", () => {
                 .auth(userToken, { type: 'bearer' });
 
             expect(res.status).to.be.equal(200);
+            delete res.body.body.happens_at;
+            delete data.happens_at;
             expect(res.body.body).to.be.eql({
                 activity_id: newId,
                 num_of_attendees: 0,
