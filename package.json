@@ -34,7 +34,7 @@
     "express-validator": "^6.13.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
-    "otp-generator": "^2.0.1"
+    "otp-generator": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
