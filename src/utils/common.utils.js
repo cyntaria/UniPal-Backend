@@ -28,6 +28,19 @@ exports.round = (value, precision) => {
     return Math.round(value * multiplier) / multiplier;
 };
 
+exports.truncateDecimal = (value, precision) => {
+    // if whole number, return as is
+    if (value % 1 === 0) return parseFloat(value);
+    let values = (value + '').split(".");
+
+    // if int part only
+    if (precision === 0) return parseInt(values[0], 10);
+
+    // truncate the decimal part
+    let truncDecimal = values[1].slice(0, precision);
+    return parseFloat(`${values[0]}.${truncDecimal}`);
+};
+
 exports.multipleFilterSet = (object) => {
     if (typeof object !== 'object') {
         throw new Error('Invalid input');

@@ -83,7 +83,7 @@ exports.deleteTeacherReviewSchema = [
         .withMessage('Rating should in range [0.1 - 5.0]'),
     body('review_rating')
         .exists()
-        .withMessage('Teacher\'s old rating is required')
+        .withMessage('Deleted review\'s rating is required')
         .isDecimal({force_decimal: false, decimal_digits: '1'})
         .withMessage('Rating should a valid decimal (0.0)')
         .isFloat({min: 0.0, max: 5.0})
@@ -149,7 +149,7 @@ exports.teacherReviewOwnerCheck = async(req) => {
         // eslint-disable-next-line eqeqeq
         const ratingCheck = req.body.review_rating == teacherReview.overall_rating;
         if (!teacherCheck || !ratingCheck) {
-            throw new DeleteFailedException('Teacher failed to be deleted. Inconsistent details found');
+            throw new DeleteFailedException('Teacher review failed to be deleted. Inconsistent details found');
         }
     }
 

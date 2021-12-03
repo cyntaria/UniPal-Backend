@@ -345,7 +345,7 @@ describe("Teacher Reviews API", () => {
             // arrange
             const {review_id: newId} = res.body.body;
             const TeacherReviewRepository = require('../../src/repositories/teacherReview.repository');
-            const review_rating = 4.3;
+            const review_rating = TeacherReviewRepository.calculateAverageRating(data);
             const newTeacherRating = TeacherReviewRepository.incrementTeacherRating(review_rating, data.old_teacher_rating, data.old_total_reviews);
             const deleteData = {
                 teacher_id: data.teacher_id,
@@ -377,11 +377,13 @@ describe("Teacher Reviews API", () => {
 
         it("Scenario 2: Delete a teacher review request is unsuccessful due to unknown review_id", async() => {
             // arrange
+            const TeacherReviewRepository = require('../../src/repositories/teacherReview.repository');
+            const review_rating = TeacherReviewRepository.calculateAverageRating(newTeacherReview);
             const deleteData = {
                 teacher_id: newTeacherReview.teacher_id,
                 teacher_rating: newTeacherReview.old_teacher_rating,
                 total_reviews: newTeacherReview.old_total_reviews,
-                review_rating: 4.3
+                review_rating
             };
             
             // act

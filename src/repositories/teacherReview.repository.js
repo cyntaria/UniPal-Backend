@@ -8,7 +8,7 @@ const {
     CreateFailedException,
     DeleteFailedException
 } = require('../utils/exceptions/database.exception');
-const { round } = require('../utils/common.utils');
+const { round, truncateDecimal } = require('../utils/common.utils');
 
 class TeacherReviewRepository {
     findAll = async(filters = {}) => {
@@ -30,10 +30,10 @@ class TeacherReviewRepository {
         return successResponse(teacherReview);
     };
 
-    #calculateAverageRating = (body) => {
+    calculateAverageRating = (body) => {
         const { learning, grading, attendance, difficulty } = body;
         const rating = (learning + grading + attendance + difficulty) / 4;
-        return round(rating, 1);
+        return truncateDecimal(rating, 1);
     };
 
     // uses bezhanov algorithm
@@ -41,18 +41,20 @@ class TeacherReviewRepository {
         newRating = parseFloat(newRating);
         oldRating = parseFloat(oldRating);
         const rating = (oldRating * numOfReviewsOld + newRating) / (numOfReviewsOld + 1);
-        return round(rating, 1);
+        return truncateDecimal(rating, 1);
     };
 
-    decrementTeacherRating = (reviewRating, teacher_rating, numOfReviews) => {
-        teacher_rating = parseFloat(teacher_rating);
+    decrementTeacherRating = (reviewRating, teacherRating, numOfReviews) => {
+        teacherRating = parseFloat(teacherRating);
         reviewRating = parseFloat(reviewRating);
-        const oldRating = (teacher_rating * numOfReviews - reviewRating) / (numOfReviews - 1);
-        return round(oldRating, 1);
+        // need rounding due to javascript's floating point arithmetic errors
+        const unMovedAverage = round(teacherRating * numOfReviews - reviewRating, 1);
+        const oldRating = unMovedAverage / (numOfReviews - 1);
+        return truncateDecimal(oldRating, 1);
     };
 
     create = async(body) => {
-        const review_rating = this.#calculateAverageRating(body);
+        const review_rating = this.calculateAverageRating(body);
         body.overall_rating = review_rating;
 
         await DBService.beginTransaction();
