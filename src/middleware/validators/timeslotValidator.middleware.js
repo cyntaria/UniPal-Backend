@@ -17,7 +17,6 @@ exports.createTimeslotSchema = [
         .custom((end_time, {req}) => req.body.start_time < end_time)
         .withMessage('End time should be greater than start time'),
     body('slot_number')
-        .trim()
         .exists()
         .withMessage('Slot number is required')
         .isInt({min: 1})
@@ -41,7 +40,6 @@ exports.updateTimeslotSchema = [
         .withMessage('End time should be greater than start time'),
     body('slot_number')
         .optional()
-        .trim()
         .isInt({min: 1})
         .withMessage('Slot number has to be a whole number >= 1'),
     body()

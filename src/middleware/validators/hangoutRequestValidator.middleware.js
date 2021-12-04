@@ -34,7 +34,6 @@ exports.createHangoutRequestSchema = [
         .withMessage('Meetup datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
     body('meetup_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Meetup Spot ID found')
 ];

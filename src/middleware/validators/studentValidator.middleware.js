@@ -79,13 +79,11 @@ exports.createStudentSchema = [
         .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('campus_id')
-        .trim()
         .exists()
         .withMessage('Campus id is required for the student')
         .isInt({ min: 1 })
         .withMessage('Invalid CampusID found'),
     body('program_id')
-        .trim()
         .exists()
         .withMessage('Program id is required for the student')
         .isInt({ min: 1 })
@@ -161,42 +159,34 @@ exports.updateStudentSchema = [
         .normalizeEmail(),
     body('hobby_1')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('hobby_2')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('hobby_3')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     body('interest_1')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('interest_2')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('interest_3')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     body('campus_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid CampusID found'),
     body('program_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid ProgramID found'),
     body('favourite_campus_hangout_spot')
@@ -215,7 +205,6 @@ exports.updateStudentSchema = [
         .withMessage('Should be less than 45 chars'),
     body('current_status')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid StudentStatusID found'),
     body('is_active')
@@ -271,42 +260,34 @@ exports.getStudentsQuerySchema = [
         .withMessage('Graduation year must be a valid year'),
     query('hobby_1')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     query('hobby_2')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     query('hobby_3')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid HobbyID found'),
     query('interest_1')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     query('interest_2')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     query('interest_3')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid InterestID found'),
     query('campus_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid CampusID found'),
     query('program_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid ProgramID found'),
     query('favourite_campus_hangout_spot')
@@ -325,7 +306,6 @@ exports.getStudentsQuerySchema = [
         .withMessage('Should be less than 45 chars'),
     query('current_status')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid StudentStatusID found'),
     query('is_active')
@@ -403,12 +383,10 @@ exports.getOrganizedActivitiesQuerySchema = [
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')
         .optional()
-        .trim()
         .isInt({min: 1, max: 12})
         .withMessage('Invalid month number'),
     query('group_size')
         .optional()
-        .trim()
         .isInt({min: 0})
         .withMessage('Invalid group size'),
     query('happens_at')
@@ -418,17 +396,14 @@ exports.getOrganizedActivitiesQuerySchema = [
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     query('activity_type_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Type ID found'),
     query('activity_status_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     query('campus_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     query()
@@ -511,12 +486,10 @@ exports.getSavedActivitiesQuerySchema = [
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')
         .optional()
-        .trim()
         .isInt({min: 1, max: 12})
         .withMessage('Invalid month number'),
     query('group_size')
         .optional()
-        .trim()
         .isInt({min: 0})
         .withMessage('Invalid group size'),
     query('happens_at')
@@ -526,17 +499,14 @@ exports.getSavedActivitiesQuerySchema = [
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     query('activity_type_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Type ID found'),
     query('activity_status_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     query('campus_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     query('organizer_erp')

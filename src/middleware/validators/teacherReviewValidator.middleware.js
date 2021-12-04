@@ -37,7 +37,6 @@ exports.createTeacherReviewSchema = [
         .matches(CourseCodeRegex)
         .withMessage('Subject code should be of format \'AAA000\''),
     body('teacher_id')
-        .trim()
         .exists()
         .withMessage('TeacherID is required for the teacherReview')
         .isInt({ min: 1 })

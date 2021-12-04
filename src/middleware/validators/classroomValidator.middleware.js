@@ -8,7 +8,6 @@ exports.createClassroomSchema = [
         .isLength({ min: 2, max: 10 })
         .withMessage('Classroom name should between 2-10 characters'),
     body('campus_id')
-        .trim()
         .exists()
         .withMessage('Campus id is required for the classroom')
         .isInt({ min: 1 })
@@ -23,7 +22,6 @@ exports.updateClassroomSchema = [
         .withMessage('Classroom name should be less than 10 characters'),
     body('campus_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus ID found'),
     body()

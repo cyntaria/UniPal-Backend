@@ -10,7 +10,6 @@ exports.createPostReactionSchema = [
         .matches(ERPRegex)
         .withMessage('ERP must be 5 digits'),
     body('reaction_type_id')
-        .trim()
         .exists()
         .withMessage('Reaction type id is required for the post')
         .isInt({ min: 1 })
@@ -25,7 +24,6 @@ exports.createPostReactionSchema = [
 
 exports.updatePostReactionSchema = [
     body('reaction_type_id')
-        .trim()
         .exists()
         .withMessage('Reaction type id is required')
         .isInt({ min: 1 })

@@ -76,13 +76,11 @@ exports.createActivitySchema = [
             return true;
         }),
     body('month_number')
-        .trim()
         .exists()
         .withMessage('Month number is required')
         .isInt({min: 1, max: 12})
         .withMessage('Invalid month number'),
     body('group_size')
-        .trim()
         .exists()
         .withMessage('Group size is required')
         .isInt({min: 0})
@@ -99,20 +97,17 @@ exports.createActivitySchema = [
         .isLength({ max: 100 })
         .withMessage('Additional directions should be less than 100 characters'),
     body('activity_type_id')
-        .trim()
         .exists()
         .withMessage('Activity type id is required for the activity')
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Type ID found'),
     body('activity_status_id')
-        .trim()
         .exists()
         .withMessage('Activity status id is required for the activity')
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     body('campus_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     body('organizer_erp')
@@ -187,12 +182,10 @@ exports.updateActivitySchema = [
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('month_number')
         .optional()
-        .trim()
         .isInt({min: 1, max: 12})
         .withMessage('Invalid month number'),
     body('group_size')
         .optional()
-        .trim()
         .isInt({min: 0})
         .withMessage('Invalid group size'),
     body('happens_at')
@@ -207,17 +200,14 @@ exports.updateActivitySchema = [
         .withMessage('Additional directions should be less than 100 characters'),
     body('activity_type_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Type ID found'),
     body('activity_status_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     body('campus_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     body()
@@ -289,12 +279,10 @@ exports.getActivitiesQuerySchema = [
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')
         .optional()
-        .trim()
         .isInt({min: 1, max: 12})
         .withMessage('Invalid month number'),
     query('group_size')
         .optional()
-        .trim()
         .isInt({min: 0})
         .withMessage('Invalid group size'),
     query('happens_at')
@@ -304,17 +292,14 @@ exports.getActivitiesQuerySchema = [
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     query('activity_type_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Type ID found'),
     query('activity_status_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Activity Status ID found'),
     query('campus_spot_id')
         .optional()
-        .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid Campus Spot ID found'),
     query('organizer_erp')

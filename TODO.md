@@ -1,2 +1,0 @@
-- Remove .trim() from non string validation chains
-- parseFloat all responses containing double values.

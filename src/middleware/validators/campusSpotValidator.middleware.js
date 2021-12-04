@@ -8,7 +8,6 @@ exports.createCampusSpotSchema = [
         .isLength({min: 3})
         .withMessage('Campus spot should be atleast 3 letters'),
     body('campus_id')
-        .trim()
         .exists()
         .withMessage('Campus id is required for the spot')
         .isInt({ min: 1 })
@@ -17,7 +16,6 @@ exports.createCampusSpotSchema = [
 
 exports.updateCampusSpotSchema = [
     body('campus_spot')
-        .trim()
         .exists()
         .withMessage('New campus spot is required')
         .isLength({min: 3})

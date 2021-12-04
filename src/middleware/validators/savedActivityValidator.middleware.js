@@ -3,7 +3,6 @@ const { datetimeRegex } = require('../../utils/common.utils');
 
 exports.createSavedActivitySchema = [
     body('activity_id')
-        .trim()
         .exists()
         .withMessage('Activity id is required')
         .isInt({ min: 1 })
