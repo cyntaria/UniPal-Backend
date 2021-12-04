@@ -33,7 +33,7 @@ class TeacherReviewRepository {
     calculateAverageRating = (body) => {
         const { learning, grading, attendance, difficulty } = body;
         const rating = (learning + grading + attendance + difficulty) / 4;
-        return truncateDecimal(rating, 1);
+        return truncateDecimal(rating, 3);
     };
 
     // uses bezhanov algorithm
@@ -41,16 +41,16 @@ class TeacherReviewRepository {
         newRating = parseFloat(newRating);
         oldRating = parseFloat(oldRating);
         const rating = (oldRating * numOfReviewsOld + newRating) / (numOfReviewsOld + 1);
-        return truncateDecimal(rating, 1);
+        return truncateDecimal(rating, 3);
     };
 
     decrementTeacherRating = (reviewRating, teacherRating, numOfReviews) => {
         teacherRating = parseFloat(teacherRating);
         reviewRating = parseFloat(reviewRating);
         // need rounding due to javascript's floating point arithmetic errors
-        const unMovedAverage = round(teacherRating * numOfReviews - reviewRating, 1);
+        const unMovedAverage = round(teacherRating * numOfReviews - reviewRating, 3);
         const oldRating = unMovedAverage / (numOfReviews - 1);
-        return truncateDecimal(oldRating, 1);
+        return truncateDecimal(oldRating, 3);
     };
 
     create = async(body) => {

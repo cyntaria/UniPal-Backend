@@ -18,7 +18,7 @@ describe("Teacher Reviews API", () => {
         grading: 4,
         attendance: 3,
         difficulty: 5,
-        overall_rating: "3.8",
+        overall_rating: "3.800",
         comment: "Overall amazing teacher. Worth it!",
         subject_code: "MKT201",
         teacher_id: 2,
@@ -172,7 +172,7 @@ describe("Teacher Reviews API", () => {
             teacher_id: 1,
             reviewed_by_erp: user2ERP,
             reviewed_at: "2021-11-22 21:20:40",
-            old_teacher_rating: "5.0",
+            old_teacher_rating: "5.000",
             old_total_reviews: 1
         };
         
@@ -326,7 +326,7 @@ describe("Teacher Reviews API", () => {
             teacher_id: 1,
             reviewed_by_erp: user2ERP,
             reviewed_at: "2021-11-22 21:20:40",
-            old_teacher_rating: "5.0",
+            old_teacher_rating: "5.000",
             old_total_reviews: 1
         };
         
@@ -351,7 +351,7 @@ describe("Teacher Reviews API", () => {
                 teacher_id: data.teacher_id,
                 teacher_rating: newTeacherRating,
                 total_reviews: data.old_total_reviews + 1,
-                review_rating
+                review_rating: review_rating.toFixed(3)
             };
 
             // act
@@ -383,7 +383,7 @@ describe("Teacher Reviews API", () => {
                 teacher_id: newTeacherReview.teacher_id,
                 teacher_rating: newTeacherReview.old_teacher_rating,
                 total_reviews: newTeacherReview.old_total_reviews,
-                review_rating
+                review_rating: review_rating.toFixed(3)
             };
             
             // act
@@ -405,7 +405,7 @@ describe("Teacher Reviews API", () => {
                 teacher_id: unknownTeacherId, // not the same as the review being deleted
                 teacher_rating: newTeacherReview.old_teacher_rating,
                 total_reviews: newTeacherReview.old_total_reviews,
-                review_rating: 0.0 // not the same as the review being deleted
+                review_rating: "0.000" // not the same as the review being deleted
             };
 
             // act
@@ -448,7 +448,7 @@ describe("Teacher Reviews API", () => {
                 teacher_id: newTeacherReview.teacher_id,
                 teacher_rating: newTeacherReview.old_teacher_rating,
                 total_reviews: newTeacherReview.old_total_reviews,
-                review_rating: 4.3
+                review_rating: "4.300"
             };
             
             // act
