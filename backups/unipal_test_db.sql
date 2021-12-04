@@ -704,7 +704,7 @@ CREATE TABLE `teacher_reviews` (
   `grading` tinyint(1) NOT NULL,
   `attendance` tinyint(1) NOT NULL,
   `difficulty` tinyint(1) NOT NULL,
-  `overall_rating` decimal(2,1) NOT NULL,
+  `overall_rating` decimal(4,3) NOT NULL,
   `comment` text NOT NULL,
   `reviewed_at` datetime NOT NULL,
   `subject_code` varchar(6) NOT NULL,
@@ -727,7 +727,7 @@ CREATE TABLE `teacher_reviews` (
 
 LOCK TABLES `teacher_reviews` WRITE;
 /*!40000 ALTER TABLE `teacher_reviews` DISABLE KEYS */;
-INSERT INTO `teacher_reviews` VALUES (1,3,4,3,5,3.8,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','MKT201',2,'17855'),(2,5,5,5,5,5.0,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','FIN201',1,'17855'),(3,3,4,4,2,3.3,'Not worth it. Poor experience','2021-11-22 21:20:40','MKT201',2,'15030');
+INSERT INTO `teacher_reviews` VALUES (1,3,4,3,5,3.800,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','MKT201',2,'17855'),(2,5,5,5,5,5.000,'Overall amazing teacher. Worth it!','2021-11-22 21:20:40','FIN201',1,'17855'),(3,3,4,4,2,3.300,'Not worth it. Poor experience','2021-11-22 21:20:40','MKT201',2,'15030');
 /*!40000 ALTER TABLE `teacher_reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -741,7 +741,7 @@ DROP TABLE IF EXISTS `teachers`;
 CREATE TABLE `teachers` (
   `teacher_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `full_name` varchar(45) NOT NULL,
-  `average_rating` decimal(2,1) unsigned NOT NULL DEFAULT 0.0,
+  `average_rating` decimal(4,3) unsigned NOT NULL DEFAULT 0.000,
   `total_reviews` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`teacher_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
@@ -753,7 +753,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.0,1),(2,'Faisal Iradat',3.6,2);
+INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.000,1),(2,'Faisal Iradat',3.600,2);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -905,4 +905,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-03 15:22:27
+-- Dump completed on 2021-12-03 23:55:11

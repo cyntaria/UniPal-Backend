@@ -486,7 +486,7 @@ CREATE TABLE `teacher_reviews` (
   `grading` tinyint(1) NOT NULL,
   `attendance` tinyint(1) NOT NULL,
   `difficulty` tinyint(1) NOT NULL,
-  `overall_rating` decimal(2,1) NOT NULL,
+  `overall_rating` decimal(4,3) NOT NULL,
   `comment` text NOT NULL,
   `reviewed_at` datetime NOT NULL,
   `subject_code` varchar(6) NOT NULL,
@@ -513,7 +513,7 @@ DROP TABLE IF EXISTS `teachers`;
 CREATE TABLE `teachers` (
   `teacher_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `full_name` varchar(45) NOT NULL,
-  `average_rating` decimal(2,1) unsigned NOT NULL DEFAULT 0.0,
+  `average_rating` decimal(4,3) unsigned NOT NULL DEFAULT 0.000,
   `total_reviews` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`teacher_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
@@ -621,4 +621,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-03 15:22:26
+-- Dump completed on 2021-12-03 23:55:11
