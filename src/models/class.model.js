@@ -80,14 +80,14 @@ class ClassModel {
         return created_class;
     };
 
-    createMany = async(classesArray) => {
+    createMany = async({classes}) => {
 
         const sql = `INSERT INTO ${tables.Classes} (
             class_erp, semester, classroom_id, subject_code,
             teacher_id, parent_class_erp, timeslot_1, timeslot_2, day_1, day_2
         ) VALUES ?`;
 
-        const result = await DBService.query(sql, [classesArray]);
+        const result = await DBService.query(sql, [classes]);
         const created_classes = !result ? 0 : {
             affected_rows: result.affectedRows
         };
