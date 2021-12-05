@@ -9,12 +9,12 @@ const classController = require('../controllers/class.controller');
 const { createClassSchema, updateClassSchema, createManyClassSchema } = require('../middleware/validators/classValidator.middleware');
 
 router.get('/',
-    auth(Roles.Admin),
+    auth(),
     awaitHandlerFactory(classController.getAllClasses)
 ); // localhost:3000/api/API_VERSION/classes
 
 router.get('/:class_erp',
-    auth(Roles.Admin),
+    auth(),
     awaitHandlerFactory(classController.getClassById)
 ); // localhost:3000/api/API_VERSION/classes/17966
 

@@ -67,8 +67,15 @@ exports.createManyClassSchema = [
         .exists()
         .withMessage('Classes are required')
         .bail()
-        .isArray()
-        .withMessage('Classes must be an array like [{class_erp : "5755", semester: "BBA-4"},{...}]')
+        .isArray({min: 1})
+        .withMessage('Classes must be an array like [{class_erp : "5755", semester: "BBA-4", ...},[...]]')
+        .bail(),
+    body('classes.*')
+        .notEmpty()
+        .withMessage('Class details are missing')
+        .bail()
+        .isObject()
+        .withMessage('Class must be an object like {class_erp : "5755", semester: "BBA-4", ...}')
         .bail(),
     body('classes.*.class_erp')
         .trim()
@@ -100,11 +107,6 @@ exports.createManyClassSchema = [
         .withMessage('TeacherID is required for the class')
         .isInt({ min: 1 })
         .withMessage('Invalid Teacher ID found'),
-    body('classes.*.parent_class_erp')
-        .optional()
-        .trim()
-        .matches(ClassERPRegex)
-        .withMessage('Class ERP must be 4 digits'),
     body('classes.*.timeslot_1')
         .exists()
         .withMessage('Timeslot 1 ID is required for the class')
@@ -126,7 +128,12 @@ exports.createManyClassSchema = [
         .exists()
         .withMessage('Day 2 is required')
         .isIn([...Object.values(Days)])
-        .withMessage('Invalid Day 2')
+        .withMessage('Invalid Day 2'),
+    body('classes.*.parent_class_erp')
+        .exists({checkNull: true})
+        .withMessage('Specify a parent class erp or make it ("") if optional')
+        .matches(ClassERPRegex)
+        .withMessage('Parent Class ERP must be 4 digits')
 ];
 
 exports.updateClassSchema = [

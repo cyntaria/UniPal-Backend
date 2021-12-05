@@ -16,7 +16,7 @@ class ClassRepository {
             throw new NotFoundException('Classes not found');
         }
 
-        classList.map((classRow) => {
+        classList = classList.map((classRow) => {
             const classObject = {
                 class_erp: classRow.class_erp,
                 semester: classRow.semester,
@@ -117,8 +117,13 @@ class ClassRepository {
         return successResponse(result, 'Class was created!');
     };
 
-    createMany = async(body) => {
-        const result = await ClassModel.createMany(body);
+    createMany = async({classes}) => {
+        classes = classes.map(classRow => {
+            if (classRow.parent_class_erp.length === 0) classRow.parent_class_erp = null;
+            return Object.values(classRow);
+        });
+
+        const result = await ClassModel.createMany(classes);
 
         if (!result) {
             throw new CreateFailedException('Classes failed to be created');

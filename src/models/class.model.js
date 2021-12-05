@@ -7,7 +7,7 @@ class ClassModel {
     findAll = async(filters) => {
         let sql = `
             SELECT 
-                CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2
+                CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2,
                 CR.classroom_id, CR.classroom,
                     CP.campus_id, CP.campus,
                 S.subject_code, S.subject,
@@ -36,7 +36,7 @@ class ClassModel {
     findOne = async(class_erp) => {
         const sql = `
             SELECT 
-                CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2
+                CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2,
                 CR.classroom_id, CR.classroom,
                     CP.campus_id, CP.campus,
                 S.subject_code, S.subject,
@@ -80,14 +80,13 @@ class ClassModel {
         return created_class;
     };
 
-    createMany = async({classes}) => {
+    createMany = async(classes) => {
 
         const sql = `INSERT INTO ${tables.Classes} (
             class_erp, semester, classroom_id, subject_code,
-            teacher_id, parent_class_erp, timeslot_1, timeslot_2, day_1, day_2
+            teacher_id, timeslot_1, timeslot_2, day_1, day_2, parent_class_erp
         ) VALUES ?`;
-
-        const result = await DBService.query(sql, [classes]);
+        const result = await DBService.query(sql, [classes], true);
         const created_classes = !result ? 0 : {
             affected_rows: result.affectedRows
         };
