@@ -2,8 +2,6 @@ name: Node Build, Test And Lint CI
 
 on:
   pull_request:
-    branches:
-      - master
     paths-ignore:
       - '**.md'
       - '**.sql'
