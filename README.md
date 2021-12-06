@@ -26,6 +26,7 @@ The documentation was generated using Postman and is divided into collections at
 - Classrooms - https://documenter.getpostman.com/view/13348269/UVBzmUFC
 - Teachers - https://documenter.getpostman.com/view/13348269/UVC2HUx5
 - Teacher Reviews - https://documenter.getpostman.com/view/13348269/UVJZmxLn
+- Terms - https://documenter.getpostman.com/view/13348269/UVJigZ54
 
 ### :dvd: Installation
 #### 1. Getting Started

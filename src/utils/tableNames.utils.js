@@ -23,5 +23,6 @@ exports.tables = {
     Classrooms: 'classrooms',
     Teachers: 'teachers',
     TeacherReviews: 'teacher_reviews',
+    Terms: 'terms',
     Classes: 'classes'
 };

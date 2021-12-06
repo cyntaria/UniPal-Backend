@@ -18,8 +18,8 @@ class ReactionTypeRepository {
         return successResponse(reactionTypeList, "Success");
     };
 
-    findOne = async(filters) => {
-        const result = await ReactionTypeModel.findOne(filters);
+    findOne = async(reaction_type_id) => {
+        const result = await ReactionTypeModel.findOne(reaction_type_id);
         if (!result) {
             throw new NotFoundException('Reaction type not found');
         }
