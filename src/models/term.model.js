@@ -2,10 +2,10 @@ const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
-class ReactionTypeModel {
+class TermModel {
 
     findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.ReactionTypes}`;
+        let sql = `SELECT * FROM ${tables.Terms}`;
 
         if (!Object.keys(filters).length) {
             return await DBService.query(sql);
@@ -17,35 +17,35 @@ class ReactionTypeModel {
         return await DBService.query(sql, [...filterValues]);
     };
 
-    findOne = async(reaction_type_id) => {
-        const sql = `SELECT * FROM ${tables.ReactionTypes}
-        WHERE reaction_type_id = ?
+    findOne = async(id) => {
+        const sql = `SELECT * FROM ${tables.Terms}
+        WHERE term_id = ?
         LIMIT 1`;
 
-        const result = await DBService.query(sql, [reaction_type_id]);
+        const result = await DBService.query(sql, [id]);
 
         return result[0];
     };
 
-    create = async({ reaction_type }) => {
-        const valueSet = { reaction_type };
+    create = async({ term }) => {
+        const valueSet = { term };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
-        const sql = `INSERT INTO ${tables.ReactionTypes} SET ${columnSet}`;
+        const sql = `INSERT INTO ${tables.Terms} SET ${columnSet}`;
 
         const result = await DBService.query(sql, [...values]);
-        const created_reaction_type = !result ? 0 : {
-            reaction_type_id: result.insertId,
+        const created_term = !result ? 0 : {
+            term_id: result.insertId,
             affected_rows: result.affectedRows
         };
 
-        return created_reaction_type;
+        return created_term;
     };
 
     update = async(columns, id) => {
         const { columnSet, values } = multipleColumnSet(columns);
 
-        const sql = `UPDATE ${tables.ReactionTypes} SET ${columnSet} WHERE reaction_type_id = ?`;
+        const sql = `UPDATE ${tables.Terms} SET ${columnSet} WHERE term_id = ?`;
 
         const result = await DBService.query(sql, [...values, id]);
 
@@ -53,8 +53,8 @@ class ReactionTypeModel {
     };
 
     delete = async(id) => {
-        const sql = `DELETE FROM ${tables.ReactionTypes}
-        WHERE reaction_type_id = ?`;
+        const sql = `DELETE FROM ${tables.Terms}
+        WHERE term_id = ?`;
         const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
@@ -62,4 +62,4 @@ class ReactionTypeModel {
     };
 }
 
-module.exports = new ReactionTypeModel;
+module.exports = new TermModel;

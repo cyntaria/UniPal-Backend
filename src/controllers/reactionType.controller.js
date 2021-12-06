@@ -7,7 +7,7 @@ class ReactionTypeController {
     };
 
     getReactionTypeById = async(req, res, next) => {
-        const response = await ReactionTypeRepository.findOne({ reaction_type_id: req.params.id });
+        const response = await ReactionTypeRepository.findOne(req.params.id);
         res.send(response);
     };
 

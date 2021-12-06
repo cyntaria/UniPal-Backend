@@ -228,7 +228,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES ('FIN201','Introduction to Business Finance'),('HUM201','Speech Communication'),('MKT201','Principles of Marketing'),('MTS101','Calculus 1'),('MTS232','Calculus 2'),('SCI102','Physics');
+INSERT INTO `subjects` VALUES ('',''),('CSE452','Data Warehousing'),('CSE555','Data Structures'),('FIN201','Introduction to Business Finance'),('HUM201','Speech Communication'),('MKT201','Principles of Marketing'),('MTS101','Calculus 1'),('MTS232','Calculus 2'),('SCI102','Physics');
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,8 +248,18 @@ UNLOCK TABLES;
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.000,1),(2,'Faisal Iradat',3.600,2);
+INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.000,1),(2,'Faisal Iradat',3.600,2),(4,'Anwar-Ul-Haq',0.000,0),(5,'Imran Khan',0.000,0);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `terms`
+--
+
+LOCK TABLES `terms` WRITE;
+/*!40000 ALTER TABLE `terms` DISABLE KEYS */;
+INSERT INTO `terms` VALUES (1,'Fall 2021'),(2,'Spring 2021'),(3,'Fall 2020'),(4,'Spring 2020'),(5,'Summer 2020');
+/*!40000 ALTER TABLE `terms` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -306,4 +316,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-03 23:55:12
+-- Dump completed on 2021-12-06  9:22:34
