@@ -83,7 +83,7 @@ npm run dev
 npm run production
 ```
 
-#### Setup CI (Github Actions)
+### :electron: Setup CI (Github Actions)
 
 If you want to run the github testing and PR labelling workflows in the CI then:
 
@@ -102,6 +102,17 @@ Create the following repository secrets:
 - If you add/remove/change the names of any folders/file extensions make sure to update the [labeler.yml](.github/labeler.yml)
 
 **Enjoy :)**
+
+### :closed_lock_with_key: Security
+Take the following steps to ensure security of configurations
+
+```sh
+# 1. Convert the envs folder to zip file
+# 2. Encrypt it using gpg passphrase
+gpg --output encrypted_envs.gpg --symmetric envs.rar
+# 3. Decrypt it using gpg passphrase
+gpg --output envs.rar --decrypt encrypted_envs.gpg
+```
 
 ### :wrench: Tech
 
