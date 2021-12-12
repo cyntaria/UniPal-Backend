@@ -23,6 +23,7 @@ class ClassRepository {
                 parent_class_erp: classRow.parent_class_erp,
                 day_1: classRow.day_1,
                 day_2: classRow.day_2,
+                term_id: classRow.term_id,
                 classroom: {
                     classroom_id: classRow.classroom_id,
                     classroom: classRow.classroom,
@@ -60,8 +61,8 @@ class ClassRepository {
         return successResponse(classList);
     };
 
-    findOne = async(id) => {
-        const classRow = await ClassModel.findOne(id);
+    findOne = async(term_id, erp) => {
+        const classRow = await ClassModel.findOne(term_id, erp);
         if (!classRow) {
             throw new NotFoundException('Class not found');
         }
@@ -72,6 +73,7 @@ class ClassRepository {
             parent_class_erp: classRow.parent_class_erp,
             day_1: classRow.day_1,
             day_2: classRow.day_2,
+            term_id: classRow.term_id,
             classroom: {
                 classroom_id: classRow.classroom_id,
                 classroom: classRow.classroom,
@@ -132,8 +134,8 @@ class ClassRepository {
         return successResponse(result, 'Classes were created!');
     };
 
-    update = async(body, erp) => {
-        const result = await ClassModel.update(body, erp);
+    update = async(body, term_id, erp) => {
+        const result = await ClassModel.update(body, term_id, erp);
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
@@ -153,8 +155,8 @@ class ClassRepository {
         return successResponse(responseBody, 'Class updated successfully');
     };
 
-    delete = async(erp) => {
-        const result = await ClassModel.delete(erp);
+    delete = async(term_id, erp) => {
+        const result = await ClassModel.delete(term_id, erp);
         if (!result) {
             throw new NotFoundException('Class not found');
         }

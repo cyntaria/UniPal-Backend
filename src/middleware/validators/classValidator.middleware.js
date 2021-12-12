@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const { ClassERPRegex, CourseCodeRegex } = require('../../utils/common.utils');
 const { Days } = require('../../utils/enums/days.utils');
 
@@ -59,7 +59,12 @@ exports.createClassSchema = [
         .exists()
         .withMessage('Day 2 is required')
         .isIn([...Object.values(Days)])
-        .withMessage('Invalid Day 2')
+        .withMessage('Invalid Day 2'),
+    body('term_id')
+        .exists()
+        .withMessage('TermID is required for the class')
+        .isInt({ min: 1 })
+        .withMessage('Invalid Term ID found')
 ];
 
 exports.createManyClassSchema = [
@@ -129,6 +134,11 @@ exports.createManyClassSchema = [
         .withMessage('Day 2 is required')
         .isIn([...Object.values(Days)])
         .withMessage('Invalid Day 2'),
+    body('classes.*.term_id')
+        .exists()
+        .withMessage('TermID is required for the class')
+        .isInt({ min: 1 })
+        .withMessage('Invalid Term ID found'),
     body('classes.*.parent_class_erp')
         .exists({checkNull: true})
         .withMessage('Specify a parent class erp or make it ("") if optional')
@@ -192,4 +202,34 @@ exports.updateClassSchema = [
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
+];
+
+exports.getClassesQuerySchema = [
+    query('semester')
+        .optional()
+        .trim()
+        .isLength({min: 4})
+        .withMessage('Semester should be atleast 4 letters')
+        .isAlphanumeric('en-US', {ignore: ' -'})
+        .withMessage('Semester should be alphanumeric'),
+    query('subject_code')
+        .optional()
+        .trim()
+        .matches(CourseCodeRegex)
+        .withMessage('Subject code should be of format \'AAA000\''),
+    query('teacher_id')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('Invalid Teacher ID found'),
+    query('term_id')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('Invalid Term ID found'),
+    query()
+        .custom(value => {
+            const queryParams = Object.keys(value);
+            const allowParams = ['semester', 'subject_code', 'teacher_id', 'term_id'];
+            return queryParams.every(param => allowParams.includes(param));
+        })
+        .withMessage('Invalid query params!')
 ];

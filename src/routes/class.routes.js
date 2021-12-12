@@ -6,17 +6,24 @@ const { Roles } = require('../utils/enums/roles.utils');
 const {checkValidation} = require('../middleware/validation.middleware');
 
 const classController = require('../controllers/class.controller');
-const { createClassSchema, updateClassSchema, createManyClassSchema } = require('../middleware/validators/classValidator.middleware');
+const {
+    createClassSchema,
+    updateClassSchema,
+    createManyClassSchema,
+    getClassesQuerySchema
+} = require('../middleware/validators/classValidator.middleware');
 
 router.get('/',
     auth(),
+    getClassesQuerySchema,
+    checkValidation,
     awaitHandlerFactory(classController.getAllClasses)
 ); // localhost:3000/api/API_VERSION/classes
 
-router.get('/:class_erp',
+router.get('/:term_id/:class_erp',
     auth(),
     awaitHandlerFactory(classController.getClassById)
-); // localhost:3000/api/API_VERSION/classes/17966
+); // localhost:3000/api/API_VERSION/classes/1/5455
 
 router.post('/',
     auth(Roles.Admin),
@@ -32,16 +39,16 @@ router.post('/bulk',
     awaitHandlerFactory(classController.createManyClasses)
 ); // localhost:3000/api/API_VERSION/classes
 
-router.patch('/:class_erp',
+router.patch('/:term_id/:class_erp',
     auth(Roles.Admin),
     updateClassSchema,
     checkValidation,
     awaitHandlerFactory(classController.updateClass)
-); // localhost:3000/api/API_VERSION/classes/17966 , using patch for partial update
+); // localhost:3000/api/API_VERSION/classes/1/5455 , using patch for partial update
 
-router.delete('/:class_erp',
+router.delete('/:term_id/:class_erp',
     auth(Roles.Admin),
     awaitHandlerFactory(classController.deleteClass)
-); // localhost:3000/api/API_VERSION/classes/17966
+); // localhost:3000/api/API_VERSION/classes/1/5455
 
 module.exports = router;

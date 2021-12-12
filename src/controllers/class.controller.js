@@ -7,7 +7,7 @@ class ClassController {
     };
 
     getClassById = async(req, res, next) => {
-        const response = await ClassRepository.findOne(req.params.class_erp);
+        const response = await ClassRepository.findOne(req.params.term_id, req.params.class_erp);
         res.send(response);
     };
 
@@ -22,12 +22,12 @@ class ClassController {
     };
 
     updateClass = async(req, res, next) => {
-        const response = await ClassRepository.update(req.body, req.params.class_erp);
+        const response = await ClassRepository.update(req.body, req.params.term_id, req.params.class_erp);
         res.send(response);
     };
 
     deleteClass = async(req, res, next) => {
-        const response = await ClassRepository.delete(req.params.class_erp);
+        const response = await ClassRepository.delete(req.params.term_id, req.params.class_erp);
         res.send(response);
     };
 }
