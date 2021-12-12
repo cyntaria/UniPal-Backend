@@ -80,6 +80,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `classes` WRITE;
 /*!40000 ALTER TABLE `classes` DISABLE KEYS */;
+INSERT INTO `classes` VALUES ('5755','CS-7',2,'CSE452',4,NULL,5,5,'tuesday','thursday',1),('5756','CS-3',1,'CSE555',5,NULL,2,2,'monday','wednesday',1),('5757','CS-3',4,'CSE555',5,'5756',3,3,'monday','wednesday',1),('5758','ACF-2',3,'HUM201',1,NULL,2,2,'tuesday','thursday',2),('5759','ECO-2',5,'HUM201',2,NULL,2,2,'tuesday','thursday',2);
 /*!40000 ALTER TABLE `classes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,4 +317,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-06  9:22:33
+-- Dump completed on 2021-12-12  4:42:46
