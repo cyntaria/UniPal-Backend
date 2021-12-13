@@ -223,7 +223,7 @@ CREATE TABLE `classes` (
   KEY `fk_classes_timeslot_2_id_idx` (`timeslot_2`) USING BTREE,
   KEY `fk_classes_term_id` (`term_id`),
   CONSTRAINT `fk_classes_classroom_id` FOREIGN KEY (`classroom_id`) REFERENCES `classrooms` (`classroom_id`),
-  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`),
+  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`) ON DELETE CASCADE,
   CONSTRAINT `fk_classes_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   CONSTRAINT `fk_classes_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`),
   CONSTRAINT `fk_classes_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`),
@@ -933,4 +933,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-12  4:42:47
+-- Dump completed on 2021-12-13  8:17:29
