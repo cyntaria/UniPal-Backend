@@ -39,7 +39,7 @@ class DatabaseService {
         });
     }
     
-    query = async(sql, values) => {
+    query = async(sql, values, multiple = false) => {
         return new Promise((resolve, reject) => {
             const callback = (error, result) => {
                 if (error) {
@@ -50,7 +50,8 @@ class DatabaseService {
             };
             if (Config.NODE_ENV === 'dev') console.log(`[SQL] ${sql}`);
             if (Config.NODE_ENV === 'dev') console.log(`[VALUES] ${values}`);
-            this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
+            if (multiple) this.dbPool.query(sql, values, callback);
+            else this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {

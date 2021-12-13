@@ -153,17 +153,20 @@ CREATE TABLE `classes` (
   `timeslot_2` int(10) unsigned NOT NULL,
   `day_1` enum('monday','tuesday','wednesday','thursday','friday','saturday','sunday') NOT NULL,
   `day_2` enum('monday','tuesday','wednesday','thursday','friday','saturday','sunday') NOT NULL,
-  PRIMARY KEY (`class_erp`),
+  `term_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`class_erp`,`term_id`),
   KEY `fk_classes_classroom_id_idx` (`classroom_id`),
   KEY `fk_classes_parent_class_erp_idx` (`parent_class_erp`),
   KEY `fk_classes_subject_code_idx` (`subject_code`),
   KEY `fk_classes_teacher_id_idx` (`teacher_id`),
   KEY `fk_classes_timeslot_1_id_idx` (`timeslot_1`) USING BTREE,
   KEY `fk_classes_timeslot_2_id_idx` (`timeslot_2`) USING BTREE,
+  KEY `fk_classes_term_id` (`term_id`),
   CONSTRAINT `fk_classes_classroom_id` FOREIGN KEY (`classroom_id`) REFERENCES `classrooms` (`classroom_id`),
-  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`),
+  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`) ON DELETE CASCADE,
   CONSTRAINT `fk_classes_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   CONSTRAINT `fk_classes_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`),
+  CONSTRAINT `fk_classes_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`),
   CONSTRAINT `fk_classes_timeslot_1_id` FOREIGN KEY (`timeslot_1`) REFERENCES `timeslots` (`timeslot_id`),
   CONSTRAINT `fk_classes_timeslot_2_id` FOREIGN KEY (`timeslot_2`) REFERENCES `timeslots` (`timeslot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -516,7 +519,21 @@ CREATE TABLE `teachers` (
   `average_rating` decimal(4,3) unsigned NOT NULL DEFAULT 0.000,
   `total_reviews` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`teacher_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `terms`
+--
+
+DROP TABLE IF EXISTS `terms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `terms` (
+  `term_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `term` varchar(20) NOT NULL,
+  PRIMARY KEY (`term_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,4 +638,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-03 23:55:11
+-- Dump completed on 2021-12-13  8:17:28

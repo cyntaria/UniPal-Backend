@@ -14,6 +14,7 @@
   },
   "mocha": {
     "exit": true,
+    "inline-diffs": true,
     "spec": "./test/**/*.test.js",
     "timeout": "20000"
   },

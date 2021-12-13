@@ -213,17 +213,20 @@ CREATE TABLE `classes` (
   `timeslot_2` int(10) unsigned NOT NULL,
   `day_1` enum('monday','tuesday','wednesday','thursday','friday','saturday','sunday') NOT NULL,
   `day_2` enum('monday','tuesday','wednesday','thursday','friday','saturday','sunday') NOT NULL,
-  PRIMARY KEY (`class_erp`),
+  `term_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`class_erp`,`term_id`),
   KEY `fk_classes_classroom_id_idx` (`classroom_id`),
   KEY `fk_classes_parent_class_erp_idx` (`parent_class_erp`),
   KEY `fk_classes_subject_code_idx` (`subject_code`),
   KEY `fk_classes_teacher_id_idx` (`teacher_id`),
   KEY `fk_classes_timeslot_1_id_idx` (`timeslot_1`) USING BTREE,
   KEY `fk_classes_timeslot_2_id_idx` (`timeslot_2`) USING BTREE,
+  KEY `fk_classes_term_id` (`term_id`),
   CONSTRAINT `fk_classes_classroom_id` FOREIGN KEY (`classroom_id`) REFERENCES `classrooms` (`classroom_id`),
-  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`),
+  CONSTRAINT `fk_classes_parent_class_erp` FOREIGN KEY (`parent_class_erp`) REFERENCES `classes` (`class_erp`) ON DELETE CASCADE,
   CONSTRAINT `fk_classes_subject_code` FOREIGN KEY (`subject_code`) REFERENCES `subjects` (`subject_code`),
   CONSTRAINT `fk_classes_teacher_id` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`),
+  CONSTRAINT `fk_classes_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`),
   CONSTRAINT `fk_classes_timeslot_1_id` FOREIGN KEY (`timeslot_1`) REFERENCES `timeslots` (`timeslot_id`),
   CONSTRAINT `fk_classes_timeslot_2_id` FOREIGN KEY (`timeslot_2`) REFERENCES `timeslots` (`timeslot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -235,6 +238,7 @@ CREATE TABLE `classes` (
 
 LOCK TABLES `classes` WRITE;
 /*!40000 ALTER TABLE `classes` DISABLE KEYS */;
+INSERT INTO `classes` VALUES ('5755','CS-7',2,'CSE452',4,NULL,5,5,'tuesday','thursday',1),('5756','CS-3',1,'CSE555',5,NULL,2,2,'monday','wednesday',1),('5757','CS-3',4,'CSE555',5,'5756',3,3,'monday','wednesday',1),('5758','ACF-2',3,'HUM201',1,NULL,2,2,'tuesday','thursday',2),('5759','ECO-2',5,'HUM201',2,NULL,2,2,'tuesday','thursday',2);
 /*!40000 ALTER TABLE `classes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -687,7 +691,7 @@ CREATE TABLE `subjects` (
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES ('FIN201','Introduction to Business Finance'),('HUM201','Speech Communication'),('MKT201','Principles of Marketing'),('MTS101','Calculus 1'),('MTS232','Calculus 2'),('SCI102','Physics');
+INSERT INTO `subjects` VALUES ('',''),('CSE452','Data Warehousing'),('CSE555','Data Structures'),('FIN201','Introduction to Business Finance'),('HUM201','Speech Communication'),('MKT201','Principles of Marketing'),('MTS101','Calculus 1'),('MTS232','Calculus 2'),('SCI102','Physics');
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -744,7 +748,7 @@ CREATE TABLE `teachers` (
   `average_rating` decimal(4,3) unsigned NOT NULL DEFAULT 0.000,
   `total_reviews` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`teacher_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -753,8 +757,32 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.000,1),(2,'Faisal Iradat',3.600,2);
+INSERT INTO `teachers` VALUES (1,'Waseem Arain',5.000,1),(2,'Faisal Iradat',3.600,2),(4,'Anwar-Ul-Haq',0.000,0),(5,'Imran Khan',0.000,0);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `terms`
+--
+
+DROP TABLE IF EXISTS `terms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `terms` (
+  `term_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `term` varchar(20) NOT NULL,
+  PRIMARY KEY (`term_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `terms`
+--
+
+LOCK TABLES `terms` WRITE;
+/*!40000 ALTER TABLE `terms` DISABLE KEYS */;
+INSERT INTO `terms` VALUES (1,'Fall 2021'),(2,'Spring 2021'),(3,'Fall 2020'),(4,'Spring 2020'),(5,'Summer 2020');
+/*!40000 ALTER TABLE `terms` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -905,4 +933,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-03 23:55:10
+-- Dump completed on 2021-12-13  8:17:28
