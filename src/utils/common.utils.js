@@ -69,7 +69,7 @@ exports.sleep = (ms) => {
 
 exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
 exports.ERPRegex = new RegExp(/^[0-9]{5}$/);
-exports.ClassERPRegex = new RegExp(/^[0-9]{4}$|^$/);
+exports.ClassERPRegex = new RegExp(/^([0-9]{4}|[0-9]{5})$|^$/);
 exports.CourseCodeRegex = new RegExp(/^[A-Z]{3}[0-9]{3}$/);
 exports.OTPRegex = new RegExp(/^[0-9]{4}$/);
 exports.timeRegex = new RegExp(/^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);
