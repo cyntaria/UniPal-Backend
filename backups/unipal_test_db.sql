@@ -878,10 +878,13 @@ DROP TABLE IF EXISTS `timetables`;
 CREATE TABLE `timetables` (
   `timetable_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `student_erp` varchar(5) NOT NULL,
+  `term_id` int(10) unsigned NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`timetable_id`),
   KEY `fk_timetables_student_erp_idx` (`student_erp`),
-  CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`)
+  KEY `fk_timetables_term_id` (`term_id`),
+  CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE,
+  CONSTRAINT `fk_timetables_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -933,4 +936,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-13  8:17:29
+-- Dump completed on 2021-12-29  5:02:31

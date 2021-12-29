@@ -24,5 +24,7 @@ exports.tables = {
     Teachers: 'teachers',
     TeacherReviews: 'teacher_reviews',
     Terms: 'terms',
-    Classes: 'classes'
+    Classes: 'classes',
+    Timetables: 'timetables',
+    TimetableClasses: 'timetable_classes'
 };
