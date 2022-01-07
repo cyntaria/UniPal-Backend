@@ -38,7 +38,6 @@ class TimetableModel {
             INNER JOIN ${tables.Timeslots} AS TS1 ON TS1.timeslot_id = CL.timeslot_1
             INNER JOIN ${tables.Timeslots} AS TS2 ON TS2.timeslot_id = CL.timeslot_2
             WHERE T.timetable_id = ?
-            LIMIT 1
         `;
 
         const result = await DBService.query(sql, [id]);
@@ -61,12 +60,13 @@ class TimetableModel {
         return created_timetable;
     };
 
-    update = async(columns, id) => {
+    update = async(columns, filters) => {
         const { columnSet, values } = multipleColumnSet(columns);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
-        const sql = `UPDATE ${tables.Timetables} SET ${columnSet} WHERE timetable_id = ?`;
+        const sql = `UPDATE ${tables.Timetables} SET ${columnSet} WHERE ${filterSet}`;
 
-        const result = await DBService.query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, ...filterValues]);
 
         return result;
     };
