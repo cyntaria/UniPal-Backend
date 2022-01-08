@@ -6,8 +6,8 @@ class TimetableController {
         res.send(response);
     };
 
-    generateTimetables = async(req, res, next) => {
-        const response = await TimetableRepository.generateAll(req.body);
+    generateTimetables = (req, res, next) => {
+        const response = TimetableRepository.generateAll(req.body);
         res.send(response);
     };
 

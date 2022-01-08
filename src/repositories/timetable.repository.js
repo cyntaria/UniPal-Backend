@@ -11,6 +11,7 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class TimetableRepository {
+
     findAll = async(filters = {}) => {
         
         let timetableList = await TimetableModel.findAll(filters);
@@ -63,7 +64,45 @@ class TimetableRepository {
         return successResponse(timetableList);
     };
 
-    generateAll = async({classes}) => {};
+    generateAll = ({classes, num_of_subjects }) => {
+        // Sort according to slot numbers
+        classes.sort((cl1, cl2) => cl1.timeslot_1.slot_number < cl2.timeslot_1.slot_number);
+
+        // Call sub function with default arguments
+        let generated_timetables = [];
+        this.findScheduleClass({}, classes, num_of_subjects, 1, generated_timetables);
+
+        return generated_timetables;
+    };
+
+    findScheduleClass = (schedule, classes_list, num_subject_left, slot_number, generated_timetables) => {
+        if (num_subject_left === 0) {
+            generated_timetables.push(schedule);
+            return;
+        } else if (num_subject_left > 0 && classes_list.length === 0) {
+            return;
+        }
+
+        for (const classItem of classes_list) {
+            if (classItem.timeslot_1.slot_number === slot_number) {
+
+                // Filter out same slot and subject classes
+                const sub_list = classes_list.filter((classObj) => {
+                    // Check for classes with same subject
+                    const subjectCheck = classObj.subject.subject_code !== classItem.subject.subject_code;
+
+                    // Check for classes with same slot number
+                    const slotCheck = classObj.timeslot_1.slot_number !== classItem.timeslot_1.slot_number;
+
+                    return subjectCheck && slotCheck;
+                });
+
+                schedule[classItem.timeslot_1.slot_number] = classItem;
+
+                this.findScheduleClass({...schedule}, sub_list, num_subject_left - 1, slot_number + 1, generated_timetables);
+            }
+        }
+    };
 
     findOne = async(timetable_id) => {
         let timetableDuplicates = await TimetableModel.findOne(timetable_id);
