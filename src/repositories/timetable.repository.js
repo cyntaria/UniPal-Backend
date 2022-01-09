@@ -19,47 +19,49 @@ class TimetableRepository {
             throw new NotFoundException('Timetables not found');
         }
 
-        timetableList = timetableList.map((timetableRow) => {
-            const timetableObject = {
-                class_erp: timetableRow.class_erp,
-                semester: timetableRow.semester,
-                parent_class_erp: timetableRow.parent_class_erp,
-                day_1: timetableRow.day_1,
-                day_2: timetableRow.day_2,
-                term_id: timetableRow.term_id,
-                classroom: {
-                    classroom_id: timetableRow.classroom_id,
-                    classroom: timetableRow.classroom,
-                    campus: {
-                        campus_id: timetableRow.campus_id,
-                        campus: timetableRow.campus
+        if (Object.keys(filters).length > 0){
+            timetableList = timetableList.map((timetableRow) => {
+                const timetableObject = {
+                    class_erp: timetableRow.class_erp,
+                    semester: timetableRow.semester,
+                    parent_class_erp: timetableRow.parent_class_erp,
+                    day_1: timetableRow.day_1,
+                    day_2: timetableRow.day_2,
+                    term_id: timetableRow.term_id,
+                    classroom: {
+                        classroom_id: timetableRow.classroom_id,
+                        classroom: timetableRow.classroom,
+                        campus: {
+                            campus_id: timetableRow.campus_id,
+                            campus: timetableRow.campus
+                        }
+                    },
+                    subject: {
+                        subject_code: timetableRow.subject_code,
+                        subject: timetableRow.subject
+                    },
+                    teacher: {
+                        teacher_id: timetableRow.teacher_id,
+                        full_name: timetableRow.full_name,
+                        average_rating: timetableRow.average_rating,
+                        total_reviews: timetableRow.total_reviews
+                    },
+                    timeslot_1: {
+                        timeslot_id: timetableRow.timeslot_id,
+                        start_time: timetableRow.start_time,
+                        end_time: timetableRow.end_time,
+                        slot_number: timetableRow.slot_number
+                    },
+                    timeslot_2: {
+                        timeslot_id: timetableRow.timeslot_id,
+                        start_time: timetableRow.start_time,
+                        end_time: timetableRow.end_time,
+                        slot_number: timetableRow.slot_number
                     }
-                },
-                subject: {
-                    subject_code: timetableRow.subject_code,
-                    subject: timetableRow.subject
-                },
-                teacher: {
-                    teacher_id: timetableRow.teacher_id,
-                    full_name: timetableRow.full_name,
-                    average_rating: timetableRow.average_rating,
-                    total_reviews: timetableRow.total_reviews
-                },
-                timeslot_1: {
-                    timeslot_id: timetableRow.timeslot_id,
-                    start_time: timetableRow.start_time,
-                    end_time: timetableRow.end_time,
-                    slot_number: timetableRow.slot_number
-                },
-                timeslot_2: {
-                    timeslot_id: timetableRow.timeslot_id,
-                    start_time: timetableRow.start_time,
-                    end_time: timetableRow.end_time,
-                    slot_number: timetableRow.slot_number
-                }
-            };
-            return timetableObject;
-        });
+                };
+                return timetableObject;
+            });
+        }
 
         return successResponse(timetableList);
     };
@@ -134,7 +136,7 @@ class TimetableRepository {
         let timetableObject = {};
 
         let classes = timetableDuplicates.map((timetableRow) => {
-            if (!Object.keys(timetableObject)) {
+            if (!Object.keys(timetableObject).length) {
                 timetableObject.timetable_id = timetableRow.timetable_id;
                 timetableObject.student_erp = timetableRow.student_erp;
                 timetableObject.term_id = timetableRow.term_id;

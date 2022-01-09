@@ -30,7 +30,7 @@ class TimetableModel {
                 TS2.timeslot_id, TS2.start_time, TS2.end_time, TS2.slot_number
             FROM ${tables.Timetables} AS T 
             NATURAL JOIN ${tables.TimetableClasses} AS TC
-            NATURAL JOIN ${tables.Classes} AS CL
+            INNER JOIN ${tables.Classes} AS CL ON CL.class_erp = TC.class_erp
             NATURAL JOIN ${tables.Classrooms} AS CR
             NATURAL JOIN ${tables.Campuses} AS CP
             NATURAL JOIN ${tables.Subjects} AS S
@@ -42,7 +42,7 @@ class TimetableModel {
 
         const result = await DBService.query(sql, [id]);
 
-        return result[0];
+        return result;
     };
 
     create = async({ student_erp, term_id, is_active = 0 }) => {
