@@ -19,25 +19,32 @@ exports.generateTimetablesSchema = [
         .bail()
         .notEmpty()
         .withMessage('Classes can\'t be empty'),
-    // body('classes.*')
-    //     .trim()
-    //     .exists()
-    //     .withMessage('Class details are required for each class')
-    //     .bail(),
-    // .isObject()
-    // .withMessage('Invalid Class details found. Class details must be a JSON object'),
-    // body('classes.*.timeslot_1')
-    //     .exists()
-    //     .withMessage('Timeslots are required for each class')
-    //     .bail(),
-    // body('classes.*.day_1')
-    //     .exists()
-    //     .withMessage('Days are required for each class')
-    //     .bail(),
-    // body('classes.*.subject')
-    //     .exists()
-    //     .withMessage('Subject is required for each class')
-    //     .bail(),
+    body('classes.*')
+        .exists()
+        .withMessage('Class details are required for each class')
+        .bail()
+        .isObject()
+        .withMessage('Invalid Class details found. Class details must be a JSON object'),
+    body('classes.*.timeslot_1')
+        .exists()
+        .withMessage('Timeslots are required for each class')
+        .bail(),
+    body('classes.*.day_1')
+        .exists()
+        .withMessage('Days are required for each class')
+        .bail(),
+    body('classes.*.timeslot_2')
+        .exists()
+        .withMessage('Timeslots are required for each class')
+        .bail(),
+    body('classes.*.day_2')
+        .exists()
+        .withMessage('Days are required for each class')
+        .bail(),
+    body('classes.*.subject')
+        .exists()
+        .withMessage('Subject is required for each class')
+        .bail(),
     body()
         .custom(value => {
             const updates = Object.keys(value);
