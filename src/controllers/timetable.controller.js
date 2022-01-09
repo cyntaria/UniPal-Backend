@@ -22,7 +22,7 @@ class TimetableController {
     };
 
     updateTimetable = async(req, res, next) => {
-        const response = await TimetableRepository.update(req.body, req.params.id);
+        const response = await TimetableRepository.update(req.body, req.params.id, req.currentStudent.erp);
         res.send(response);
     };
 

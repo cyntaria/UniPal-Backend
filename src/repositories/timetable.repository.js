@@ -219,14 +219,14 @@ class TimetableRepository {
         return successResponse(result, 'Timetable was created!');
     };
 
-    update = async(body, timetable_id) => {
+    update = async(body, timetable_id, student_erp) => {
         await DBService.beginTransaction();
 
         let responseBody = {};
 
         try {
             // set previously active timetable to inactive
-            const resultSetInActive = await TimetableModel.update({is_active: 0}, {is_active: 1});
+            const resultSetInActive = await TimetableModel.update({is_active: 0}, {is_active: 1, student_erp});
             
             let resultSetActive;
             if (!resultSetInActive) {
@@ -240,8 +240,8 @@ class TimetableRepository {
                 }
             }
             
-            const { affectedRows1, changedRows1 } = resultSetInActive;
-            const { affectedRows2, changedRows2 } = resultSetActive;
+            const { affectedRows: affectedRows1, changedRows: changedRows1 } = resultSetInActive;
+            const { affectedRows: affectedRows2, changedRows: changedRows2 } = resultSetActive;
 
             if (!affectedRows1 && !affectedRows2) throw new NotFoundException('Timetable not found');
             else if ((affectedRows1 && !changedRows1) || (affectedRows2 && !changedRows2)) throw new UpdateFailedException('Timetable update failed');

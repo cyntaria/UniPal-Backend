@@ -68,7 +68,6 @@ exports.createTimetableSchema = [
         .withMessage('ERP must be 5 digits'),
     body('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('classes')
@@ -92,7 +91,6 @@ exports.createTimetableSchema = [
 exports.updateTimetableSchema = [
     body('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body()
@@ -158,7 +156,6 @@ exports.getTimetablesQuerySchema = [
         .withMessage('ERP must be 5 digits'),
     query('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('term_id')
@@ -182,7 +179,7 @@ exports.timetableOwnerCheck = async(req) => {
         return req.body.student_erp === student.erp;
     }
 
-    const timetable = await TimetableModel.findOne({timetable_id});
+    const timetable = await TimetableModel.findOne(timetable_id);
     if (!timetable) {
         throw new NotFoundException('Timetable not found');
     }
