@@ -5,29 +5,46 @@ const TimetableModel = require('../../models/timetable.model');
 const { NotFoundException } = require('../../utils/exceptions/database.exception');
 
 exports.generateTimetablesSchema = [
+    body('num_of_subjects')
+        .exists()
+        .withMessage('Number of subjects is required')
+        .isInt({min: 1})
+        .withMessage('Number of subjects has to be a whole number >= 1'),
     body('classes')
         .exists()
         .withMessage('Timetable classes are required')
         .bail()
         .isArray()
-        .withMessage('Classes must be an array like [5899, 5797, ...]')
+        .withMessage('Classes must be an array like [{...}, {...}, ...]')
         .bail()
         .notEmpty()
         .withMessage('Classes can\'t be empty'),
-    body('classes.*')
-        .trim()
-        .exists()
-        .withMessage('ClassERP is required for each class')
-        .bail()
-        .matches(ClassERPRegex)
-        .withMessage('Invalid ClassERP found. Class ERP must be 4 digits'),
+    // body('classes.*')
+    //     .trim()
+    //     .exists()
+    //     .withMessage('Class details are required for each class')
+    //     .bail(),
+    // .isObject()
+    // .withMessage('Invalid Class details found. Class details must be a JSON object'),
+    // body('classes.*.timeslot_1')
+    //     .exists()
+    //     .withMessage('Timeslots are required for each class')
+    //     .bail(),
+    // body('classes.*.day_1')
+    //     .exists()
+    //     .withMessage('Days are required for each class')
+    //     .bail(),
+    // body('classes.*.subject')
+    //     .exists()
+    //     .withMessage('Subject is required for each class')
+    //     .bail(),
     body()
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ['classes'];
+            const allowUpdates = ['num_of_subjects', 'classes'];
             return updates.every(update => allowUpdates.includes(update));
         })
-        .withMessage('Invalid updates!')
+        .withMessage('Invalid parameters!')
 ];
 
 exports.createTimetableSchema = [

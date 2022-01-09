@@ -64,42 +64,63 @@ class TimetableRepository {
         return successResponse(timetableList);
     };
 
-    generateAll = ({classes, num_of_subjects }) => {
+    generateAll = ({ classes, num_of_subjects }) => {
         // Sort according to slot numbers
-        classes.sort((cl1, cl2) => cl1.timeslot_1.slot_number < cl2.timeslot_1.slot_number);
-
+        classes.sort((cl1, cl2) => cl1.timeslot_1.slot_number - cl2.timeslot_1.slot_number);
+        
         // Call sub function with default arguments
         let generated_timetables = [];
-        this.findScheduleClass({}, classes, num_of_subjects, 1, generated_timetables);
+        this.findScheduleClass({}, classes, num_of_subjects, generated_timetables);
 
-        return generated_timetables;
+        return successResponse(generated_timetables, 'Timetables were generated!');
     };
 
-    findScheduleClass = (schedule, classes_list, num_subject_left, slot_number, generated_timetables) => {
-        if (num_subject_left === 0) {
+    findScheduleClass = (schedule, classes_list, num_subject_left, generated_timetables) => {
+
+        // if all classes done OR if possible classes empty due to clashes found
+        if (num_subject_left === 0 || (num_subject_left > 0 && classes_list.length === 0)) {
             generated_timetables.push(schedule);
-            return;
-        } else if (num_subject_left > 0 && classes_list.length === 0) {
             return;
         }
 
+        const curr_slot_number = classes_list[0].timeslot_1.slot_number;
+        const curr_day = classes_list[0].day_1;
+
         for (const classItem of classes_list) {
-            if (classItem.timeslot_1.slot_number === slot_number) {
+            // Any other class matching current slot and day
+            if (classItem.timeslot_1.slot_number === curr_slot_number && classItem.day_1 === curr_day) {
 
                 // Filter out same slot and subject classes
                 const sub_list = classes_list.filter((classObj) => {
-                    // Check for classes with same subject
-                    const subjectCheck = classObj.subject.subject_code !== classItem.subject.subject_code;
+                    // Check for classes with same subject and not labs
+                    const isLabCheck = classObj.parent_class_erp !== classItem.class_erp;
+                    const subjectSameCheck = classObj.subject.subject_code === classItem.subject.subject_code;
 
-                    // Check for classes with same slot number
-                    const slotCheck = classObj.timeslot_1.slot_number !== classItem.timeslot_1.slot_number;
+                    // Check for classes with same slot number on same days
+                    const daySameCheck = classObj.day_1 === classItem.day_1;
+                    const slotSameCheck = classObj.timeslot_1.slot_number === classItem.timeslot_1.slot_number;
 
-                    return subjectCheck && slotCheck;
+                    return !(subjectSameCheck && isLabCheck) && !(slotSameCheck && daySameCheck);
                 });
 
-                schedule[classItem.timeslot_1.slot_number] = classItem;
+                const next_schedule = {...schedule};
 
-                this.findScheduleClass({...schedule}, sub_list, num_subject_left - 1, slot_number + 1, generated_timetables);
+                // Assign class in schedule
+                if (!next_schedule[classItem.day_1]) {
+                    next_schedule[classItem.day_1] = {};
+                }
+                if (!next_schedule[classItem.day_2]) {
+                    next_schedule[classItem.day_2] = {};
+                }
+                if (!next_schedule[classItem.day_1][classItem.timeslot_1.slot_number]) {
+                    next_schedule[classItem.day_1][classItem.timeslot_1.slot_number] = classItem;
+                }
+                if (!next_schedule[classItem.day_2][classItem.timeslot_2.slot_number]) {
+                    next_schedule[classItem.day_2][classItem.timeslot_2.slot_number] = classItem;
+                }
+
+                // Find next class
+                this.findScheduleClass(next_schedule, sub_list, num_subject_left - 1, generated_timetables);
             }
         }
     };
