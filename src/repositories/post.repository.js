@@ -206,6 +206,7 @@ class PostRepository {
                 }
             } catch (ex) {
                 await DBService.rollback();
+                throw ex;
             }
         }
 

@@ -252,6 +252,7 @@ class TimetableRepository {
             };
         } catch (ex) {
             await DBService.rollback();
+            throw ex;
         }
 
         await DBService.commit();
@@ -293,6 +294,7 @@ class TimetableRepository {
             }
         } catch (ex) {
             await DBService.rollback();
+            throw ex;
         }
 
         await DBService.commit();

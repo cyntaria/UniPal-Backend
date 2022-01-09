@@ -79,6 +79,7 @@ class TeacherReviewRepository {
             }
         } catch (ex) {
             await DBService.rollback();
+            throw ex;
         }
 
         await DBService.commit();
@@ -109,6 +110,7 @@ class TeacherReviewRepository {
             }
         } catch (ex) {
             await DBService.rollback();
+            throw ex;
         }
 
         await DBService.commit();
