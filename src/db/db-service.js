@@ -50,9 +50,15 @@ class DatabaseService {
             };
             if (Config.NODE_ENV === 'dev') console.log(`[SQL] ${sql}`);
             if (Config.NODE_ENV === 'dev') console.log(`[VALUES] ${values}`);
+            
             if (multiple) this.dbPool.query(sql, values, callback);
             else this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
+            console.log(`[DBError] ${err}`);
+            console.log(`[Code] ${err.code}`);
+            console.log(`[SQL] ${sql}`);
+            console.log(`[VALUES] ${values}`);
+            
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {
                 err.status = HttpStatusCodes[err.code];
@@ -60,40 +66,44 @@ class DatabaseService {
                 if (err.status === ErrorStatusCodes.ForeignKeyViolation) throw new ForeignKeyViolationException(err.message);
             }
 
-            console.log(`[DBError] ${err}`);
-            console.log(`[Code] ${err.code}`);
-            console.log(`[SQL] ${sql}`);
-            console.log(`[VALUES] ${values}`);
             throw new InternalServerException();
             // throw err;
         });
     };
 
     beginTransaction = async() => {
-        return new Promise((resolve, reject) => {
+        const connection = await new Promise((resolve, reject) => {
             this.dbPool.getConnection((err, connection) => {
                 if (err){
+                    let ex;
                     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-                        throw new DatabaseException('Database connection was closed.');
+                        ex = new DatabaseException('Database connection was closed.');
                     } else if (err.code === 'ER_CON_COUNT_ERROR') {
-                        throw new DatabaseException('Database has too many connections.');
+                        ex = new DatabaseException('Database has too many connections.');
                     } else if (err.code === 'ECONNREFUSED') {
-                        throw new DatabaseException('Database connection was refused.');
+                        ex = new DatabaseException('Database connection was refused.');
                     }
-                }
-                if (connection){
-                    const callback = (error, result) => {
-                        if (error) {
-                            reject(error);
-                            return;
-                        }
-                        resolve(result);
-                    };
-                    connection.beginTransaction(callback);
-                    this.dbConnection = connection;
+                    reject(ex);
+                } else {
+                    resolve(connection);
                 }
             });
         });
+        try {
+            return await new Promise((resolve, reject) => {
+                const callback = (error, result) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve(result);
+                };
+                connection.beginTransaction(callback);
+                this.dbConnection = connection;
+            });
+        } finally {
+            connection.release();
+        }
     };
 
     rollback = async() => {
