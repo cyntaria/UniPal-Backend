@@ -200,16 +200,18 @@ class TimetableRepository {
 
         const { timetable_id } = result;
 
-        for (const classObj of classes) {
-            try {
-                const success = await TimetableClassModel.create(timetable_id, classObj.class_erp);
-                if (!success) {
-                    await DBService.rollback();
-                    throw new CreateFailedException(`Timetable class(erp: ${classObj.class_erp}) failed to be created`);
-                }
-            } catch (ex) {
+        try {
+            const timetable_classes = classes.map(class_erp => {
+                return [timetable_id, class_erp];
+            });
+            const success = await TimetableClassModel.createMany(timetable_classes);
+            if (!success) {
                 await DBService.rollback();
+                throw new CreateFailedException(`Timetable classes failed to be created`);
             }
+        } catch (ex) {
+            await DBService.rollback();
+            throw ex;
         }
 
         await DBService.commit();
