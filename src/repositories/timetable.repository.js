@@ -19,50 +19,6 @@ class TimetableRepository {
             throw new NotFoundException('Timetables not found');
         }
 
-        if (Object.keys(filters).length > 0){
-            timetableList = timetableList.map((timetableRow) => {
-                const timetableObject = {
-                    class_erp: timetableRow.class_erp,
-                    semester: timetableRow.semester,
-                    parent_class_erp: timetableRow.parent_class_erp,
-                    day_1: timetableRow.day_1,
-                    day_2: timetableRow.day_2,
-                    term_id: timetableRow.term_id,
-                    classroom: {
-                        classroom_id: timetableRow.classroom_id,
-                        classroom: timetableRow.classroom,
-                        campus: {
-                            campus_id: timetableRow.campus_id,
-                            campus: timetableRow.campus
-                        }
-                    },
-                    subject: {
-                        subject_code: timetableRow.subject_code,
-                        subject: timetableRow.subject
-                    },
-                    teacher: {
-                        teacher_id: timetableRow.teacher_id,
-                        full_name: timetableRow.full_name,
-                        average_rating: timetableRow.average_rating,
-                        total_reviews: timetableRow.total_reviews
-                    },
-                    timeslot_1: {
-                        timeslot_id: timetableRow.timeslot_id,
-                        start_time: timetableRow.start_time,
-                        end_time: timetableRow.end_time,
-                        slot_number: timetableRow.slot_number
-                    },
-                    timeslot_2: {
-                        timeslot_id: timetableRow.timeslot_id,
-                        start_time: timetableRow.start_time,
-                        end_time: timetableRow.end_time,
-                        slot_number: timetableRow.slot_number
-                    }
-                };
-                return timetableObject;
-            });
-        }
-
         return successResponse(timetableList);
     };
 
@@ -72,7 +28,7 @@ class TimetableRepository {
         
         // Call sub function with default arguments
         let generated_timetables = [];
-        this.findScheduleClass({}, classes, num_of_subjects, generated_timetables);
+        this.findScheduleClass(new Map(), classes, num_of_subjects, generated_timetables);
 
         return successResponse(generated_timetables, 'Timetables were generated!');
     };
@@ -81,7 +37,17 @@ class TimetableRepository {
 
         // if all classes done OR if possible classes empty due to clashes found
         if (num_subject_left === 0 || (num_subject_left > 0 && classes_list.length === 0)) {
-            generated_timetables.push(schedule);
+            const extractClasses = (classArray, timeslotMap) => {
+                classArray.push(...timeslotMap.values());
+                return classArray;
+            };
+            const classes = [...schedule.values()].reduce(extractClasses, []);
+            const timetable = {
+                term_id: classes[0].term_id,
+                is_active: 0,
+                classes
+            };
+            generated_timetables.push(timetable);
             return;
         }
 
@@ -105,20 +71,14 @@ class TimetableRepository {
                     return !(subjectSameCheck && isLabCheck) && !(slotSameCheck && daySameCheck);
                 });
 
-                const next_schedule = {...schedule};
+                const next_schedule = new Map(schedule);
 
                 // Assign class in schedule
-                if (!next_schedule[classItem.day_1]) {
-                    next_schedule[classItem.day_1] = {};
+                if (!next_schedule.has(classItem.day_1)) {
+                    next_schedule.set(classItem.day_1, new Map());
                 }
-                if (!next_schedule[classItem.day_2]) {
-                    next_schedule[classItem.day_2] = {};
-                }
-                if (!next_schedule[classItem.day_1][classItem.timeslot_1.slot_number]) {
-                    next_schedule[classItem.day_1][classItem.timeslot_1.slot_number] = classItem;
-                }
-                if (!next_schedule[classItem.day_2][classItem.timeslot_2.slot_number]) {
-                    next_schedule[classItem.day_2][classItem.timeslot_2.slot_number] = classItem;
+                if (!next_schedule.get(classItem.day_1).has(classItem.timeslot_1.slot_number)) {
+                    next_schedule.get(classItem.day_1).set(classItem.timeslot_1.slot_number, classItem);
                 }
 
                 // Find next class
@@ -128,7 +88,7 @@ class TimetableRepository {
     };
 
     findOne = async(timetable_id) => {
-        let timetableDuplicates = await TimetableModel.findOne(timetable_id);
+        let timetableDuplicates = await TimetableModel.findOne(timetable_id, true);
         if (!timetableDuplicates) {
             throw new NotFoundException('Timetable not found');
         }
@@ -263,33 +223,25 @@ class TimetableRepository {
     };
 
     updateClasses = async(body, timetable_id) => {
-        await DBService.beginTransaction();
-
-        const result = await TimetableModel.update(body, timetable_id);
-
-        if (!result) {
-            await DBService.rollback();
-            throw new UnexpectedException('Something went wrong');
-        }
-
         let rows_added = 0;
         let rows_removed = 0;
 
+        await DBService.beginTransaction();
+        
         try {
             let { added, removed } = body;
             if (added) {
-                added = added.map(class_erp => {
-                    return [timetable_id, class_erp];
-                });
-                const rowsAdded = await TimetableClassModel.createMany(added);
-                if (!rowsAdded) {
+                added = added.map(class_erp => [timetable_id, class_erp]);
+                rows_added = await TimetableClassModel.createMany(added);
+                if (!rows_added) {
                     await DBService.rollback();
                     throw new UpdateFailedException(`New timetable classes failed to be added`);
                 }
             }
             if (removed) {
-                const rowsRemoved = await TimetableClassModel.deleteMany(removed, timetable_id);
-                if (!rowsRemoved) {
+                removed = removed.map(class_erp => [class_erp]);
+                rows_removed = await TimetableClassModel.deleteMany(removed, timetable_id);
+                if (!rows_removed) {
                     await DBService.rollback();
                     throw new UpdateFailedException(`Old timetable classes failed to be removed`);
                 }

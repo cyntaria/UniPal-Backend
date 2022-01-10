@@ -46,7 +46,7 @@ class TimetableClassModel {
         const sql = `DELETE FROM ${tables.TimetableClasses}
         WHERE timetable_id = ? AND class_erp IN (?)`;
 
-        const result = await DBService.query(sql, id, [removed_classes]);
+        const result = await DBService.query(sql, [id, removed_classes], true);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

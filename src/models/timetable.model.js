@@ -17,32 +17,37 @@ class TimetableModel {
         return await DBService.query(sql, [...filterValues]);
     };
 
-    findOne = async(id) => {
-        const sql = `
-            SELECT 
-                T.timetable_id, T.student_erp, T.term_id, T.is_active,
-                CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2,
-                CR.classroom_id, CR.classroom,
-                    CP.campus_id, CP.campus,
-                S.subject_code, S.subject,
-                TR.teacher_id, TR.full_name, TR.average_rating, TR.total_reviews,
-                TS1.timeslot_id, TS1.start_time, TS1.end_time, TS1.slot_number,
-                TS2.timeslot_id, TS2.start_time, TS2.end_time, TS2.slot_number
-            FROM ${tables.Timetables} AS T 
-            NATURAL JOIN ${tables.TimetableClasses} AS TC
-            INNER JOIN ${tables.Classes} AS CL ON CL.class_erp = TC.class_erp
-            NATURAL JOIN ${tables.Classrooms} AS CR
-            NATURAL JOIN ${tables.Campuses} AS CP
-            NATURAL JOIN ${tables.Subjects} AS S
-            NATURAL JOIN ${tables.Teachers} AS TR
-            INNER JOIN ${tables.Timeslots} AS TS1 ON TS1.timeslot_id = CL.timeslot_1
-            INNER JOIN ${tables.Timeslots} AS TS2 ON TS2.timeslot_id = CL.timeslot_2
-            WHERE T.timetable_id = ?
-        `;
+    findOne = async(id, details = false) => {
+        let sql;
+        if (details) {
+            sql = `
+                SELECT 
+                    T.timetable_id, T.student_erp, T.term_id, T.is_active,
+                    CL.class_erp, CL.semester, CL.parent_class_erp, CL.day_1, CL.day_2,
+                    CR.classroom_id, CR.classroom,
+                        CP.campus_id, CP.campus,
+                    S.subject_code, S.subject,
+                    TR.teacher_id, TR.full_name, TR.average_rating, TR.total_reviews,
+                    TS1.timeslot_id, TS1.start_time, TS1.end_time, TS1.slot_number,
+                    TS2.timeslot_id, TS2.start_time, TS2.end_time, TS2.slot_number
+                FROM ${tables.Timetables} AS T 
+                NATURAL JOIN ${tables.TimetableClasses} AS TC
+                INNER JOIN ${tables.Classes} AS CL ON CL.class_erp = TC.class_erp
+                NATURAL JOIN ${tables.Classrooms} AS CR
+                NATURAL JOIN ${tables.Campuses} AS CP
+                NATURAL JOIN ${tables.Subjects} AS S
+                NATURAL JOIN ${tables.Teachers} AS TR
+                INNER JOIN ${tables.Timeslots} AS TS1 ON TS1.timeslot_id = CL.timeslot_1
+                INNER JOIN ${tables.Timeslots} AS TS2 ON TS2.timeslot_id = CL.timeslot_2
+                WHERE T.timetable_id = ?
+            `;
+        } else {
+            sql = `SELECT * FROM ${tables.Timetables} WHERE timetable_id = ?`;
+        }
 
         const result = await DBService.query(sql, [id]);
 
-        return result;
+        return details ? result : result[0];
     };
 
     create = async({ student_erp, term_id, is_active = 0 }) => {
