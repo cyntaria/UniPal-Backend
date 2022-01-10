@@ -1,0 +1,1 @@
+- add a `details` argument to **find** model methods to make joins optional. See [Timetable Model](./src/models/timetable.model.js) for example.
