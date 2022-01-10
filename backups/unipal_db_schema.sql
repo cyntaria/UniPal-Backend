@@ -567,7 +567,7 @@ CREATE TABLE `timetable_classes` (
   KEY `fk_timetable_classes_timetable_id_idx` (`timetable_id`),
   KEY `fk_timetable_classes_class_erp_idx` (`class_erp`) USING BTREE,
   CONSTRAINT `fk_timetable_classes_class_erp` FOREIGN KEY (`class_erp`) REFERENCES `classes` (`class_erp`),
-  CONSTRAINT `fk_timetable_classes_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`)
+  CONSTRAINT `fk_timetable_classes_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -608,7 +608,7 @@ CREATE TABLE `timetables` (
   KEY `fk_timetables_term_id` (`term_id`),
   CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE,
   CONSTRAINT `fk_timetables_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,4 +641,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-29  5:02:30
+-- Dump completed on 2022-01-10  7:12:26
