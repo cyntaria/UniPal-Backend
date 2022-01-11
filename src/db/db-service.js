@@ -65,8 +65,6 @@ class DatabaseService {
             if (Config.NODE_ENV === 'dev') {
                 console.log(`[DBError] ${err}`);
                 console.log(`[Code] ${err.code}`);
-                console.log(`[SQL] ${sql}`);
-                console.log(`[VALUES] ${values}`);
             }
             
             const mysqlErrorList = Object.keys(HttpStatusCodes);
