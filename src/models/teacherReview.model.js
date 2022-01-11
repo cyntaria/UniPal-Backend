@@ -46,7 +46,7 @@ class TeacherReviewModel {
     create = async({
         learning, grading, attendance, difficulty,
         overall_rating, comment, reviewed_at, subject_code, teacher_id, reviewed_by_erp
-    }) => {
+    }, transaction_conn = null) => {
         
         const valueSet = {
             learning, grading, attendance, difficulty,
@@ -56,7 +56,7 @@ class TeacherReviewModel {
 
         const sql = `INSERT INTO ${tables.TeacherReviews} SET ${columnSet}`;
 
-        const result = await DBService.query(sql, [...values]);
+        const result = await DBService.query(sql, [...values], {transaction_conn: transaction_conn});
         const created_activity = !result ? 0 : {
             review_id: result.insertId,
             affected_rows: result.affectedRows
@@ -65,10 +65,10 @@ class TeacherReviewModel {
         return created_activity;
     };
 
-    delete = async(id) => {
+    delete = async(id, transaction_conn = null) => {
         const sql = `DELETE FROM ${tables.TeacherReviews}
         WHERE review_id = ?`;
-        const result = await DBService.query(sql, [id]);
+        const result = await DBService.query(sql, [id], {transaction_conn: transaction_conn});
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

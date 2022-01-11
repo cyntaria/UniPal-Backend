@@ -238,7 +238,7 @@ CREATE TABLE `classes` (
 
 LOCK TABLES `classes` WRITE;
 /*!40000 ALTER TABLE `classes` DISABLE KEYS */;
-INSERT INTO `classes` VALUES ('5755','CS-7',2,'CSE452',4,NULL,5,5,'tuesday','thursday',1),('5756','CS-3',1,'CSE555',5,NULL,2,2,'monday','wednesday',1),('5757','CS-3',4,'CSE555',5,'5756',3,3,'monday','wednesday',1),('5758','ACF-2',3,'HUM201',1,NULL,2,2,'tuesday','thursday',2),('5759','ECO-2',5,'HUM201',2,NULL,2,2,'tuesday','thursday',2);
+INSERT INTO `classes` VALUES ('5755','CS-7',2,'CSE452',4,NULL,5,5,'tuesday','thursday',1),('5756','CS-3',1,'CSE555',5,NULL,2,2,'monday','wednesday',1),('5757','CS-3',4,'CSE555',5,'5756',3,3,'monday','wednesday',1),('5758','ACF-2',3,'SCI102',1,NULL,2,2,'tuesday','thursday',2),('5759','ECO-2',5,'HUM201',2,NULL,2,2,'tuesday','thursday',2),('5760','ECO-2',5,'HUM201',2,NULL,3,3,'tuesday','thursday',2);
 /*!40000 ALTER TABLE `classes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -826,7 +826,7 @@ CREATE TABLE `timetable_classes` (
   KEY `fk_timetable_classes_timetable_id_idx` (`timetable_id`),
   KEY `fk_timetable_classes_class_erp_idx` (`class_erp`) USING BTREE,
   CONSTRAINT `fk_timetable_classes_class_erp` FOREIGN KEY (`class_erp`) REFERENCES `classes` (`class_erp`),
-  CONSTRAINT `fk_timetable_classes_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`)
+  CONSTRAINT `fk_timetable_classes_timetable_id` FOREIGN KEY (`timetable_id`) REFERENCES `timetables` (`timetable_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -836,6 +836,7 @@ CREATE TABLE `timetable_classes` (
 
 LOCK TABLES `timetable_classes` WRITE;
 /*!40000 ALTER TABLE `timetable_classes` DISABLE KEYS */;
+INSERT INTO `timetable_classes` VALUES (1,'5755'),(1,'5756'),(1,'5757'),(1,'5758'),(1,'5760'),(2,'5755'),(2,'5756'),(2,'5757'),(2,'5759'),(5,'5755'),(5,'5756'),(5,'5757'),(5,'5759');
 /*!40000 ALTER TABLE `timetable_classes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -878,11 +879,14 @@ DROP TABLE IF EXISTS `timetables`;
 CREATE TABLE `timetables` (
   `timetable_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `student_erp` varchar(5) NOT NULL,
+  `term_id` int(10) unsigned NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`timetable_id`),
   KEY `fk_timetables_student_erp_idx` (`student_erp`),
-  CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  KEY `fk_timetables_term_id` (`term_id`),
+  CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE,
+  CONSTRAINT `fk_timetables_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -891,6 +895,7 @@ CREATE TABLE `timetables` (
 
 LOCK TABLES `timetables` WRITE;
 /*!40000 ALTER TABLE `timetables` DISABLE KEYS */;
+INSERT INTO `timetables` VALUES (1,'17855',1,1),(2,'17855',1,0),(5,'15030',2,0);
 /*!40000 ALTER TABLE `timetables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -933,4 +938,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-13  8:17:29
+-- Dump completed on 2022-01-11 15:12:27

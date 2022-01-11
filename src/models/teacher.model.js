@@ -42,12 +42,12 @@ class TeacherModel {
         return created_Teacher;
     };
 
-    update = async(columns, id) => {
+    update = async(columns, id, transaction_conn = null) => {
         const { columnSet, values } = multipleColumnSet(columns);
 
         const sql = `UPDATE ${tables.Teachers} SET ${columnSet} WHERE teacher_id = ?`;
 
-        const result = await DBService.query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id], {transaction_conn: transaction_conn});
 
         return result;
     };

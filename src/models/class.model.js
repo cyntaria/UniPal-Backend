@@ -88,7 +88,7 @@ class ClassModel {
             class_erp, semester, classroom_id, subject_code,
             teacher_id, timeslot_1, timeslot_2, day_1, day_2, term_id, parent_class_erp
         ) VALUES ?`;
-        const result = await DBService.query(sql, [classes], true);
+        const result = await DBService.query(sql, [classes], {multiple: true});
         const created_classes = !result ? 0 : {
             affected_rows: result.affectedRows
         };

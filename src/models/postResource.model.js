@@ -4,13 +4,13 @@ const { tables } = require('../utils/tableNames.utils');
 
 class PostResourceModel {
 
-    create = async({ post_id, resource_url, resource_type }) => {
+    create = async({ post_id, resource_url, resource_type }, transaction_conn = null) => {
         const valueSet = { post_id, resource_url, resource_type };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
         const sql = `INSERT INTO ${tables.PostResources} SET ${columnSet}`;
 
-        const result = await DBService.query(sql, [...values]);
+        const result = await DBService.query(sql, [...values], {transaction_conn: transaction_conn});
         const created_resource = !result ? 0 : {
             resource_id: result.insertId,
             affected_rows: result.affectedRows

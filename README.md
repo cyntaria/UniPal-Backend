@@ -6,28 +6,31 @@
 
 The documentation was generated using Postman and is divided into collections at the following URLs:
 
-- Auth - https://documenter.getpostman.com/view/13348269/TzzHnZDS
-- Hobbies - https://documenter.getpostman.com/view/13348269/U16dT95z
-- Interests - https://documenter.getpostman.com/view/13348269/U16evoaD
-- Campuses - https://documenter.getpostman.com/view/13348269/U16gNmMg
-- Programs - https://documenter.getpostman.com/view/13348269/U16gNmRy
-- Student Statuses - https://documenter.getpostman.com/view/13348269/U16gNmWU
-- Students - https://documenter.getpostman.com/view/13348269/U16jLkDx
-- Activity Statuses - https://documenter.getpostman.com/view/13348269/U16kpjou
-- Activity Types - https://documenter.getpostman.com/view/13348269/U16kq4gc
-- Campus Spots - https://documenter.getpostman.com/view/13348269/U16nJNvi
-- Activities - https://documenter.getpostman.com/view/13348269/
-- Student Connections - https://documenter.getpostman.com/view/13348269/UUy7bjZY
-- Hangout Requests - https://documenter.getpostman.com/view/13348269/UV5WCHBi
-- Reaction Types - https://documenter.getpostman.com/view/13348269/UV5WCdMP
-- Posts - https://documenter.getpostman.com/view/13348269/UV5ZAw6H
-- Subjects - https://documenter.getpostman.com/view/13348269/UV5cAbDZ
-- Timeslots - https://documenter.getpostman.com/view/13348269/UV5cAvrF
-- Classrooms - https://documenter.getpostman.com/view/13348269/UVBzmUFC
-- Teachers - https://documenter.getpostman.com/view/13348269/UVC2HUx5
-- Teacher Reviews - https://documenter.getpostman.com/view/13348269/UVJZmxLn
-- Terms - https://documenter.getpostman.com/view/13348269/UVJigZ54
-- Classes - https://documenter.getpostman.com/view/13348269/UVR5q8Xn
+Endpoint | URL
+--- | ---
+Auth | https://documenter.getpostman.com/view/13348269/TzzHnZDS
+Hobbies | https://documenter.getpostman.com/view/13348269/U16dT95z
+Interests | https://documenter.getpostman.com/view/13348269/U16evoaD
+Campuses | https://documenter.getpostman.com/view/13348269/U16gNmMg
+Programs | https://documenter.getpostman.com/view/13348269/U16gNmRy
+Student Statuses | https://documenter.getpostman.com/view/13348269/U16gNmWU
+Students | https://documenter.getpostman.com/view/13348269/U16jLkDx
+Activity Statuses | https://documenter.getpostman.com/view/13348269/U16kpjou
+Activity Types | https://documenter.getpostman.com/view/13348269/U16kq4gc
+Campus Spots | https://documenter.getpostman.com/view/13348269/U16nJNvi
+Activities | https://documenter.getpostman.com/view/13348269/
+Student Connections | https://documenter.getpostman.com/view/13348269/UUy7bjZY
+Hangout Requests | https://documenter.getpostman.com/view/13348269/UV5WCHBi
+Reaction Types | https://documenter.getpostman.com/view/13348269/UV5WCdMP
+Posts | https://documenter.getpostman.com/view/13348269/UV5ZAw6H
+Subjects | https://documenter.getpostman.com/view/13348269/UV5cAbDZ
+Timeslots | https://documenter.getpostman.com/view/13348269/UV5cAvrF
+Classrooms | https://documenter.getpostman.com/view/13348269/UVBzmUFC
+Teachers | https://documenter.getpostman.com/view/13348269/UVC2HUx5
+Teacher Reviews | https://documenter.getpostman.com/view/13348269/UVJZmxLn
+Terms | https://documenter.getpostman.com/view/13348269/UVJigZ54
+Classes | https://documenter.getpostman.com/view/13348269/UVR5q8Xn
+Timetables | https://documenter.getpostman.com/view/13348269/UVXgKwEp
 
 ### :dvd: Installation
 #### 1. Getting Started

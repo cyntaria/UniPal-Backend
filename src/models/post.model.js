@@ -93,14 +93,14 @@ class PostModel {
         return result;
     };
 
-    create = async({ body, privacy, author_erp, posted_at }) => {
+    create = async({ body, privacy, author_erp, posted_at }, transaction_conn = null) => {
         
         const valueSet = { body, privacy, author_erp, posted_at };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
         const sql = `INSERT INTO ${tables.Posts} SET ${columnSet}`;
 
-        const result = await DBService.query(sql, [...values]);
+        const result = await DBService.query(sql, [...values], {transaction_conn: transaction_conn});
         const created_post = !result ? 0 : {
             post_id: result.insertId,
             affected_rows: result.affectedRows
