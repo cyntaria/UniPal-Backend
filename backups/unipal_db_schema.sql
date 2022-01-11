@@ -608,7 +608,7 @@ CREATE TABLE `timetables` (
   KEY `fk_timetables_term_id` (`term_id`),
   CONSTRAINT `fk_timetables_student_erp` FOREIGN KEY (`student_erp`) REFERENCES `students` (`erp`) ON DELETE CASCADE,
   CONSTRAINT `fk_timetables_term_id` FOREIGN KEY (`term_id`) REFERENCES `terms` (`term_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,4 +641,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-10  7:12:26
+-- Dump completed on 2022-01-11 15:12:26

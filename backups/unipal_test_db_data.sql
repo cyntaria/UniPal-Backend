@@ -279,7 +279,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `timetable_classes` WRITE;
 /*!40000 ALTER TABLE `timetable_classes` DISABLE KEYS */;
-INSERT INTO `timetable_classes` VALUES (1,'5755'),(1,'5756'),(1,'5757'),(1,'5758'),(1,'5760'),(2,'5755'),(2,'5756'),(2,'5757'),(2,'5759');
+INSERT INTO `timetable_classes` VALUES (1,'5755'),(1,'5756'),(1,'5757'),(1,'5758'),(1,'5760'),(2,'5755'),(2,'5756'),(2,'5757'),(2,'5759'),(5,'5755'),(5,'5756'),(5,'5757'),(5,'5759');
 /*!40000 ALTER TABLE `timetable_classes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,7 +298,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `timetables` WRITE;
 /*!40000 ALTER TABLE `timetables` DISABLE KEYS */;
-INSERT INTO `timetables` VALUES (1,'17855',1,1),(2,'17855',1,0);
+INSERT INTO `timetables` VALUES (1,'17855',1,1),(2,'17855',1,0),(5,'15030',2,0);
 /*!40000 ALTER TABLE `timetables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-10  7:12:28
+-- Dump completed on 2022-01-11 15:12:27
