@@ -188,8 +188,6 @@ exports.timetableOwnerCheck = async(req) => {
 };
 
 exports.timetableQueryCheck = async(req) => {
-    const student = req.currentStudent;
-    const isMyTimetables = req.query.student_erp === student.erp;
-    const isOthersActiveTimetable = !isMyTimetables && req.query.is_active === 1;
-    return isMyTimetables || isOthersActiveTimetable;
+    // Must have some query params
+    return req.query.student_erp !== undefined;
 };

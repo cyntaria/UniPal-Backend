@@ -1,6 +1,6 @@
 const { successResponse } = require('../utils/responses.utils');
 
-const { DBService } = require('../db/db-service');
+const { DBTransaction } = require('../db/db-transaction');
 const TimetableModel = require('../models/timetable.model');
 const TimetableClassModel = require('../models/timetableClass.model');
 const {
@@ -29,6 +29,10 @@ class TimetableRepository {
         // Call sub function with default arguments
         let generated_timetables = [];
         this.findScheduleClass(new Map(), classes, num_of_subjects, generated_timetables);
+
+        if (!generated_timetables.length) {
+            throw new NotFoundException('Possible timetables not found');
+        }
 
         return successResponse(generated_timetables, 'Timetables were generated!');
     };
@@ -89,7 +93,7 @@ class TimetableRepository {
 
     findOne = async(timetable_id) => {
         let timetableDuplicates = await TimetableModel.findOne(timetable_id, true);
-        if (!timetableDuplicates) {
+        if (!timetableDuplicates || !timetableDuplicates.length) {
             throw new NotFoundException('Timetable not found');
         }
 
@@ -151,51 +155,50 @@ class TimetableRepository {
     create = async(body) => {
         const {classes, ...timetableBody} = body;
 
-        await DBService.beginTransaction();
-
-        const result = await TimetableModel.create(timetableBody);
-
-        if (!result) {
-            await DBService.rollback();
-            throw new CreateFailedException('Timetable failed to be created');
-        }
-
-        const { timetable_id } = result;
+        const transaction = await DBTransaction.begin();
+        let result;
 
         try {
+            result = await TimetableModel.create(timetableBody, transaction.connection);
+    
+            if (!result) {
+                throw new CreateFailedException('Timetable failed to be created');
+            }
+    
+            const { timetable_id } = result;
+
             const timetable_classes = classes.map(class_erp => {
                 return [timetable_id, class_erp];
             });
-            const success = await TimetableClassModel.createMany(timetable_classes);
+            const success = await TimetableClassModel.createMany(timetable_classes, transaction.connection);
             if (!success) {
-                await DBService.rollback();
                 throw new CreateFailedException(`Timetable classes failed to be created`);
             }
         } catch (ex) {
-            await DBService.rollback();
+            await transaction.rollback();
             throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         return successResponse(result, 'Timetable was created!');
     };
 
     update = async(body, timetable_id, student_erp) => {
-        await DBService.beginTransaction();
+        const transaction = await DBTransaction.begin();
 
         let responseBody = {};
 
         try {
             // set previously active timetable to inactive
-            const resultSetInActive = await TimetableModel.update({is_active: 0}, {is_active: 1, student_erp});
+            const resultSetInActive = await TimetableModel.update({is_active: 0}, {is_active: 1, student_erp}, transaction.connection);
             
             let resultSetActive;
             if (!resultSetInActive) {
                 throw new UnexpectedException('Something went wrong');
             } else {
                 // set specified timetable as active
-                resultSetActive = await TimetableModel.update(body, {timetable_id});
+                resultSetActive = await TimetableModel.update(body, {timetable_id}, transaction.connection);
 
                 if (!resultSetActive) {
                     throw new UnexpectedException('Something went wrong');
@@ -213,11 +216,11 @@ class TimetableRepository {
                 rows_changed: changedRows1 + changedRows2
             };
         } catch (ex) {
-            await DBService.rollback();
+            await transaction.rollback();
             throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         return successResponse(responseBody, 'Timetable updated successfully');
     };
@@ -226,32 +229,30 @@ class TimetableRepository {
         let rows_added = 0;
         let rows_removed = 0;
 
-        await DBService.beginTransaction();
+        const transaction = await DBTransaction.begin();
         
         try {
             let { added, removed } = body;
             if (added) {
                 added = added.map(class_erp => [timetable_id, class_erp]);
-                rows_added = await TimetableClassModel.createMany(added);
+                rows_added = await TimetableClassModel.createMany(added, transaction.connection);
                 if (!rows_added) {
-                    await DBService.rollback();
                     throw new UpdateFailedException(`New timetable classes failed to be added`);
                 }
             }
             if (removed) {
                 removed = removed.map(class_erp => [class_erp]);
-                rows_removed = await TimetableClassModel.deleteMany(removed, timetable_id);
+                rows_removed = await TimetableClassModel.deleteMany(removed, timetable_id, transaction.connection);
                 if (!rows_removed) {
-                    await DBService.rollback();
                     throw new UpdateFailedException(`Old timetable classes failed to be removed`);
                 }
             }
         } catch (ex) {
-            await DBService.rollback();
+            await transaction.rollback();
             throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         const responseBody = {
             rows_added,

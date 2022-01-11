@@ -18,13 +18,13 @@ class TimetableClassModel {
         return created_timetable_class;
     };
 
-    createMany = async(added_classes) => {
+    createMany = async(added_classes, transaction_conn = null) => {
 
         const sql = `INSERT INTO ${tables.TimetableClasses} (
             timetable_id, class_erp
         ) VALUES ?`;
         
-        const result = await DBService.query(sql, [added_classes], true);
+        const result = await DBService.query(sql, [added_classes], {multiple: true, transaction_conn: transaction_conn});
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
@@ -42,11 +42,11 @@ class TimetableClassModel {
         return affectedRows;
     };
 
-    deleteMany = async(removed_classes, id) => {
+    deleteMany = async(removed_classes, id, transaction_conn = null) => {
         const sql = `DELETE FROM ${tables.TimetableClasses}
         WHERE timetable_id = ? AND class_erp IN (?)`;
 
-        const result = await DBService.query(sql, [id, removed_classes], true);
+        const result = await DBService.query(sql, [id, removed_classes], {multiple: true, transaction_conn: transaction_conn});
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

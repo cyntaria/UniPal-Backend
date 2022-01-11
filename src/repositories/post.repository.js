@@ -1,6 +1,6 @@
 const { successResponse } = require('../utils/responses.utils');
 
-const { DBService } = require('../db/db-service');
+const { DBTransaction } = require('../db/db-transaction');
 const PostModel = require('../models/post.model');
 const PostResourceModel = require('../models/postResource.model');
 const {
@@ -181,36 +181,35 @@ class PostRepository {
     create = async(body) => {
         const {resources, ...postBody} = body;
 
-        await DBService.beginTransaction();
+        const transaction = await DBTransaction.begin();
+        let result;
 
-        const result = await PostModel.create(postBody);
+        try {
+            result = await PostModel.create(postBody, transaction.connection);
 
-        if (!result) {
-            await DBService.rollback();
-            throw new CreateFailedException('Post failed to be created');
-        }
+            if (!result) {
+                throw new CreateFailedException('Post failed to be created');
+            }
 
-        const { post_id } = result;
+            const { post_id } = result;
 
-        for (const resource of resources) {
-            const postResource = {
-                post_id,
-                resource_url: resource.resource_url,
-                resource_type: resource.resource_type
-            };
-            try {
-                const success = await PostResourceModel.create(postResource);
+            for (const resource of resources) {
+                const postResource = {
+                    post_id,
+                    resource_url: resource.resource_url,
+                    resource_type: resource.resource_type
+                };
+                const success = await PostResourceModel.create(postResource, transaction.connection);
                 if (!success) {
-                    await DBService.rollback();
                     throw new CreateFailedException(`Post resource(id: ${resource.resource_url}, resource_type: ${resource.resource_type}) failed to be created`);
                 }
-            } catch (ex) {
-                await DBService.rollback();
-                throw ex;
             }
+        } catch (ex) {
+            await transaction.rollback();
+            throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         return successResponse(result, 'Post was created!');
     };

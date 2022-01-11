@@ -39,7 +39,7 @@ class DatabaseService {
         });
     }
     
-    query = async(sql, values, multiple = false) => {
+    query = async(sql, values, options = { multiple: false, transaction_conn: null }) => {
         return new Promise((resolve, reject) => {
             const callback = (error, result) => {
                 if (error) {
@@ -48,16 +48,26 @@ class DatabaseService {
                 }
                 resolve(result);
             };
-            if (Config.NODE_ENV === 'dev') console.log(`[SQL] ${sql}`);
-            if (Config.NODE_ENV === 'dev') console.log(`[VALUES] ${values}`);
+            if (Config.NODE_ENV === 'dev') {
+                console.log(`[SQL] ${sql}`);
+                console.log(`[VALUES] ${values}`);
+            }
             
-            if (multiple) this.dbPool.query(sql, values, callback);
-            else this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
+            if (!options) this.dbPool.query(sql, values, callback);
+            else if (!options.transaction_conn) {
+                if (!options.multiple) this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
+                else this.dbPool.query(sql, values, callback);
+            } else {
+                if (!options.multiple) options.transaction_conn.execute(sql, values, callback);
+                else options.transaction_conn.query(sql, values, callback);
+            }
         }).catch((err) => {
-            console.log(`[DBError] ${err}`);
-            console.log(`[Code] ${err.code}`);
-            console.log(`[SQL] ${sql}`);
-            console.log(`[VALUES] ${values}`);
+            if (Config.NODE_ENV === 'dev') {
+                console.log(`[DBError] ${err}`);
+                console.log(`[Code] ${err.code}`);
+                console.log(`[SQL] ${sql}`);
+                console.log(`[VALUES] ${values}`);
+            }
             
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {
@@ -71,8 +81,8 @@ class DatabaseService {
         });
     };
 
-    beginTransaction = async() => {
-        const connection = await new Promise((resolve, reject) => {
+    getConnection = async() => {
+        return await new Promise((resolve, reject) => {
             this.dbPool.getConnection((err, connection) => {
                 if (err){
                     let ex;
@@ -88,50 +98,6 @@ class DatabaseService {
                     resolve(connection);
                 }
             });
-        });
-        try {
-            return await new Promise((resolve, reject) => {
-                const callback = (error, result) => {
-                    if (error) {
-                        reject(error);
-                        return;
-                    }
-                    resolve(result);
-                };
-                connection.beginTransaction(callback);
-                this.dbConnection = connection;
-            });
-        } finally {
-            connection.release();
-        }
-    };
-
-    rollback = async() => {
-        return new Promise((resolve, reject) => {
-            const callback = (error, result) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-                resolve(result);
-            };
-            this.dbConnection.rollback(callback);
-            this.dbConnection.release();
-        });
-    };
-
-    commit = async() => {
-        return new Promise((resolve, reject) => {
-            const callback = (error, result) => {
-                if (error) {
-                    reject(error);
-                    this.rollback();
-                    return;
-                }
-                resolve(result);
-            };
-            this.dbConnection.commit(callback);
-            this.dbConnection.release();
         });
     };
 }

@@ -50,13 +50,13 @@ class TimetableModel {
         return details ? result : result[0];
     };
 
-    create = async({ student_erp, term_id, is_active = 0 }) => {
+    create = async({ student_erp, term_id, is_active = 0 }, transaction_conn = null) => {
         const valueSet = { student_erp, term_id, is_active };
         const { columnSet, values } = multipleColumnSet(valueSet);
 
         const sql = `INSERT INTO ${tables.Timetables} SET ${columnSet}`;
 
-        const result = await DBService.query(sql, [...values]);
+        const result = await DBService.query(sql, [...values], {transaction_conn: transaction_conn});
         const created_timetable = !result ? 0 : {
             timetable_id: result.insertId,
             affected_rows: result.affectedRows
@@ -65,13 +65,13 @@ class TimetableModel {
         return created_timetable;
     };
 
-    update = async(columns, filters) => {
+    update = async(columns, filters, transaction_conn = null) => {
         const { columnSet, values } = multipleColumnSet(columns);
         const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `UPDATE ${tables.Timetables} SET ${columnSet} WHERE ${filterSet}`;
 
-        const result = await DBService.query(sql, [...values, ...filterValues]);
+        const result = await DBService.query(sql, [...values, ...filterValues], {transaction_conn: transaction_conn});
 
         return result;
     };

@@ -1,6 +1,6 @@
 const { successResponse } = require('../utils/responses.utils');
 
-const { DBService } = require('../db/db-service');
+const { DBTransaction } = require('../db/db-transaction');
 const TeacherReviewModel = require('../models/teacherReview.model');
 const TeacherModel = require('../models/teacher.model');
 const {
@@ -57,63 +57,65 @@ class TeacherReviewRepository {
         const review_rating = this.calculateAverageRating(body);
         body.overall_rating = review_rating;
 
-        await DBService.beginTransaction();
-
-        const result = await TeacherReviewModel.create(body);
-
-        if (!result) {
-            await DBService.rollback();
-            throw new CreateFailedException('Teacher review failed to be created');
-        }
+        const transaction = await DBTransaction.begin();
+        let result;
 
         try {
+            result = await TeacherReviewModel.create(body, transaction.connection);
+    
+            if (!result) {
+                throw new CreateFailedException('Teacher review failed to be created');
+            }
+
             const { old_teacher_rating, old_total_reviews, teacher_id } = body;
             const newTeacherRating = this.incrementTeacherRating(review_rating, old_teacher_rating, old_total_reviews);
+            
             const success = await TeacherModel.update({
                 average_rating: newTeacherRating,
                 total_reviews: old_total_reviews + 1
-            }, teacher_id);
+            }, teacher_id, transaction.connection);
+
             if (!success) {
-                await DBService.rollback();
                 throw new CreateFailedException(`Teacher review failed to be created. Failure to update teacher rating`);
             }
         } catch (ex) {
-            await DBService.rollback();
+            await transaction.rollback();
             throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         return successResponse(result, 'Teacher review was created!');
     };
 
     delete = async(body, id) => {
-        await DBService.beginTransaction();
+        const transaction = await DBTransaction.begin();
 
-        const result = await TeacherReviewModel.delete(id);
+        let result;
         
-        if (!result) {
-            await DBService.rollback();
-            throw new NotFoundException('Teacher review not found');
-        }
-
         try {
+            result = await TeacherReviewModel.delete(id, transaction.connection);
+            
+            if (!result) {
+                throw new NotFoundException('Teacher review not found');
+            }
             const { review_rating, teacher_rating, total_reviews, teacher_id } = body;
             const oldTeacherRating = this.decrementTeacherRating(review_rating, teacher_rating, total_reviews);
+            
             const success = await TeacherModel.update({
                 average_rating: oldTeacherRating,
                 total_reviews: total_reviews - 1
-            }, teacher_id);
+            }, teacher_id, transaction.connection);
+
             if (!success) {
-                await DBService.rollback();
                 throw new DeleteFailedException(`Teacher review failed to be deleted. Failure to update teacher rating`);
             }
         } catch (ex) {
-            await DBService.rollback();
+            await transaction.rollback();
             throw ex;
         }
 
-        await DBService.commit();
+        await transaction.commit();
 
         const responseBody = {
             rows_removed: result
