@@ -11,5 +11,5 @@ module.exports.Config = {
     EXPIRY_JWT: '3d',
     EXPIRY_HOURS_OTP: 1,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || "SENDGRID_API_KEY",
-    SENDGRID_SENDER: process.env.SENDGRID_SENDER || "FROM_EMAIL"
+    SENDGRID_SENDER: process.env.SENDGRID_SENDER || "SENDGRID_FROM_EMAIL"
 };
