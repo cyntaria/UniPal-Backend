@@ -7,7 +7,7 @@ module.exports.Config = {
     DB_PASS: process.env.DB_PASS || '',
     DB_DATABASE: process.env.DB_DATABASE || 'test',
     DB_CONN_LIMIT: process.env.DB_CONN_LIMIT || 10,
-    SECRET_JWT: process.env.SECRET_JWT || "*Un1p4L*",
+    SECRET_JWT: process.env.SECRET_JWT || "SECRET_JWT",
     EXPIRY_JWT: '3d',
     EXPIRY_HOURS_OTP: 1,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || "SENDGRID_API_KEY",
