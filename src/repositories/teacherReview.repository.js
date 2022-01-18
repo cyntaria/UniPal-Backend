@@ -22,7 +22,7 @@ class TeacherReviewRepository {
     };
 
     findOne = async(id) => {
-        const teacherReview = await TeacherReviewModel.findOne(id);
+        const teacherReview = await TeacherReviewModel.findOne(id, true);
         if (!teacherReview) {
             throw new NotFoundException('Teacher review not found');
         }

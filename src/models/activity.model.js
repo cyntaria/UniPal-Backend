@@ -17,21 +17,34 @@ class ActivityModel {
         return await DBService.query(sql, [...filterValues]);
     };
 
-    findOne = async(filters) => {
+    findOne = async(filters, details = false) => {
         const {activity_id} = filters;
         const { filterSet, filterValues } = multipleFilterSet(filters);
+        let sql;
+        let params;
 
-        const sql = `SELECT *,
-        (
-            SELECT COUNT(activity_id)
-            FROM ${tables.ActivityAttendees}
-            WHERE activity_id = ?
-        ) AS num_of_attendees
-        FROM ${tables.Activities}
-        WHERE ${filterSet}
-        LIMIT 1`;
-
-        const result = await DBService.query(sql, [activity_id, ...filterValues]);
+        if (details) {
+            sql = `SELECT *,
+            (
+                SELECT COUNT(activity_id)
+                FROM ${tables.ActivityAttendees}
+                WHERE activity_id = ?
+            ) AS num_of_attendees
+            FROM ${tables.Activities}
+            WHERE ${filterSet}
+            LIMIT 1`;
+            
+            params = [activity_id, ...filterValues];
+        } else {
+            sql = `SELECT *
+            FROM ${tables.Activities}
+            WHERE ${filterSet}
+            LIMIT 1`;
+            
+            params = [...filterValues];
+        }
+        
+        const result = await DBService.query(sql, params);
 
         // return back the first row (activity)
         return result[0];

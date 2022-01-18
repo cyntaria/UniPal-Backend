@@ -20,7 +20,7 @@ class ActivityRepository {
     };
 
     findOne = async(filters) => {
-        const activity = await ActivityModel.findOne(filters);
+        const activity = await ActivityModel.findOne(filters, true);
         if (!activity) {
             throw new NotFoundException('Activity not found');
         }
