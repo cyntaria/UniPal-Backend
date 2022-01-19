@@ -2,7 +2,7 @@ const server = require('./server');
 const { Config } = require('./configs/config');
 
 // starting the server
-const port = Number(Config.PORT);
+const port = Config.NODE_ENV === "dev" ? Number(Config.PORT) : Config.PORT;
 const app = server.setup();
 app.listen(port, () => console.log(`
   ==================================
