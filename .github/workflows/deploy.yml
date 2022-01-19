@@ -12,7 +12,6 @@ on:
 
 env:
   WEBAPP_NAME: 'unipal-backend'
-  WEBAPP_PACKAGE_PATH: '.'
 
 jobs:
   build:
@@ -40,14 +39,14 @@ jobs:
       - name: Cache artifact for deployment job
         uses: actions/cache@v2.1.7
         with:
-          path: ${{ env.WEBAPP_PACKAGE_PATH }}
+          path: ${{ env.GITHUB_WORKSPACE }}
           key: ${{ env.WEBAPP_NAME }}
 
       # - name: Upload artifact for deployment job
       #   uses: actions/upload-artifact@v2
       #   with:
       #     name: ${{ env.WEBAPP_NAME }}
-      #     path: ${{ env.WEBAPP_PACKAGE_PATH }}
+      #     path: ${{ env.GITHUB_WORKSPACE }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,8 +58,9 @@ jobs:
     steps:
       - name: Restore cache artifact from build job
         uses: actions/cache@v2.1.7
+        id: cache
         with:
-          path: ${{ env.WEBAPP_PACKAGE_PATH }}
+          path: ${{ env.GITHUB_WORKSPACE }}
           key: ${{ env.WEBAPP_NAME }}
 
       # - name: Download artifact from build job
@@ -69,10 +69,11 @@ jobs:
       #     name: ${{ env.WEBAPP_NAME }}
 
       - name: 'Deploy to Azure Web App'
+        if: steps.cache.outputs.cache-hit == 'true'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: ${{ env.WEBAPP_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEA95B8E957541C1B27907E81965510A }}
-          package: ${{ env.WEBAPP_PACKAGE_PATH }}
+          package: ${{ env.GITHUB_WORKSPACE }}
