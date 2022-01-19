@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v2.5.1
         with:
           node-version: '14.x'
+          cache: 'npm'
 
       - name: Install npm dependencies
         run: |
@@ -36,9 +37,7 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: .
-          key: ${{ runner.os }}-node-app
-          restore-keys: |
-            ${{ runner.os }}-node-app
+          key: node-app
 
       # - name: Upload artifact for deployment job
       #   uses: actions/upload-artifact@v2
@@ -58,9 +57,7 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: .
-          key: ${{ runner.os }}-node-app
-          restore-keys: |
-            ${{ runner.os }}-node-app
+          key: node-app
 
       # - name: Download artifact from build job
       #   uses: actions/download-artifact@v2
