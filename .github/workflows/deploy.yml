@@ -10,6 +10,10 @@ on:
     types: [closed]
   workflow_dispatch:
 
+env:
+  WEBAPP_NAME: 'unipal-backend'
+  WEBAPP_PACKAGE_PATH: '.'
+
 jobs:
   build:
     if: github.event.pull_request.merged == true
@@ -36,14 +40,14 @@ jobs:
       - name: Cache artifact for deployment job
         uses: actions/cache@v2.1.7
         with:
-          path: .
-          key: node-app
+          path: ${{ env.WEBAPP_PACKAGE_PATH }}
+          key: ${{ env.WEBAPP_NAME }}
 
       # - name: Upload artifact for deployment job
       #   uses: actions/upload-artifact@v2
       #   with:
-      #     name: node-app
-      #     path: .
+      #     name: ${{ env.WEBAPP_NAME }}
+      #     path: ${{ env.WEBAPP_PACKAGE_PATH }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -56,19 +60,19 @@ jobs:
       - name: Restore cache artifact from build job
         uses: actions/cache@v2.1.7
         with:
-          path: .
-          key: node-app
+          path: ${{ env.WEBAPP_PACKAGE_PATH }}
+          key: ${{ env.WEBAPP_NAME }}
 
       # - name: Download artifact from build job
       #   uses: actions/download-artifact@v2
       #   with:
-      #     name: node-app
+      #     name: ${{ env.WEBAPP_NAME }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'unipal-backend'
+          app-name: ${{ env.WEBAPP_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEA95B8E957541C1B27907E81965510A }}
-          package: .
+          package: ${{ env.WEBAPP_PACKAGE_PATH }}
