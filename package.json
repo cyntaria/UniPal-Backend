@@ -43,7 +43,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "chai": "^4.3.4",
     "decache": "^4.6.1",
     "eslint": "^8.7.0",
