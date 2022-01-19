@@ -27,6 +27,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    # - name: Get npm cache directory
+    #   id: npm-cache
+    #   run: |
+    #     echo "::set-output name=dir::$(npm config get cache)"
+        
+    # - name: Cache dependencies
+    #   uses: actions/cache@v2.1.7
+    #   with:
+    #     path: ${{ steps.npm-cache.outputs.dir }}
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
     - name: Setup MariaDB MySQL
       uses: getong/mariadb-action@v1.1
       with:
