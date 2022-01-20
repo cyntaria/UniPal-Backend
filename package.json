@@ -41,7 +41,7 @@
     "otp-generator": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
+    "@babel/core": "^7.16.10",
     "@babel/eslint-parser": "^7.16.5",
     "axios": "^0.25.0",
     "chai": "^4.3.4",
