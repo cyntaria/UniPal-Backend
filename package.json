@@ -46,7 +46,7 @@
     "axios": "^0.25.0",
     "chai": "^4.3.6",
     "decache": "^4.6.1",
-    "eslint": "^8.7.0",
+    "eslint": "^8.8.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^9.2.0",
     "nodemon": "^2.0.15",
