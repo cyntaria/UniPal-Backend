@@ -334,10 +334,18 @@ describe("Timetables API", () => {
 
             expect(res.status).to.be.equal(200);
             const resBody = res.body.body;
-            resBody.classes = resBody.classes.map(classItem => classItem.class_erp);
+
+            // check if all classes added to schedule
+            const resClasses = resBody.classes.map(classItem => classItem.class_erp);
+            expect(resClasses).to.include.all.members(data.classes);
+
+            // check other properties
+            delete resBody.classes;
             expect(resBody).to.be.eql({
                 timetable_id: newId,
-                ...data
+                student_erp: data.student_erp,
+                term_id: data.term_id,
+                is_active: data.is_active
             });
 
             // cleanup

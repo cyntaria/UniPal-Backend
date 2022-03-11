@@ -18,7 +18,7 @@ Students | https://documenter.getpostman.com/view/13348269/U16jLkDx
 Activity Statuses | https://documenter.getpostman.com/view/13348269/U16kpjou
 Activity Types | https://documenter.getpostman.com/view/13348269/U16kq4gc
 Campus Spots | https://documenter.getpostman.com/view/13348269/U16nJNvi
-Activities | https://documenter.getpostman.com/view/13348269/
+Activities | https://documenter.getpostman.com/view/13348269/UUxtEW2F
 Student Connections | https://documenter.getpostman.com/view/13348269/UUy7bjZY
 Hangout Requests | https://documenter.getpostman.com/view/13348269/UV5WCHBi
 Reaction Types | https://documenter.getpostman.com/view/13348269/UV5WCdMP
