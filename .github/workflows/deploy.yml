@@ -37,7 +37,7 @@ jobs:
           npm ci
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.WEBAPP_NAME }}
           path: .
