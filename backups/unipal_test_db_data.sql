@@ -100,7 +100,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `hangout_requests` WRITE;
 /*!40000 ALTER TABLE `hangout_requests` DISABLE KEYS */;
-INSERT INTO `hangout_requests` VALUES (1,'17855','15030','request_pending','Some purpose','2021-10-04 17:24:40',7,NULL),(2,'17855','15030','accepted','Some other purpose','2021-10-04 17:24:40',2,'2021-10-04 17:24:40');
+INSERT INTO `hangout_requests` VALUES (1,'17855','15030','request_pending','Some purpose','2021-10-04 17:24:40',7,NULL),(2,'17855','15030','accepted','Some other purpose','2021-10-04 17:24:40',2,'2021-10-04 17:24:40'),(4,'15030','17855','request_pending','Let\'s grab lunch','2021-10-04 17:24:40',7,NULL),(5,'15030','17855','request_pending','Let\'s go for a movie','2022-05-10 17:24:40',6,NULL),(6,'15030','17855','request_pending','I wanna discuss the AUDIT project','2022-05-15 17:24:40',4,NULL),(8,'15030','17855','request_pending','Playing cards','2022-05-11 13:00:00',2,NULL);
 /*!40000 ALTER TABLE `hangout_requests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-11 15:12:27
+-- Dump completed on 2022-05-10 19:12:17
