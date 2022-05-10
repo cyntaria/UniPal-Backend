@@ -16,6 +16,15 @@ class ConnectionRequestRepository {
             throw new NotFoundException('Connection requests not found');
         }
 
+        connectionRequestList = connectionRequestList.map((cRequest) => {
+            const connRequestObj = {
+                ...cRequest.student_connection,
+                sender: cRequest.sender,
+                receiver: cRequest.receiver
+            };
+            return connRequestObj;
+        });
+
         return successResponse(connectionRequestList);
     };
 
@@ -26,14 +35,29 @@ class ConnectionRequestRepository {
             throw new NotFoundException('Friend connections not found');
         }
 
+        connectionsList = connectionsList.map((cRequest) => {
+            const connRequestObj = {
+                ...cRequest.student_connection,
+                sender: cRequest.sender,
+                receiver: cRequest.receiver
+            };
+            return connRequestObj;
+        });
+
         return successResponse(connectionsList);
     };
 
     findOne = async(id) => {
-        const connectionRequest = await StudentConnectionModel.findOne(id);
+        let connectionRequest = await StudentConnectionModel.findOne(id);
         if (!connectionRequest) {
             throw new NotFoundException('Connection request not found');
         }
+
+        connectionRequest = {
+            ...connectionRequest.student_connection,
+            sender: connectionRequest.sender,
+            receiver: connectionRequest.receiver
+        };
 
         return successResponse(connectionRequest);
     };
