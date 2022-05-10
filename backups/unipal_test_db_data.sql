@@ -169,7 +169,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `programs` WRITE;
 /*!40000 ALTER TABLE `programs` DISABLE KEYS */;
-INSERT INTO `programs` VALUES (1,'BSCS'),(2,'BSACF');
+INSERT INTO `programs` VALUES (1,'BSCS'),(2,'BSACF'),(3,'MSCS'),(4,'BBA'),(5,'BSSS'),(6,'BSECO'),(7,'BSEM');
 /*!40000 ALTER TABLE `programs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +199,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `student_connections` WRITE;
 /*!40000 ALTER TABLE `student_connections` DISABLE KEYS */;
-INSERT INTO `student_connections` VALUES (5,'17855','15030','request_pending','2021-10-04 17:24:40',NULL,'15030','17855'),(6,'15030','17619','friends','2021-10-10 18:38:15','2021-10-10 18:38:15','15030','17619');
+INSERT INTO `student_connections` VALUES (5,'17855','15030','request_pending','2021-10-04 17:24:40',NULL,'15030','17855'),(6,'15030','17619','friends','2021-10-10 18:38:15','2021-10-10 18:38:15','15030','17619'),(9,'17847','17855','request_pending','2022-05-10 19:40:00',NULL,'17847','17855');
 /*!40000 ALTER TABLE `student_connections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,7 +219,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('15030','Mohammad Rafay','Siddiqui','male','+923009999999','rafaysiddiqui58@gmail.com','1999-09-18','$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'m.rafay.15030@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'admin'),('17619','Test','User','male','+923009999999','testuser3@gmail.com','1999-09-18','$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'test.user.17619@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'api_user'),('17855','Abdur Rafay','Saleem','male','+923009999999','arafaysaleem@gmail.com','1999-09-18','$2a$08$GOxUY8wR5qIE.fA.q9DdVuyLrdQYLHUFcmt1ibwNeXmIsJvgefwWu','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'a.rafay.17855@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'api_user');
+INSERT INTO `students` VALUES ('15030','Mohammad Rafay','Siddiqui','male','+923009999999','rafaysiddiqui58@gmail.com','1999-09-18','$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'m.rafay.15030@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'admin'),('17619','Test','User','male','+923009999999','testuser3@gmail.com','1999-09-18','$2a$08$rN26l6b2CRlSxp0jvCf/4u4WXJ85upOty4t73LR2b419wu/5.22ga','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'test.user.17619@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'api_user'),('17847','Bakhtawar','Sharif','female','+923009999999',NULL,'1999-05-31','$2a$08$tW3gAJcox/aE33Sjc4KsDehde33eOJ7X1t0t0cpWGNDxOLfULeZsi','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'b.sharif.17847@iba.khi.edu.pk',NULL,NULL,NULL,NULL,NULL,NULL,4,1,NULL,NULL,NULL,1,'api_user'),('17855','Abdur Rafay','Saleem','male','+923009999999','arafaysaleem@gmail.com','1999-09-18','$2a$08$GOxUY8wR5qIE.fA.q9DdVuyLrdQYLHUFcmt1ibwNeXmIsJvgefwWu','https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg',2022,'a.rafay.17855@iba.khi.edu.pk',1,2,3,1,2,3,1,1,'CED','Lifting',1,1,'api_user');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-10 19:12:17
+-- Dump completed on 2022-05-10 20:28:51
