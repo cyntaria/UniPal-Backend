@@ -5,7 +5,7 @@ const { MiddlewareLoader } = require('./loaders/middleware.loader');
 const { Config } = require('../src/configs/config');
 
 const setup = () => {
-    // load express
+    // load express and sentry
     const app = ExpressLoader.init();
 
     // init routes

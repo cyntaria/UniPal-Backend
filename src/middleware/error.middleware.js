@@ -9,7 +9,7 @@ function errorMiddleware(err, req, res, next) {
 
     let { message, code, status, data, stack } = err;
 
-    if (Config.NODE_ENV === "dev"){
+    if (Config.NODE_ENV !== "production"){
         console.log(`[Exception] ${code}, [Code] ${status}`);
         console.log(`[Error] ${message}`);
         console.log(`[Stack] ${stack}`);

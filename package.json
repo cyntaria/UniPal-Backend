@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "engines": {
     "node": ">=12"
-},
+  },
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "start": "node -r dotenv-flow/config src/index.js -- --dotenv-flow-path=envs",
@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.6.2",
+    "@sentry/node": "^6.19.7",
+    "@sentry/tracing": "^6.19.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

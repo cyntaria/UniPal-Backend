@@ -1,9 +1,20 @@
 const express = require("express");
 const cors = require("cors");
+const Sentry = require("@sentry/node");
+const { SentryLoader } = require("./sentry.loader");
 
 class ExpressLoader {
     static init() {
         const app = express();
+
+        // init Sentry SDK for error logging
+        SentryLoader.init(app);
+
+        // To monitor release health of each request in session aggregates mode
+        app.use(Sentry.Handlers.requestHandler());
+
+        // TracingHandler creates a trace for every incoming request
+        app.use(Sentry.Handlers.tracingHandler());
 
         // Middleware that transforms the raw string of req.body into json
         app.use(express.json());
