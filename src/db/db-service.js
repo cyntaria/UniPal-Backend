@@ -76,8 +76,7 @@ class DatabaseService {
                 if (err.status === ErrorStatusCodes.ForeignKeyViolation) throw new ForeignKeyViolationException(err.message);
             }
 
-            console.log(`[DBError] ${err}`);
-            throw new InternalServerException();
+            throw new InternalServerException(`[DBError]: ${err.message}`);
             // throw err;
         });
     };
