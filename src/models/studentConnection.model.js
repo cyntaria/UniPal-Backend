@@ -40,17 +40,11 @@ class StudentConnectionModel {
     };
 
     findOne = async(id) => {
-        const sql = `SELECT
-            student_connection_id, connection_status, sent_at, accepted_at,
-            SENDER.erp, SENDER.first_name, SENDER.last_name, SENDER.profile_picture_url, SENDER.program_id, SENDER.graduation_year,
-            RECEIVER.erp, RECEIVER.first_name, RECEIVER.last_name, RECEIVER.profile_picture_url, RECEIVER.program_id, RECEIVER.graduation_year
-        FROM ${tables.StudentConnections} AS student_connection
-        INNER JOIN ${tables.Students} AS sender ON student_connection.sender_erp = SENDER.erp
-        INNER JOIN ${tables.Students} AS receiver ON student_connection.receiver_erp = RECEIVER.erp    
+        const sql = `SELECT * FROM ${tables.StudentConnections}
         WHERE student_connection_id = ?
         LIMIT 1`;
 
-        const result = await DBService.query(sql, [id], { nestTables: true });
+        const result = await DBService.query(sql, [id]);
 
         return result[0];
     };

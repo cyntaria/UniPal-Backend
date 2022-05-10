@@ -53,12 +53,6 @@ class ConnectionRequestRepository {
             throw new NotFoundException('Connection request not found');
         }
 
-        connectionRequest = {
-            ...connectionRequest.student_connection,
-            sender: connectionRequest.sender,
-            receiver: connectionRequest.receiver
-        };
-
         return successResponse(connectionRequest);
     };
 

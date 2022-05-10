@@ -123,8 +123,8 @@ exports.connectionRequestOwnerCheck = async(req) => {
         throw new NotFoundException('Connection request not found');
     }
 
-    const isSender = connectionRequest.sender.erp === student.erp;
-    const isReceiver = connectionRequest.receiver.erp === student.erp;
+    const isSender = connectionRequest.sender_erp === student.erp;
+    const isReceiver = connectionRequest.receiver_erp === student.erp;
     
     if (req.method === RequestMethods.PATCH) {
         return isReceiver;
