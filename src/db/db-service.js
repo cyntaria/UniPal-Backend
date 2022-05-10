@@ -5,7 +5,6 @@ const {
     DatabaseException
 } = require('../utils/exceptions/database.exception');
 const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
-const { InternalServerException } = require('../utils/exceptions/api.exception');
 const {Config} = require('../configs/config');
 
 class DatabaseService {
@@ -65,7 +64,7 @@ class DatabaseService {
             }
         }).catch((err) => {
             if (Config.NODE_ENV === 'dev') {
-                console.log(`[DBError] ${err}`);
+                console.log(`[DBError] ${err.message}`);
                 console.log(`[Code] ${err.code}`);
             }
             
@@ -76,9 +75,21 @@ class DatabaseService {
                 if (err.status === ErrorStatusCodes.ForeignKeyViolation) throw new ForeignKeyViolationException(err.message);
             }
 
-            throw new InternalServerException(`[DBError]: ${err.message}`);
-            // throw err;
+            this.#handleUnknownErrors(sql, values, err);
         });
+    };
+
+    #handleUnknownErrors(sql, values, err) {
+        if (Config.NODE_ENV !== 'dev') {
+            console.log(`[SQL] ${sql}`);
+            console.log(`[VALUES] ${values}`);
+            console.log(`[DBError] ${err.message}`);
+            console.log(`[Code] ${err.code}`);
+        }
+        throw new DatabaseException('', {
+            message: `[DBError] ${err.message}`,
+            db_code: err.code
+        }, false);
     };
 
     getConnection = async() => {
