@@ -10,11 +10,11 @@ class HangoutRequestModel {
             SELECT 
                 hangout_request_id, request_status, purpose, 
                 meetup_at, meetup_spot_id, accepted_at,
-                SENDER.erp, SENDER.first_name, SENDER.last_name, SENDER.profile_picture_url, SENDER.program_id, SENDER.graduation_year,
-                RECEIVER.erp, RECEIVER.first_name, RECEIVER.last_name, RECEIVER.profile_picture_url, RECEIVER.program_id, RECEIVER.graduation_year
+                sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+                receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
             FROM ${tables.HangoutRequests} AS hangout_request
-            INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = SENDER.erp
-            INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = RECEIVER.erp
+            INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = sender.erp
+            INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = receiver.erp
         `;
 
         if (!Object.keys(filters).length) {
@@ -32,11 +32,11 @@ class HangoutRequestModel {
         SELECT 
             hangout_request_id, request_status, purpose, 
             meetup_at, meetup_spot_id, accepted_at,
-            SENDER.erp, SENDER.first_name, SENDER.last_name, SENDER.profile_picture_url, SENDER.program_id, SENDER.graduation_year,
-            RECEIVER.erp, RECEIVER.first_name, RECEIVER.last_name, RECEIVER.profile_picture_url, RECEIVER.program_id, RECEIVER.graduation_year
+            sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+            receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
         FROM ${tables.HangoutRequests} AS hangout_request
-        INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = SENDER.erp
-        INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = RECEIVER.erp
+        INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = sender.erp
+        INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = receiver.erp
         WHERE hangout_request_id = ?
         LIMIT 1`;
 

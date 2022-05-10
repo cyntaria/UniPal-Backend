@@ -9,11 +9,11 @@ class StudentConnectionModel {
         let sql = `
         SELECT 
             student_connection_id, connection_status, sent_at,
-            SENDER.erp, SENDER.first_name, SENDER.last_name, SENDER.profile_picture_url, SENDER.program_id, SENDER.graduation_year,
-            RECEIVER.erp, RECEIVER.first_name, RECEIVER.last_name, RECEIVER.profile_picture_url, RECEIVER.program_id, RECEIVER.graduation_year
+            sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+            receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
         FROM ${tables.StudentConnections} AS student_connection
-        INNER JOIN ${tables.Students} AS sender ON student_connection.sender_erp = SENDER.erp
-        INNER JOIN ${tables.Students} AS receiver ON student_connection.receiver_erp = RECEIVER.erp
+        INNER JOIN ${tables.Students} AS sender ON student_connection.sender_erp = sender.erp
+        INNER JOIN ${tables.Students} AS receiver ON student_connection.receiver_erp = receiver.erp
         WHERE connection_status = ?`;
 
         if (!Object.keys(filters).length) {
@@ -29,11 +29,11 @@ class StudentConnectionModel {
     findAll = async({erp}) => {
         let sql = `SELECT 
             student_connection_id, connection_status, sent_at, accepted_at,
-            SENDER.erp, SENDER.first_name, SENDER.last_name, SENDER.profile_picture_url, SENDER.program_id, SENDER.graduation_year,
-            RECEIVER.erp, RECEIVER.first_name, RECEIVER.last_name, RECEIVER.profile_picture_url, RECEIVER.program_id, RECEIVER.graduation_year
+            sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+            receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
         FROM ${tables.StudentConnections} AS student_connection
-        INNER JOIN ${tables.Students} AS sender ON student_connection.sender_erp = SENDER.erp
-        INNER JOIN ${tables.Students} AS receiver ON student_connection.receiver_erp = RECEIVER.erp
+        INNER JOIN ${tables.Students} AS sender ON student_connection.sender_erp = sender.erp
+        INNER JOIN ${tables.Students} AS receiver ON student_connection.receiver_erp = receiver.erp
         WHERE connection_status = ? AND (sender_erp = ? OR receiver_erp = ?)`;
 
         return await DBService.query(sql, [ConnectionStatus.Friends, erp, erp], { nestTables: true });
