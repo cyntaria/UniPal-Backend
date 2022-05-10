@@ -11,6 +11,7 @@ class ExpressLoader {
         SentryLoader.init(app);
 
         // To monitor release health of each request in session aggregates mode
+        // This must be the first middleware
         app.use(Sentry.Handlers.requestHandler());
 
         // TracingHandler creates a trace for every incoming request

@@ -11,11 +11,11 @@ class MiddlewareLoader {
         });
 
         // Sentry error loggin middleware
-        app.use(Sentry.Handlers.errorHandler({
-            shouldHandleError(_) { return true; }
-        }));
+        // This must be after routes loader and before error middleware
+        app.use(Sentry.Handlers.errorHandler());
 
         // Error middleware
+        // This must be the last middleware
         app.use(errorMiddleware);
     }
 }
