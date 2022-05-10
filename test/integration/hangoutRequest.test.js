@@ -13,7 +13,7 @@ describe("Hangout requests API", () => {
     const existingHangoutRequest = {
         hangout_request_id: 1,
         sender: {
-            erp: "17855",
+            erp: userERP,
             first_name: "Abdur Rafay",
             last_name: "Saleem",
             profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
@@ -21,7 +21,7 @@ describe("Hangout requests API", () => {
             graduation_year: 2022
         },
         receiver: {
-            erp: "15030",
+            erp: adminERP,
             first_name: "Mohammad Rafay",
             last_name: "Siddiqui",
             profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
