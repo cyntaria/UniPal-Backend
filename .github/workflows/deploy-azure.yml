@@ -10,9 +10,6 @@ on:
     types: [closed]
   workflow_dispatch:
 
-env:
-  WEBAPP_NAME: 'unipal-backend'
-
 jobs:
   install-npm-and-deploy:
     runs-on: ubuntu-latest
@@ -42,7 +39,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: ${{ env.WEBAPP_NAME }}
-          slot-name: 'Staging'
+          app-name: ${{ secrets.WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEA95B8E957541C1B27907E81965510A }}
           package: .
