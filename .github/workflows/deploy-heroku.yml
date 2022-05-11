@@ -8,9 +8,8 @@ on:
   workflow_dispatch:
 
 env:
-  WEBAPP_NAME: ${{secrets.WEBAPP_NAME}}
-  WEBAPP_URL: https://$WEBAPP_NAME.herokuapp.com/api/v1
-  HEALTH_ENDPOINT: $WEBAPP_URL/health
+  WEBAPP_NAME: ${{ secrets.WEBAPP_NAME }}
+  WEBAPP_URL: https://${{ secrets.WEBAPP_NAME }}.herokuapp.com/api/v1
 
 jobs:
   deploy-to-heroku:
@@ -18,7 +17,7 @@ jobs:
     if: github.event.pull_request.merged == true
     environment:
       name: 'Production'
-      url: $WEBAPP_URL
+      url: ${{ env.WEBAPP_URL }}
 
     steps:
       - name: Checkout Github Repo
@@ -35,9 +34,9 @@ jobs:
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: $WEBAPP_NAME
+          heroku_app_name: ${{ env.WEBAPP_NAME }}
           heroku_email: "a.rafaysaleem@gmail.com"
-          healthcheck: $HEALTH_ENDPOINT
+          healthcheck: ${{ env.WEBAPP_URL }}/health
           delay: 20
           rollbackonhealthcheckfailed: true
           env_file: ".env.production"
