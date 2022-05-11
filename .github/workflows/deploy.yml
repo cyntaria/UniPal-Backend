@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build And Deploy To Azure
+name: Build And Deploy To Heroku And Azure
 
 on:
   pull_request:
@@ -11,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  WEBAPP_NAME: 'unipal-backend'
+  WEBAPP_NAME: ${{secrets.WEBAPP_NAME}}
 
 jobs:
   build:
@@ -39,34 +36,58 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.WEBAPP_NAME }}
+          name: $WEBAPP_NAME
           path: .
 
-  deploy:
+  deploy-to-heroku:
     runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: "https://$WEBAPP_NAME.herokuapp.com/api/v1"
 
     steps:
-      # - name: Restore cache artifact from build job
-      #   uses: actions/cache@v2.1.7
-      #   id: cache
-      #   with:
-      #     path: .
-      #     key: ${{ env.WEBAPP_NAME }}
+      - name: Load config vars into ENV file
+        env:
+          CONFIG_VARS: ${{ secrets.PRODUCTION_ENV }}
+        run: echo $CONFIG_VARS > .env.production
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+      - name: Deploy To Heroku API
+        uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
-          name: ${{ env.WEBAPP_NAME }}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: $WEBAPP_NAME
+          heroku_email: "a.rafaysaleem@gmail.com"
+          healthcheck: "https://$WEBAPP_NAME.herokuapp.com/api/v1/health"
+          delay: 10
+          rollbackonhealthcheckfailed: true
+          env_file: ".env.production"
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        id: deploy-to-webapp
-        with:
-          app-name: ${{ env.WEBAPP_NAME }}
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEA95B8E957541C1B27907E81965510A }}
-          package: .
+  deploy-to-azure:
+  runs-on: ubuntu-latest
+  needs: build
+  environment:
+    name: 'Staging'
+    url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+  steps:
+    # - name: Restore cache artifact from build job
+    #   uses: actions/cache@v2.1.7
+    #   id: cache
+    #   with:
+    #     path: .
+    #     key: $WEBAPP_NAME
+
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: $WEBAPP_NAME
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      id: deploy-to-webapp
+      with:
+        app-name: $WEBAPP_NAME
+        slot-name: 'Production'
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BEA95B8E957541C1B27907E81965510A }}
+        package: .
