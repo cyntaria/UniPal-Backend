@@ -14,7 +14,7 @@ const {
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
-const { hashPassword, combineStudentPreferences } = require('../utils/common.utils');
+const { hashPassword } = require('../utils/common.utils');
 const { successResponse } = require('../utils/responses.utils');
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
 const { Config } = require('../configs/config');
@@ -64,12 +64,7 @@ class AuthRepository {
             message = "Authenticated";
         }
         student.password = undefined;
-
-        responseBody = {
-            ...combineStudentPreferences(student),
-            token
-        };
-
+        responseBody = { ...student, token };
         return successResponse(responseBody, message);
     };
 

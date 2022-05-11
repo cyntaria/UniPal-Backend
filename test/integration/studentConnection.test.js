@@ -12,22 +12,8 @@ describe("Connection Requests API", () => {
     const userERP = '17855';
     const existingConnectionRequest = {
         student_connection_id: 5,
-        sender: {
-            erp: userERP,
-            first_name: "Abdur Rafay",
-            last_name: "Saleem",
-            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
-            program_id: 1,
-            graduation_year: 2022
-        },
-        receiver: {
-            erp: adminERP,
-            first_name: "Mohammad Rafay",
-            last_name: "Siddiqui",
-            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
-            program_id: 1,
-            graduation_year: 2022
-        },
+        sender_erp: userERP,
+        receiver_erp: adminERP,
         connection_status: 'request_pending',
         sent_at: '2021-10-04 17:24:40',
         accepted_at: null
@@ -56,13 +42,11 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const studentCheck = studentConn => studentConn.sender.erp === erp || studentConn.receiver.erp === erp;
+            const studentCheck = studentConn => studentConn.sender_erp === erp || studentConn.receiver_erp === erp;
             const connectionStatusCheck = studentConn => studentConn.connection_status === 'friends';
             const queryCheck = studentConn => studentCheck(studentConn) && connectionStatusCheck(studentConn);
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
-            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender', 'receiver', 'connection_status', 'sent_at', 'accepted_at']);
-            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingConnectionRequest.sender));
-            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingConnectionRequest.receiver));
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at', 'accepted_at']);
         });
 
         it("Scenario 2: Get all student connections unsuccessful due to no friend connections", async() => {
@@ -145,7 +129,7 @@ describe("Connection Requests API", () => {
     context("GET /student-connections/requests", () => {
         const subRoute = 'requests';
 
-        it("Scenario 1: Get all connection requests is successful (Sent)", async() => {
+        it("Scenario 1: Get all connection Requests is successful (Sent)", async() => {
             // arrange
             const sender_erp = userERP;
             
@@ -159,14 +143,12 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = studentConnection => studentConnection.sender.erp === sender_erp;
+            const queryCheck = studentConnection => studentConnection.sender_erp === sender_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
-            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender', 'receiver', 'connection_status', 'sent_at']);
-            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingConnectionRequest.sender));
-            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingConnectionRequest.receiver));
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
-        it("Scenario 2: Get all connection requests is successful (Receiver)", async() => {
+        it("Scenario 2: Get all connection Requests is successful (Receiver)", async() => {
             // arrange
             const receiver_erp = adminERP;
             
@@ -180,14 +162,12 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = studentConnection => studentConnection.receiver.erp === receiver_erp;
+            const queryCheck = studentConnection => studentConnection.receiver_erp === receiver_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
-            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender', 'receiver', 'connection_status', 'sent_at']);
-            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingConnectionRequest.sender));
-            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingConnectionRequest.receiver));
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender_erp', 'receiver_erp', 'connection_status', 'sent_at']);
         });
 
-        it("Scenario 3: Get all connection requests unsuccessful due to no (sent) connection requests", async() => {
+        it("Scenario 3: Get all connection Requests unsuccessful due to no (sent) connection Requests", async() => {
             // arrange
             const sender_erp = user2ERP;
             const fakeToken = jwt.sign({erp: sender_erp}, Config.SECRET_JWT);
@@ -204,7 +184,7 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.message).to.be.equal('Connection requests not found');
         });
 
-        it("Scenario 4: Get all connection requests unsuccessful due to no (received) connection requests", async() => {
+        it("Scenario 4: Get all connection Requests unsuccessful due to no (received) connection Requests", async() => {
             // arrange
             const receiver_erp = user2ERP;
             const fakeToken = jwt.sign({erp: receiver_erp}, Config.SECRET_JWT);
@@ -221,7 +201,7 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.message).to.be.equal('Connection requests not found');
         });
 
-        it("Scenario 5: Get all connection requests is incorrect due to multiple query params", async() => {
+        it("Scenario 5: Get all connection Requests is incorrect due to multiple query params", async() => {
             // arrange
             const sender_erp = userERP;
             const receiver_erp = user2ERP;
@@ -241,7 +221,7 @@ describe("Connection Requests API", () => {
             expect(incorrectMsg).to.include('Can\'t specify both sender and receiver erp');
         });
 
-        it("Scenario 6: Get all connection requests is incorrect due to no query params", async() => {
+        it("Scenario 6: Get all connection Requests is incorrect due to no query params", async() => {
             // act
             let res = await request(this.app)
                 .get(`${baseRoute}/${subRoute}`) // <-- either specify sender_erp or receiver_erp
@@ -255,7 +235,7 @@ describe("Connection Requests API", () => {
             expect(incorrectMsg).to.include('Either sender or receiver erp is required');
         });
 
-        it("Scenario 7: Get all connection requests is incorrect due to unknown query params", async() => {
+        it("Scenario 7: Get all connection Requests is incorrect due to unknown query params", async() => {
             // arrange
             const sender_erp = '123'; // a valid erp is 5 digits
 
@@ -274,7 +254,7 @@ describe("Connection Requests API", () => {
             expect(incorrectMsg).to.include('Invalid query params!');
         });
 
-        it("Scenario 8: Get request is forbidden due to querying other's sent connection requests", async() => {
+        it("Scenario 8: Get request is forbidden due to querying other's sent connection Requests", async() => {
             // arrange
             const sender_erp = userERP;
 
@@ -290,7 +270,7 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 9: Get request is forbidden due to querying other's received connection requests", async() => {
+        it("Scenario 9: Get request is forbidden due to querying other's received connection Requests", async() => {
             // arrange
             const receiver_erp = userERP;
 
@@ -306,7 +286,7 @@ describe("Connection Requests API", () => {
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
-        it("Scenario 10: Get all connection requests is unauthorized", async() => {
+        it("Scenario 10: Get all connection Requests is unauthorized", async() => {
             // act
             let res = await request(this.app).get(`${baseRoute}/${subRoute}`);
     
@@ -366,14 +346,14 @@ describe("Connection Requests API", () => {
         it("Scenario 2: Create a connection request is unsuccessful due to unknown receiver_erp", async() => {
             // arrange
             const data = {
-                sender_erp: existingConnectionRequest.sender.erp,
+                sender_erp: existingConnectionRequest.sender_erp,
                 receiver_erp: unknownStudentERP,
                 sent_at
             };
             // act
             const res = await request(this.app)
                 .post(baseRoute)
-                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender.erp
+                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender_erp
                 .send(data);
     
             // assert
@@ -386,14 +366,14 @@ describe("Connection Requests API", () => {
         it("Scenario 3: Create a connection request is unsuccessful due to already sent connection request", async() => {
             // arrange
             const data = {
-                sender_erp: existingConnectionRequest.sender.erp,
-                receiver_erp: existingConnectionRequest.receiver.erp,
+                sender_erp: existingConnectionRequest.sender_erp,
+                receiver_erp: existingConnectionRequest.receiver_erp,
                 sent_at
             };
             // act
             const res = await request(this.app)
                 .post(baseRoute)
-                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender.erp
+                .auth(userToken, { type: 'bearer' }) // userToken erp === existingStudentConnection.sender_erp
                 .send(data);
     
             // assert
@@ -405,8 +385,8 @@ describe("Connection Requests API", () => {
         it("Scenario 4: Create a connection request is unsuccessful due to already received connection request", async() => {
             // arrange
             const data = {
-                sender_erp: existingConnectionRequest.receiver.erp,
-                receiver_erp: existingConnectionRequest.sender.erp, // flip receiver and sender
+                sender_erp: existingConnectionRequest.receiver_erp,
+                receiver_erp: existingConnectionRequest.sender_erp, // flip receiver and sender
                 sent_at
             };
             const senderToken = jwt.sign({erp: data.sender_erp}, Config.SECRET_JWT);
@@ -515,7 +495,7 @@ describe("Connection Requests API", () => {
             // act
             let res = await request(app)
                 .patch(`${baseRoute}/${studentConnectionId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver.erp
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver_erp
                 .send(data);
     
             // assert
@@ -530,12 +510,11 @@ describe("Connection Requests API", () => {
                 .auth(adminToken, { type: 'bearer' });
             
             expect(res.status).to.be.equal(200);
-            const {sender, receiver, ...studentConnection} = existingConnectionRequest;
-            
-            studentConnection.sender_erp = existingConnectionRequest.sender.erp;
-            studentConnection.receiver_erp = existingConnectionRequest.receiver.erp; // 15030, bcz smaller
-            studentConnection.student_1_erp = existingConnectionRequest.receiver.erp; // 15030, bcz smaller
-            studentConnection.student_2_erp = existingConnectionRequest.sender.erp; // 17855, bcz greater
+            const studentConnection = {
+                ...existingConnectionRequest,
+                student_1_erp: existingConnectionRequest.receiver_erp, // 15030, bcz smaller
+                student_2_erp: existingConnectionRequest.sender_erp // 17855, bcz greater
+            };
             studentConnection.accepted_at = data.accepted_at;
             studentConnection.connection_status = data.connection_status;
             expect(res.body.body).to.be.eql(studentConnection);
@@ -545,7 +524,7 @@ describe("Connection Requests API", () => {
             data.accepted_at = existingConnectionRequest.accepted_at;
             res = await request(app)
                 .patch(`${baseRoute}/${studentConnectionId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver.erp
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingStudentConnection.receiver_erp
                 .send(data);
             expect(res.status).to.be.equal(200);
         });
@@ -581,7 +560,7 @@ describe("Connection Requests API", () => {
             // act
             const res = await request(this.app)
                 .patch(`${baseRoute}/${studentConnectionId}`)
-                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingStudentConnection.receiver.erp
+                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingStudentConnection.receiver_erp
                 .send(data);
             
             // assert

@@ -15,30 +15,15 @@ class HangoutRequestRepository {
         if (!hangoutRequestsList.length) {
             throw new NotFoundException('Hangout requests not found');
         }
-        
-        hangoutRequestsList = hangoutRequestsList.map((hRequest) => {
-            const hangoutRequestObj = {
-                ...hRequest.hangout_request,
-                sender: hRequest.sender,
-                receiver: hRequest.receiver
-            };
-            return hangoutRequestObj;
-        });
 
         return successResponse(hangoutRequestsList);
     };
 
     findOne = async(id) => {
-        let hangoutRequest = await HangoutRequestModel.findOne(id);
+        const hangoutRequest = await HangoutRequestModel.findOne(id);
         if (!hangoutRequest) {
             throw new NotFoundException('Hangout request not found');
         }
-
-        hangoutRequest = {
-            ...hangoutRequest.hangout_request,
-            sender: hangoutRequest.sender,
-            receiver: hangoutRequest.receiver
-        };
 
         return successResponse(hangoutRequest);
     };

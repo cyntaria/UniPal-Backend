@@ -16,21 +16,6 @@ exports.multipleColumnSet = (object) => {
     };
 };
 
-exports.combineStudentPreferences = (student) => {
-    const {
-        hobby_1, hobby_2, hobby_3,
-        interest_1, interest_2, interest_3,
-        ...stud
-    } = student;
-
-    const noHobbies = hobby_1 == null && hobby_2 == null && hobby_3 == null;
-    const noInterests = interest_1 == null && interest_2 == null && interest_3 == null;
-    const hobbies = noHobbies ? null : [ hobby_1, hobby_2, hobby_3 ];
-    const interests = noInterests ? null : [ interest_1, interest_2, interest_3 ];
-    
-    return { ...stud, hobbies, interests };
-};
-
 exports.parseTime = (time) => {
     let times = time.split(":");
     let hours = times[0];

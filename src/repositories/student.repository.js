@@ -1,5 +1,4 @@
 const { successResponse } = require('../utils/responses.utils');
-const { combineStudentPreferences } = require('../utils/common.utils');
 
 const StudentModel = require('../models/student.model');
 const {
@@ -38,7 +37,7 @@ class StudentRepository {
                 sent_at,
                 accepted_at
             };
-            return combineStudentPreferences(restOfStudent);
+            return restOfStudent;
         });
 
         return successResponse(studentList);
@@ -50,8 +49,6 @@ class StudentRepository {
         if (erp === myERP) student = await this.#findMyProfile(erp);
         else student = await this.#findOthersProfile(erp, myERP);
 
-        student = combineStudentPreferences(student);
-        
         return successResponse(student);
     };
 

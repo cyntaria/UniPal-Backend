@@ -120,8 +120,8 @@ exports.hangoutRequestOwnerCheck = async(req) => {
         throw new NotFoundException('Hangout request not found');
     }
 
-    const isSender = hangoutRequest.sender.erp === student.erp;
-    const isReceiver = hangoutRequest.receiver.erp === student.erp;
+    const isSender = hangoutRequest.sender_erp === student.erp;
+    const isReceiver = hangoutRequest.receiver_erp === student.erp;
     
     if (req.method === RequestMethods.PATCH) {
         return isReceiver;

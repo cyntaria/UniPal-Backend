@@ -12,22 +12,8 @@ describe("Hangout requests API", () => {
     const userERP = '17855';
     const existingHangoutRequest = {
         hangout_request_id: 1,
-        sender: {
-            erp: userERP,
-            first_name: "Abdur Rafay",
-            last_name: "Saleem",
-            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
-            program_id: 1,
-            graduation_year: 2022
-        },
-        receiver: {
-            erp: adminERP,
-            first_name: "Mohammad Rafay",
-            last_name: "Siddiqui",
-            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
-            program_id: 1,
-            graduation_year: 2022
-        },
+        sender_erp: userERP,
+        receiver_erp: adminERP,
         purpose: 'Some purpose',
         request_status: 'request_pending',
         meetup_at: '2021-10-04 17:24:40',
@@ -59,20 +45,18 @@ describe("Hangout requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = hangoutRequest => hangoutRequest.sender.erp === sender_erp;
+            const queryCheck = hangoutRequest => hangoutRequest.sender_erp === sender_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys([
                 'hangout_request_id',
-                'sender',
-                'receiver',
+                'sender_erp',
+                'receiver_erp',
                 'purpose',
                 'request_status',
                 'meetup_at',
                 'meetup_spot_id',
                 'accepted_at'
             ]);
-            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingHangoutRequest.sender));
-            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingHangoutRequest.receiver));
         });
 
         it("Scenario 2: Get all hangout requests is successful (Receiver)", async() => {
@@ -89,20 +73,18 @@ describe("Hangout requests API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            const queryCheck = hangoutRequest => hangoutRequest.receiver.erp === receiver_erp;
+            const queryCheck = hangoutRequest => hangoutRequest.receiver_erp === receiver_erp;
             expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys([
                 'hangout_request_id',
-                'sender',
-                'receiver',
+                'sender_erp',
+                'receiver_erp',
                 'purpose',
                 'request_status',
                 'meetup_at',
                 'meetup_spot_id',
                 'accepted_at'
             ]);
-            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingHangoutRequest.sender));
-            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingHangoutRequest.receiver));
         });
 
         it("Scenario 3: Get all hangout requests unsuccessful due to no (sent) hangout requests", async() => {
@@ -267,9 +249,12 @@ describe("Hangout requests API", () => {
                 .auth(userToken, { type: 'bearer' }); // token erp === sender_erp in body
 
             expect(res.status).to.be.equal(200);
-            expect(res.body.body.hangout_request_id).to.be.equal(newId);
-            expect(res.body.body.sender.erp).to.be.equal(data.sender_erp);
-            expect(res.body.body.receiver.erp).to.be.equal(data.receiver_erp);
+            expect(res.body.body).to.be.eql({
+                hangout_request_id: newId,
+                ...data,
+                request_status: existingHangoutRequest.request_status,
+                accepted_at: null
+            });
 
             // cleanup
             res = await request(app)
@@ -281,7 +266,7 @@ describe("Hangout requests API", () => {
         it("Scenario 2: Create a hangout request is unsuccessful due to unknown receiver_erp", async() => {
             // arrange
             const data = {
-                sender_erp: existingHangoutRequest.sender.erp,
+                sender_erp: existingHangoutRequest.sender_erp,
                 receiver_erp: unknownStudentERP,
                 purpose,
                 meetup_at,
@@ -290,7 +275,7 @@ describe("Hangout requests API", () => {
             // act
             const res = await request(this.app)
                 .post(baseRoute)
-                .auth(userToken, { type: 'bearer' }) // userToken erp === existingHangoutRequest.sender.erp
+                .auth(userToken, { type: 'bearer' }) // userToken erp === existingHangoutRequest.sender_erp
                 .send(data);
     
             // assert
@@ -396,7 +381,7 @@ describe("Hangout requests API", () => {
             // act
             let res = await request(app)
                 .patch(`${baseRoute}/${hangoutRequestId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingHangoutRequest.receiver.erp
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingHangoutRequest.receiver_erp
                 .send(data);
     
             // assert
@@ -423,7 +408,7 @@ describe("Hangout requests API", () => {
             data.accepted_at = existingHangoutRequest.accepted_at;
             res = await request(app)
                 .patch(`${baseRoute}/${hangoutRequestId}`)
-                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingHangoutRequest.receiver.erp
+                .auth(adminToken, { type: 'bearer' }) // <-- adminToken.erp == existingHangoutRequest.receiver_erp
                 .send(data);
             expect(res.status).to.be.equal(200);
         });
@@ -459,7 +444,7 @@ describe("Hangout requests API", () => {
             // act
             const res = await request(this.app)
                 .patch(`${baseRoute}/${hangoutRequestId}`)
-                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingHangoutRequest.receiver.erp
+                .auth(userToken, { type: 'bearer' }) // <-- userToken.erp !== existingHangoutRequest.receiver_erp
                 .send(data);
             
             // assert
