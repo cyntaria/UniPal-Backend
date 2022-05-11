@@ -1,7 +1,7 @@
 {
   "name": "unipal-backend",
   "version": "1.0.0",
-  "description": "[![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/) [![BadgeAzure](https://img.shields.io/badge/DATABASE-AZURE-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=007FFF)](https://shields.io/) [![BadgeVercel](https://img.shields.io/badge/DEPLOYED-VERCEL-000000?style=for-the-badge&logo=Vercel)](https://shields.io/)",
+  "description": "[![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/) [![BadgeAzure](https://img.shields.io/badge/DATABASE-AZURE-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=007FFF)](https://shields.io/) [![BadgeAzureAppService](https://img.shields.io/badge/STAGING-AZURE-2560E0?style=for-the-badge&logo=azurepipelines&logoColor=007FFF)](https://shields.io/) [![BadgeHeroku](https://img.shields.io/badge/DEPLOYED-HEROKU-430098?style=for-the-badge&logo=Heroku)](https://shields.io/)",
   "main": "src/index.js",
   "engines": {
     "node": ">=12"
