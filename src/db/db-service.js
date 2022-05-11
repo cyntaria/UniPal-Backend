@@ -79,7 +79,7 @@ class DatabaseService {
         });
     };
 
-    #handleUnknownErrors(sql, values, err) {
+    #handleUnknownErrors = (sql, values, err) => {
         if (Config.NODE_ENV !== 'dev') {
             console.log(`[SQL] ${sql}`);
             console.log(`[VALUES] ${values}`);
