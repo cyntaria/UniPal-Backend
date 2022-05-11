@@ -5,7 +5,6 @@ const {
     DatabaseException
 } = require('../utils/exceptions/database.exception');
 const { ErrorStatusCodes } = require('../utils/errorStatusCodes.utils');
-const { InternalServerException } = require('../utils/exceptions/api.exception');
 const {Config} = require('../configs/config');
 
 class DatabaseService {
@@ -39,7 +38,7 @@ class DatabaseService {
         });
     }
     
-    query = async(sql, values, options = { multiple: false, transaction_conn: null }) => {
+    query = async(sql, values, options = { multiple: false, transaction_conn: null, nestTables: false }) => {
         return new Promise((resolve, reject) => {
             const callback = (error, result) => {
                 if (error) {
@@ -52,18 +51,20 @@ class DatabaseService {
                 console.log(`[SQL] ${sql}`);
                 console.log(`[VALUES] ${values}`);
             }
+
+            const queryOptions = {sql, nestTables: options.nestTables};
             
-            if (!options) this.dbPool.query(sql, values, callback);
+            if (!options) this.dbPool.query(queryOptions, values, callback);
             else if (!options.transaction_conn) {
-                if (!options.multiple) this.dbPool.execute(sql, values, callback); // execute will internally call prepare and query
-                else this.dbPool.query(sql, values, callback);
+                if (!options.multiple) this.dbPool.execute(queryOptions, values, callback); // execute will internally call prepare and query
+                else this.dbPool.query(queryOptions, values, callback);
             } else {
-                if (!options.multiple) options.transaction_conn.execute(sql, values, callback);
-                else options.transaction_conn.query(sql, values, callback);
+                if (!options.multiple) options.transaction_conn.execute(queryOptions, values, callback);
+                else options.transaction_conn.query(queryOptions, values, callback);
             }
         }).catch((err) => {
             if (Config.NODE_ENV === 'dev') {
-                console.log(`[DBError] ${err}`);
+                console.log(`[DBError] ${err.message}`);
                 console.log(`[Code] ${err.code}`);
             }
             
@@ -74,9 +75,21 @@ class DatabaseService {
                 if (err.status === ErrorStatusCodes.ForeignKeyViolation) throw new ForeignKeyViolationException(err.message);
             }
 
-            throw new InternalServerException();
-            // throw err;
+            this.#handleUnknownErrors(sql, values, err);
         });
+    };
+
+    #handleUnknownErrors = (sql, values, err) => {
+        if (Config.NODE_ENV !== 'dev') {
+            console.log(`[SQL] ${sql}`);
+            console.log(`[VALUES] ${values}`);
+            console.log(`[DBError] ${err.message}`);
+            console.log(`[Code] ${err.code}`);
+        }
+        throw new DatabaseException('', {
+            message: `[DBError] ${err.message}`,
+            db_code: err.code
+        }, false);
     };
 
     getConnection = async() => {

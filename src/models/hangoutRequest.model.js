@@ -6,24 +6,41 @@ const { HangoutRequestStatus } = require('../utils/enums/hangoutRequestStatus.ut
 class HangoutRequestModel {
 
     findAll = async(filters) => {
-        let sql = `SELECT * FROM ${tables.HangoutRequests}`;
+        let sql = `
+            SELECT 
+                hangout_request_id, request_status, purpose, 
+                meetup_at, meetup_spot_id, accepted_at,
+                sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+                receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
+            FROM ${tables.HangoutRequests} AS hangout_request
+            INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = sender.erp
+            INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = receiver.erp
+        `;
 
         if (!Object.keys(filters).length) {
-            return await DBService.query(sql);
+            return await DBService.query(sql, [], { nestTables: true });
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` WHERE ${filterSet}`;
 
-        return await DBService.query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues], { nestTables: true });
     };
 
     findOne = async(id) => {
-        const sql = `SELECT * FROM ${tables.HangoutRequests}
+        const sql = `
+        SELECT 
+            hangout_request_id, request_status, purpose, 
+            meetup_at, meetup_spot_id, accepted_at,
+            sender.erp, sender.first_name, sender.last_name, sender.profile_picture_url, sender.program_id, sender.graduation_year,
+            receiver.erp, receiver.first_name, receiver.last_name, receiver.profile_picture_url, receiver.program_id, receiver.graduation_year
+        FROM ${tables.HangoutRequests} AS hangout_request
+        INNER JOIN ${tables.Students} AS sender ON hangout_request.sender_erp = sender.erp
+        INNER JOIN ${tables.Students} AS receiver ON hangout_request.receiver_erp = receiver.erp
         WHERE hangout_request_id = ?
         LIMIT 1`;
 
-        const result = await DBService.query(sql, [id]);
+        const result = await DBService.query(sql, [id], {nestTables: true});
 
         return result[0];
     };

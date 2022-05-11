@@ -212,7 +212,7 @@ CREATE TABLE `hangout_requests` (
   CONSTRAINT `fk_hangout_requests_campus_spot_id` FOREIGN KEY (`meetup_spot_id`) REFERENCES `campus_spots` (`campus_spot_id`),
   CONSTRAINT `fk_hangout_requests_receiver_erp` FOREIGN KEY (`receiver_erp`) REFERENCES `students` (`erp`),
   CONSTRAINT `fk_hangout_requests_sender_erp` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,7 +329,7 @@ CREATE TABLE `programs` (
   `program_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `program` varchar(45) NOT NULL,
   PRIMARY KEY (`program_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -390,7 +390,7 @@ CREATE TABLE `student_connections` (
   CONSTRAINT `fk_friend_requests_sender_erp_idx` FOREIGN KEY (`sender_erp`) REFERENCES `students` (`erp`),
   CONSTRAINT `fk_friend_requests_student_1_erp` FOREIGN KEY (`student_1_erp`) REFERENCES `students` (`erp`),
   CONSTRAINT `fk_friend_requests_student_2_erp` FOREIGN KEY (`student_2_erp`) REFERENCES `students` (`erp`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,4 +641,4 @@ CREATE TABLE `tsr_members` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-11 15:12:26
+-- Dump completed on 2022-05-11  2:07:02
