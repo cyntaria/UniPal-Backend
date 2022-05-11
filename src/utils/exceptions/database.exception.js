@@ -16,7 +16,7 @@ class DatabaseException extends Error {
 
 class NotFoundException extends DatabaseException {
     constructor(message, data){
-        super(message, data, true, ErrorStatusCodes.InternalServerError);
+        super(message, data, true, ErrorStatusCodes.NotFound);
     }
 }
 
