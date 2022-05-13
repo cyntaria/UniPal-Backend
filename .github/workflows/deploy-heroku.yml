@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     environment:
-      name: 'Production'
+      name: 'Staging'
       url: ${{ env.WEBAPP_URL }}
 
     steps:
