@@ -9,7 +9,6 @@ const reactionTypeController = require('../controllers/reactionType.controller')
 const { createReactionTypeSchema, updateReactionTypeSchema } = require('../middleware/validators/reactionTypeValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(reactionTypeController.getAllReactionTypes)
 ); // localhost:3000/api/API_VERSION/reaction-types
 

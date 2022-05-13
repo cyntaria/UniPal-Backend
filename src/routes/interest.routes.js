@@ -9,7 +9,6 @@ const interestController = require('../controllers/interest.controller');
 const { createInterestSchema, updateInterestSchema } = require('../middleware/validators/interestValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(interestController.getAllInterests)
 ); // localhost:3000/api/API_VERSION/interests
 

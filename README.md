@@ -1,6 +1,6 @@
 # UniPal REST API Using Express With MVC Architecture
 
-[![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/) [![BadgeAzure](https://img.shields.io/badge/DATABASE-AZURE-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=007FFF)](https://shields.io/) [![BadgeAzureAppService](https://img.shields.io/badge/STAGING-AZURE-2560E0?style=for-the-badge&logo=azurepipelines&logoColor=007FFF)](https://shields.io/) [![BadgeHeroku](https://img.shields.io/badge/DEPLOYED-HEROKU-430098?style=for-the-badge&logo=Heroku)](https://shields.io/)
+[![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/) [![BadgeAzure](https://img.shields.io/badge/DATABASE-AZURE-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=007FFF)](https://shields.io/) [![BadgeAzureAppService](https://img.shields.io/badge/DEPLOYED-AZURE%20APP%20SERVICE-2560E0?style=for-the-badge&logo=azurepipelines&logoColor=007FFF)](https://shields.io/) [![BadgeHeroku](https://img.shields.io/badge/STAGING-HEROKU-430098?style=for-the-badge&logo=Heroku)](https://shields.io/)
 
 ### :memo: Documentation
 
@@ -91,13 +91,17 @@ npm run production
 If you want to run the github testing and PR labelling workflows in the CI then:
 
 Create the following repository secrets:
-  * DB_HOST: your_db_host
+  * DB_HOST: your_db_host (If using CI mysql service set to 127.0.0.1)
   * DB_USER: your_db_user (If using CI mysql service set this to 'root')
   * DB_PASS: your_db_password (If using CI mysql service set this to 'root')
   * DB_TEST_DATABASE: your_test_database_name
   * SENDGRID_API_KEY: value should be your .env file variable => sendgrid_api_key
   * SENDGRID_SENDER: value should be your .env file variable => from_email
   * SECRET_JWT: value should be your .env file variable => your_secret
+  * PRODUCTION_ENV: contents of the base `.env + .env.production` files
+  * HEROKU_API_KEY: value for the heroku api key
+  * AZURE_PUBLISH_PROFILE: the contents of the downloaded publish profile from Azure
+  * WEBAPP_NAME: name of the deployed webapp, should match heroku/azure project name
 
 ### :closed_book: Important Notes
 
