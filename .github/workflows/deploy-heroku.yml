@@ -3,7 +3,7 @@ name: Deploy To Heroku
 on:
   pull_request:
     branches:
-      - production
+      - staging
     types: [closed]
   workflow_dispatch:
 

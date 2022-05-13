@@ -6,7 +6,7 @@ name: Build And Deploy To Azure
 on:
   pull_request:
     branches:
-      - staging
+      - production
     types: [closed]
   workflow_dispatch:
 
