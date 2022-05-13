@@ -9,7 +9,6 @@ const studentStatusController = require('../controllers/studentStatus.controller
 const { createStudentStatusSchema, updateStudentStatusSchema } = require('../middleware/validators/studentStatusValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(studentStatusController.getAllStudentStatuses)
 ); // localhost:3000/api/API_VERSION/student-statuses
 

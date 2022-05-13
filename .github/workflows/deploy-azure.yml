@@ -6,7 +6,7 @@ name: Build And Deploy To Azure
 on:
   pull_request:
     branches:
-      - staging
+      - production
     types: [closed]
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     environment:
-      name: 'Staging'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
