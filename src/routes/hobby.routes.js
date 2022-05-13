@@ -9,7 +9,6 @@ const { Roles } = require('../utils/enums/roles.utils');
 const { createHobbySchema, updateHobbySchema } = require('../middleware/validators/hobbyValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(hobbyController.getAllHobbies)
 ); // localhost:3000/api/API_VERSION/hobbies
 
