@@ -238,7 +238,6 @@ describe("Teacher Reviews API", () => {
                 .delete(`${baseRoute}/${newId}`)
                 .auth(user2Token, { type: 'bearer' })
                 .send(deleteData);
-            console.log(res.body.headers);
             expect(res.status).to.be.equal(200);
         });
 
