@@ -30,8 +30,7 @@ describe("Campus Spots API", () => {
         it("Scenario 1: Get all campus spots request successful", async() => {
             // act
             let res = await request(this.app)
-                .get(baseRoute)
-                .auth(userToken, { type: 'bearer' });
+                .get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(200);
@@ -50,8 +49,7 @@ describe("Campus Spots API", () => {
 
             // act
             const res = await request(app)
-                .get(baseRoute)
-                .auth(userToken, { type: 'bearer' });
+                .get(baseRoute);
     
             // assert
             expect(res.status).to.be.equal(404);
@@ -59,17 +57,6 @@ describe("Campus Spots API", () => {
             expect(res.body.headers.code).to.be.equal('NotFoundException');
             expect(res.body.headers.message).to.be.equal('Campus spots not found');
             modelStub.restore();
-        });
-
-        it("Scenario 3: Get all campus spots request is unauthorized", async() => {
-            // act
-            let res = await request(this.app).get(baseRoute);
-    
-            // assert
-            expect(res.status).to.be.equal(401);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('TokenMissingException');
-            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
         });
     });
 
