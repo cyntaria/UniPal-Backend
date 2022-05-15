@@ -18,14 +18,29 @@ class TeacherReviewRepository {
             throw new NotFoundException('Teacher reviews not found');
         }
 
+        teacherReviewList = teacherReviewList.map((tReview) => {
+            const connRequestObj = {
+                ...tReview.teacher_review,
+                subject: tReview.subject,
+                reviewed_by: tReview.reviewed_by
+            };
+            return connRequestObj;
+        });
+
         return successResponse(teacherReviewList);
     };
 
     findOne = async(id) => {
-        const teacherReview = await TeacherReviewModel.findOne(id, true);
+        let teacherReview = await TeacherReviewModel.findOne(id, true);
         if (!teacherReview) {
             throw new NotFoundException('Teacher review not found');
         }
+
+        teacherReview = {
+            ...teacherReview.teacher_review,
+            subject: teacherReview.subject,
+            reviewed_by: teacherReview.reviewed_by
+        };
 
         return successResponse(teacherReview);
     };
