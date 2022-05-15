@@ -9,7 +9,6 @@ const activityTypeController = require('../controllers/activityType.controller')
 const { createActivityTypeSchema, updateActivityTypeSchema } = require('../middleware/validators/activityTypeValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(activityTypeController.getAllActivityTypes)
 ); // localhost:3000/api/API_VERSION/activity-types
 

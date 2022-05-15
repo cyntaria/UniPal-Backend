@@ -9,7 +9,6 @@ const campusSpotController = require('../controllers/campusSpot.controller');
 const { createCampusSpotSchema, updateCampusSpotSchema } = require('../middleware/validators/campusSpotValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(campusSpotController.getAllCampusSpots)
 ); // localhost:3000/api/API_VERSION/campus-spots
 
