@@ -20,9 +20,19 @@ describe("Teacher Reviews API", () => {
         difficulty: 5,
         overall_rating: "3.800",
         comment: "Overall amazing teacher. Worth it!",
-        subject_code: "MKT201",
+        subject: {
+            subject_code: "MKT201",
+            subject: "Principles of Marketing"
+        },
         teacher_id: 2,
-        reviewed_by_erp: userERP,
+        reviewed_by: {
+            erp: userERP,
+            first_name: "Abdur Rafay",
+            last_name: "Saleem",
+            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
+            program_id: 1,
+            graduation_year: 2022
+        },
         reviewed_at: "2021-11-22 21:20:40"
     };
     const unknownTeacherReviewId = 99999;
@@ -52,7 +62,11 @@ describe("Teacher Reviews API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
+            const reviewerCheck = review => review.teacher_id === teacher_id;
+            expect(resBody.every(reviewerCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys(Object.keys(existingTeacherReview));
+            expect(resBody[0].subject).to.include.all.keys(Object.keys(existingTeacherReview.subject));
+            expect(resBody[0].reviewed_by).to.include.all.keys(Object.keys(existingTeacherReview.reviewed_by));
         });
 
         it("Scenario 2: Get all teacher reviews request unsuccessful due to zero teacher reviews", async() => {
@@ -134,6 +148,8 @@ describe("Teacher Reviews API", () => {
             const resBody = res.body.body;
             expect(resBody).to.include.all.keys(Object.keys(existingTeacherReview));
             expect(resBody.review_id).to.be.equal(existingTeacherReview.review_id); // should match initially sent id
+            expect(resBody.subject).to.include.all.keys(Object.keys(existingTeacherReview.subject));
+            expect(resBody.reviewed_by).to.include.all.keys(Object.keys(existingTeacherReview.reviewed_by));
         });
 
         it("Scenario 2: Get a teacher review request is unsuccessful due to unknown review_id", async() => {
@@ -203,13 +219,13 @@ describe("Teacher Reviews API", () => {
                 .auth(user2Token, { type: 'bearer' });
 
             expect(res.status).to.be.equal(200);
-            const { overall_rating: review_rating, ...resBody } = res.body.body;
-            expect(resBody).to.be.eql({
-                review_id: newId,
-                ...reviewBody
-            });
+            const resBody = res.body.body;
+            expect(resBody.review_id).to.be.equal(newId);
+            expect(resBody.subject.subject_code).to.be.equal(data.subject_code);
+            expect(resBody.reviewed_by.erp).to.be.equal(data.reviewed_by_erp);
 
             // cleanup
+            const { overall_rating: review_rating } = resBody;
             const TeacherReviewRepository = require('../../src/repositories/teacherReview.repository');
             const newTeacherRating = TeacherReviewRepository.incrementTeacherRating(review_rating, old_teacher_rating, old_total_reviews);
             const deleteData = {
