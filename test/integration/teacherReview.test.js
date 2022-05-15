@@ -225,6 +225,7 @@ describe("Teacher Reviews API", () => {
             expect(resBody.reviewed_by.erp).to.be.equal(data.reviewed_by_erp);
 
             // cleanup
+            const { overall_rating: review_rating } = resBody;
             const TeacherReviewRepository = require('../../src/repositories/teacherReview.repository');
             const newTeacherRating = TeacherReviewRepository.incrementTeacherRating(review_rating, old_teacher_rating, old_total_reviews);
             const deleteData = {
@@ -237,6 +238,7 @@ describe("Teacher Reviews API", () => {
                 .delete(`${baseRoute}/${newId}`)
                 .auth(user2Token, { type: 'bearer' })
                 .send(deleteData);
+            console.log(res.body.headers);
             expect(res.status).to.be.equal(200);
         });
 

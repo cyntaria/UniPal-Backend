@@ -144,13 +144,13 @@ exports.teacherReviewOwnerCheck = async(req) => {
     }
 
     if (req.method === RequestMethods.DELETE) {
-        const teacherCheck = req.body.teacher_id === teacherReview.teacher_id;
+        const teacherCheck = req.body.teacher_id === teacherReview.teacher_review.teacher_id;
         // eslint-disable-next-line eqeqeq
-        const ratingCheck = req.body.review_rating == teacherReview.overall_rating;
+        const ratingCheck = req.body.review_rating == teacherReview.teacher_review.overall_rating;
         if (!teacherCheck || !ratingCheck) {
             throw new DeleteFailedException('Teacher review failed to be deleted. Inconsistent details found');
         }
     }
 
-    return teacherReview.reviewed_by.erp === student.erp;
+    return teacherReview.teacher_review.reviewed_by_erp === student.erp;
 };
