@@ -9,7 +9,6 @@ const activityStatusController = require('../controllers/activityStatus.controll
 const { createActivityStatusSchema, updateActivityStatusSchema } = require('../middleware/validators/activityStatusValidator.middleware');
 
 router.get('/',
-    auth(),
     awaitHandlerFactory(activityStatusController.getAllActivityStatuses)
 ); // localhost:3000/api/API_VERSION/activity-statuses
 

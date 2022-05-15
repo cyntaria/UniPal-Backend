@@ -8,22 +8,24 @@ class TeacherReviewModel {
         let sql = `
             SELECT 
                 review_id, learning, grading, attendance, difficulty,
-                overall_rating, comment, reviewed_at, subject_code, teacher_id, reviewed_by_erp
-            FROM ${tables.TeacherReviews} AS TR
-            NATURAL JOIN ${tables.Teachers}
-            NATURAL JOIN ${tables.Subjects}
-            INNER JOIN ${tables.Students} AS ST ON TR.reviewed_by_erp = ST.erp
+                overall_rating, comment, reviewed_at, teacher_id,
+                subject.subject_code, subject.subject,
+                reviewed_by.erp, reviewed_by.first_name, reviewed_by.last_name,
+                reviewed_by.profile_picture_url, reviewed_by.program_id, reviewed_by.graduation_year
+            FROM ${tables.TeacherReviews} AS teacher_review
+            NATURAL JOIN ${tables.Subjects} AS subject
+            INNER JOIN ${tables.Students} AS reviewed_by ON teacher_review.reviewed_by_erp = reviewed_by.erp
         `;
 
         if (!Object.keys(filters).length) {
             sql += ` ORDER BY reviewed_at DESC`;
-            return await DBService.query(sql);
+            return await DBService.query(sql, [], { nestTables: true });
         }
 
         const { filterSet, filterValues } = multipleFilterSet(filters);
         sql += ` WHERE ${filterSet} ORDER BY reviewed_at DESC`;
 
-        return await DBService.query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues], { nestTables: true });
     };
 
     findOne = async(id, details = false) => {
@@ -32,24 +34,26 @@ class TeacherReviewModel {
             sql = `
                 SELECT
                     review_id, learning, grading, attendance, difficulty,
-                    overall_rating, comment, reviewed_at, subject_code, teacher_id, reviewed_by_erp
-                FROM ${tables.TeacherReviews} AS TR
-                NATURAL JOIN ${tables.Teachers}
-                NATURAL JOIN ${tables.Subjects}
-                INNER JOIN ${tables.Students} AS ST ON TR.reviewed_by_erp = ST.erp
+                    overall_rating, comment, reviewed_at, teacher_id,
+                    subject.subject_code, subject.subject,
+                    reviewed_by.erp, reviewed_by.first_name, reviewed_by.last_name,
+                    reviewed_by.profile_picture_url, reviewed_by.program_id, reviewed_by.graduation_year
+                FROM ${tables.TeacherReviews} AS teacher_review
+                NATURAL JOIN ${tables.Subjects} AS subject
+                INNER JOIN ${tables.Students} AS reviewed_by ON teacher_review.reviewed_by_erp = reviewed_by.erp
                 WHERE review_id = ?
                 LIMIT 1
             `;
         } else {
             sql = `
                 SELECT *
-                FROM ${tables.TeacherReviews}
+                FROM ${tables.TeacherReviews} AS teacher_review
                 WHERE review_id = ?
                 LIMIT 1
             `;
         }
 
-        const result = await DBService.query(sql, [id]);
+        const result = await DBService.query(sql, [id], { nestTables: true });
 
         return result[0];
     };
