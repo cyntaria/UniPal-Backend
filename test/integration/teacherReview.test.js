@@ -65,8 +65,8 @@ describe("Teacher Reviews API", () => {
             const reviewerCheck = review => review.teacher_id === teacher_id;
             expect(resBody.every(reviewerCheck)).to.be.true; // should match initially sent query params
             expect(resBody[0]).to.include.all.keys(Object.keys(existingTeacherReview));
-            expect(resBody[0].subject).to.include.all.keys(Object.keys(existingConnectionRequest.subject));
-            expect(resBody[0].reviewed_by).to.include.all.keys(Object.keys(existingConnectionRequest.reviewed_by));
+            expect(resBody[0].subject).to.include.all.keys(Object.keys(existingTeacherReview.subject));
+            expect(resBody[0].reviewed_by).to.include.all.keys(Object.keys(existingTeacherReview.reviewed_by));
         });
 
         it("Scenario 2: Get all teacher reviews request unsuccessful due to zero teacher reviews", async() => {
@@ -148,8 +148,8 @@ describe("Teacher Reviews API", () => {
             const resBody = res.body.body;
             expect(resBody).to.include.all.keys(Object.keys(existingTeacherReview));
             expect(resBody.review_id).to.be.equal(existingTeacherReview.review_id); // should match initially sent id
-            expect(resBody.subject).to.include.all.keys(Object.keys(existingConnectionRequest.subject));
-            expect(resBody.reviewed_by).to.include.all.keys(Object.keys(existingConnectionRequest.reviewed_by));
+            expect(resBody.subject).to.include.all.keys(Object.keys(existingTeacherReview.subject));
+            expect(resBody.reviewed_by).to.include.all.keys(Object.keys(existingTeacherReview.reviewed_by));
         });
 
         it("Scenario 2: Get a teacher review request is unsuccessful due to unknown review_id", async() => {

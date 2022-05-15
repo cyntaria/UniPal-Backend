@@ -152,5 +152,5 @@ exports.teacherReviewOwnerCheck = async(req) => {
         }
     }
 
-    return teacherReview.reviewed_by_erp === student.erp;
+    return teacherReview.reviewed_by.erp === student.erp;
 };
