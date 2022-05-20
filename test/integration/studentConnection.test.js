@@ -75,10 +75,8 @@ describe("Connection Requests API", () => {
                 .auth(userToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Friend connections not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 3: Get all student connections is incorrect due to no query params", async() => {
@@ -198,10 +196,8 @@ describe("Connection Requests API", () => {
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Connection requests not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 4: Get all connection requests unsuccessful due to no (received) connection requests", async() => {
@@ -215,10 +211,8 @@ describe("Connection Requests API", () => {
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Connection requests not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 5: Get all connection requests is incorrect due to multiple query params", async() => {
