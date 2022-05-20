@@ -35,37 +35,30 @@ exports.createActivitySchema = [
         .withMessage('Invalid Privacy'),
     body('monday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('tuesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('wednesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('thursday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('friday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('saturday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('sunday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body()
@@ -93,7 +86,6 @@ exports.createActivitySchema = [
         .withMessage('Activity happening time must be of valid format \'hh:mm:ss\''),
     body('additional_instructions')
         .optional()
-        .trim()
         .isLength({ max: 100 })
         .withMessage('Additional directions should be less than 100 characters'),
     body('activity_type_id')
@@ -132,52 +124,42 @@ exports.updateActivitySchema = [
         .withMessage('Title should be less than 50 characters'),
     body('location')
         .optional()
-        .trim()
         .isIn([...Object.values(ActivityLocation)])
         .withMessage('Invalid Location'),
     body('frequency')
         .optional()
-        .trim()
         .isIn([...Object.values(ActivityFrequency)])
         .withMessage('Invalid Frequency'),
     body('privacy')
         .optional()
-        .trim()
         .isIn([...Object.values(Privacy)])
         .withMessage('Invalid Privacy'),
     body('monday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('tuesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('wednesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('thursday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('friday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('saturday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('sunday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body('month_number')
@@ -229,52 +211,42 @@ exports.updateActivitySchema = [
 exports.getActivitiesQuerySchema = [
     query('location')
         .optional()
-        .trim()
         .isIn([...Object.values(ActivityLocation)])
         .withMessage('Invalid Location'),
     query('frequency')
         .optional()
-        .trim()
         .isIn([...Object.values(ActivityFrequency)])
         .withMessage('Invalid Frequency'),
     query('privacy')
         .optional()
-        .trim()
         .isIn([...Object.values(Privacy)])
         .withMessage('Invalid Privacy'),
     query('monday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('tuesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('wednesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('thursday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('friday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('saturday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('sunday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')
@@ -322,7 +294,6 @@ exports.getActivitiesQuerySchema = [
 exports.getActivitiesAttendeesQuerySchema = [
     query('involvement_type')
         .optional()
-        .trim()
         .isIn([...Object.values(InvolvementType)])
         .withMessage('Invalid Involvement Type'),
     query()

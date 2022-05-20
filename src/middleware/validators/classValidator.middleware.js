@@ -182,12 +182,10 @@ exports.updateClassSchema = [
         .withMessage('Invalid Timeslot ID found'),
     body('day_1')
         .optional()
-        .trim()
         .isIn([...Object.values(Days)])
         .withMessage('Invalid Day 1'),
     body('day_2')
         .optional()
-        .trim()
         .isIn([...Object.values(Days)])
         .withMessage('Invalid Day 2'),
     body()

@@ -116,10 +116,8 @@ describe("Hangout requests API", () => {
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hangout requests not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 4: Get all hangout requests unsuccessful due to no (received) hangout requests", async() => {
@@ -133,10 +131,8 @@ describe("Hangout requests API", () => {
                 .auth(fakeToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Hangout requests not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 5: Get all hangout requests is incorrect due to multiple query params", async() => {

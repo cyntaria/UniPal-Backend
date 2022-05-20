@@ -90,10 +90,8 @@ describe("Activities API", () => {
                 .auth(userToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Activities not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
             modelStub.restore();
         });
 
@@ -206,10 +204,8 @@ describe("Activities API", () => {
                 .auth(userToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 4: Get an activity's attendees request is unsuccessful due to zero attendees", async() => {
@@ -225,10 +221,8 @@ describe("Activities API", () => {
                 .auth(userToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
             modelStub.restore();
         });
 
