@@ -12,9 +12,6 @@ class ActivityRepository {
     findAll = async(filters = {}) => {
         
         let activityList = await ActivityModel.findAll(filters);
-        if (!activityList.length) {
-            throw new NotFoundException('Activities not found');
-        }
 
         return successResponse(activityList);
     };
@@ -30,9 +27,6 @@ class ActivityRepository {
 
     findAllAttendeesByActivity = async(id, filters) => {
         let activityAttendees = await ActivityModel.findAllAttendeesByActivity(id, filters);
-        if (!activityAttendees.length) {
-            throw new NotFoundException('Activity attendees not found');
-        }
 
         return successResponse(activityAttendees);
     };

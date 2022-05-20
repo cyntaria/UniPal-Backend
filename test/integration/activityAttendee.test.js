@@ -339,10 +339,8 @@ describe("Activity Attendees API", () => {
                 .auth(userToken, { type: 'bearer' });
 
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 2: Delete an activity attendee request is successful (Admin)", async() => {
@@ -374,10 +372,8 @@ describe("Activity Attendees API", () => {
                 .auth(userToken, { type: 'bearer' });
 
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Activity attendees not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
         it("Scenario 3: Delete an activity attendee request is unsuccessful due to unknown activity_id", async() => {

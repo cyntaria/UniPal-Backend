@@ -12,9 +12,6 @@ class ConnectionRequestRepository {
     findAllRequests = async(filters = {}) => {
         
         let connectionRequestList = await StudentConnectionModel.findAllRequests(filters);
-        if (!connectionRequestList.length) {
-            throw new NotFoundException('Connection requests not found');
-        }
 
         connectionRequestList = connectionRequestList.map((cRequest) => {
             const connRequestObj = {
@@ -31,9 +28,6 @@ class ConnectionRequestRepository {
     findAll = async(query) => {
         
         let connectionsList = await StudentConnectionModel.findAll(query);
-        if (!connectionsList.length) {
-            throw new NotFoundException('Friend connections not found');
-        }
 
         connectionsList = connectionsList.map((cRequest) => {
             const connRequestObj = {

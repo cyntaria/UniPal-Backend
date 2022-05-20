@@ -14,9 +14,6 @@ class TeacherReviewRepository {
     findAll = async(filters = {}) => {
         
         let teacherReviewList = await TeacherReviewModel.findAll(filters);
-        if (!teacherReviewList.length) {
-            throw new NotFoundException('Teacher reviews not found');
-        }
 
         teacherReviewList = teacherReviewList.map((tReview) => {
             const connRequestObj = {

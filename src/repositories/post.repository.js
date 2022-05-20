@@ -14,9 +14,6 @@ class PostRepository {
     findAll = async(filters = {}) => {
         
         let postDuplicates = await PostModel.findAll(filters);
-        if (!postDuplicates.length) {
-            throw new NotFoundException('Posts not found');
-        }
 
         let postsActualMap = new Map();
         let postsDuplicatesMap = new Map();
@@ -171,9 +168,6 @@ class PostRepository {
 
     findAllReactionsByPost = async(id) => {
         let postReactions = await PostModel.findAllReactionsByPost(id);
-        if (!postReactions.length) {
-            throw new NotFoundException('Post reactions not found');
-        }
 
         return successResponse(postReactions);
     };
