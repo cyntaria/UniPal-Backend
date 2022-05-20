@@ -12,9 +12,6 @@ class StudentRepository {
     findAll = async(filters = {}, myERP) => {
         
         let studentList = await StudentModel.findAll(filters, myERP);
-        if (!studentList.length) {
-            throw new NotFoundException('Students not found');
-        }
 
         studentList = studentList.map(student => {
             const {

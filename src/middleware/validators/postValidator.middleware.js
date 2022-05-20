@@ -58,7 +58,6 @@ exports.updatePostSchema = [
         .trim(),
     body('privacy')
         .optional()
-        .trim()
         .isIn([...Object.values(Privacy)])
         .withMessage('Invalid Privacy'),
     body()
@@ -77,7 +76,6 @@ exports.updatePostSchema = [
 exports.getPostsQuerySchema = [
     query('privacy')
         .optional()
-        .trim()
         .isIn([...Object.values(Privacy)])
         .withMessage('Invalid Privacy'),
     query('author_erp')

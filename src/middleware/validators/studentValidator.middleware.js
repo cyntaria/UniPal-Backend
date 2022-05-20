@@ -90,7 +90,6 @@ exports.createStudentSchema = [
         .withMessage('Invalid ProgramID found'),
     body('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1')
 ];
@@ -112,7 +111,6 @@ exports.updateStudentSchema = [
         .withMessage('Last name should be all alphabets'),
     body('gender')
         .optional()
-        .trim()
         .isIn([...Object.values(Genders)])
         .withMessage('Invalid Gender'),
     body('contact')
@@ -209,7 +207,6 @@ exports.updateStudentSchema = [
         .withMessage('Invalid StudentStatusID found'),
     body('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     body()
@@ -310,7 +307,6 @@ exports.getStudentsQuerySchema = [
         .withMessage('Invalid StudentStatusID found'),
     query('is_active')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('role')
@@ -348,37 +344,30 @@ exports.getOrganizedActivitiesQuerySchema = [
         .withMessage('Invalid Privacy'),
     query('monday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('tuesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('wednesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('thursday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('friday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('saturday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('sunday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')
@@ -451,37 +440,30 @@ exports.getSavedActivitiesQuerySchema = [
         .withMessage('Invalid Privacy'),
     query('monday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('tuesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('wednesday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('thursday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('friday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('saturday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('sunday')
         .optional()
-        .trim()
         .isBoolean()
         .withMessage('Invalid boolean. Should be either 0 or 1'),
     query('month_number')

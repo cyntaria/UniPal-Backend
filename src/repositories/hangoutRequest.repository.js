@@ -12,9 +12,6 @@ class HangoutRequestRepository {
     findAll = async(query) => {
         
         let hangoutRequestsList = await HangoutRequestModel.findAll(query);
-        if (!hangoutRequestsList.length) {
-            throw new NotFoundException('Hangout requests not found');
-        }
         
         hangoutRequestsList = hangoutRequestsList.map((hRequest) => {
             const hangoutRequestObj = {

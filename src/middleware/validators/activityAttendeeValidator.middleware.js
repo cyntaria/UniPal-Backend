@@ -21,7 +21,6 @@ exports.createActivityAttendeeSchema = [
 exports.updateActivityAttendeeSchema = [
     body('involvement_type')
         .optional()
-        .trim()
         .isIn([...Object.values(InvolvementType)])
         .withMessage('Invalid Involvement Type'),
     body()
