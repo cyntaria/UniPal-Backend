@@ -320,7 +320,7 @@ exports.getStudentsQuerySchema = [
             const allowParams = ['first_name', 'last_name', 'gender', 'birthday',
                 'graduation_year', 'hobby_1', 'hobby_2', 'hobby_3',
                 'interest_1', 'interest_2', 'interest_3', 'program_id', 'campus_id', 'current_status',
-                'favourite_campus_hangout_spot', 'favourite_campus_activity', 'is_active','role'];
+                'favourite_campus_hangout_spot', 'favourite_campus_activity', 'is_active', 'role'];
             return queryParams.every(param => allowParams.includes(param));
         })
         .withMessage('Invalid query params!')
