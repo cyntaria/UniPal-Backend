@@ -10,9 +10,6 @@ class TeacherRepository {
     findAll = async(filters = {}) => {
         
         let teacherList = await TeacherModel.findAll(filters);
-        if (!teacherList.length) {
-            throw new NotFoundException('Teachers not found');
-        }
 
         return successResponse(teacherList, "Success");
     };
