@@ -51,10 +51,8 @@ describe("Reaction Types API", () => {
                 .auth(userToken, { type: 'bearer' });
     
             // assert
-            expect(res.status).to.be.equal(404);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('NotFoundException');
-            expect(res.body.headers.message).to.be.equal('Reaction types not found');
+            expect(res.status).to.be.equal(200);
+            expect(res.body.body).to.be.an('array').that.is.empty;
             modelStub.restore();
         });
     });
