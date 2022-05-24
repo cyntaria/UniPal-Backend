@@ -18,7 +18,7 @@ exports.createHangoutRequestSchema = [
         .withMessage('Receiver ERP is required')
         .matches(ERPRegex)
         .withMessage('Receiver ERP must be 5 digits')
-        .custom((receiver_erp, {req}) => req.body.sender_erp !== receiver_erp)
+        .custom((receiver_erp, { req }) => req.body.sender_erp !== receiver_erp)
         .withMessage('Sender and receiver ERP can\'t be the same'),
     body('purpose')
         .trim()
@@ -33,7 +33,9 @@ exports.createHangoutRequestSchema = [
         .matches(datetimeRegex)
         .withMessage('Meetup datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
     body('meetup_spot_id')
-        .optional()
+        .trim()
+        .exists()
+        .withMessage('Meetup spot is required')
         .isInt({ min: 1 })
         .withMessage('Invalid Meetup Spot ID found')
 ];
@@ -45,7 +47,7 @@ exports.updateHangoutRequestSchema = [
         .withMessage('Hangout status is required')
         .isIn([...Object.values(HangoutRequestStatus)])
         .withMessage('Invalid Hangout Status')
-        .custom((request_status, {req}) => {
+        .custom((request_status, { req }) => {
             if (request_status !== HangoutRequestStatus.RequestPending) {
                 return req.body.accepted_at !== undefined;
             }
@@ -57,7 +59,7 @@ exports.updateHangoutRequestSchema = [
         .trim()
         .matches(datetimeRegex)
         .withMessage('Accepted datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
-        .custom((accepted_at, {req}) => {
+        .custom((accepted_at, { req }) => {
             return req.body.request_status === HangoutRequestStatus.Accepted ||
                 req.body.request_status === HangoutRequestStatus.Rejected;
         })
@@ -86,7 +88,7 @@ exports.getHangoutRequestQuerySchema = [
         .trim()
         .matches(ERPRegex)
         .withMessage('Receiver ERP must be 5 digits')
-        .custom((receiver_erp, {req}) => req.query.sender_erp === undefined)
+        .custom((receiver_erp, { req }) => req.query.sender_erp === undefined)
         .withMessage('Can\'t specify both sender and receiver erp'),
     query()
         .custom(value => {
@@ -108,7 +110,7 @@ exports.hangoutRequestOwnerCheck = async(req) => {
         return req.body.sender_erp === student.erp;
     }
 
-    if (req.params.id === undefined){
+    if (req.params.id === undefined) {
         if (req.query.sender_erp) return req.query.sender_erp === student.erp;
         else if (req.query.receiver_erp) return req.query.receiver_erp === student.erp;
     }
@@ -122,7 +124,7 @@ exports.hangoutRequestOwnerCheck = async(req) => {
 
     const isSender = hangoutRequest.sender.erp === student.erp;
     const isReceiver = hangoutRequest.receiver.erp === student.erp;
-    
+
     if (req.method === RequestMethods.PATCH) {
         return isReceiver;
     } else if (req.method === RequestMethods.DELETE) {
