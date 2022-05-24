@@ -37,7 +37,7 @@
     "deep-email-validator": "^0.1.21",
     "dotenv-flow": "^3.2.0",
     "express": "^4.18.1",
-    "express-validator": "^6.14.0",
+    "express-validator": "^6.14.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "otp-generator": "^4.0.0"
@@ -48,7 +48,7 @@
     "axios": "^0.27.2",
     "chai": "^4.3.6",
     "decache": "^4.6.1",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.16",

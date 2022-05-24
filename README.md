@@ -1,5 +1,14 @@
 # UniPal REST API Using Express With MVC Architecture
 
+[![Node Build, Test And Lint CI](https://github.com/cyntaria/UniPal-Backend/actions/workflows/build-test.yml/badge.svg)](https://github.com/cyntaria/UniPal-Backend/actions/workflows/build-test.yml) 
+[![Build And Deploy To Azure](https://github.com/cyntaria/UniPal-Backend/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/cyntaria/UniPal-Backend/actions/workflows/deploy-azure.yml) 
+[![Pull Request Labeler](https://github.com/cyntaria/UniPal-Backend/actions/workflows/label.yml/badge.svg)](https://github.com/cyntaria/UniPal-Backend/actions/workflows/label.yml) 
+[![Deploy To Heroku](https://github.com/cyntaria/UniPal-Backend/actions/workflows/deploy-heroku.yml/badge.svg)](https://github.com/cyntaria/UniPal-Backend/actions/workflows/deploy-heroku.yml) 
+[![GitHub issues](https://img.shields.io/github/issues/cyntaria/UniPal-Backend?color=orange)](https://github.com/cyntaria/UniPal-Backend/issues) 
+[![GitHub stars](https://img.shields.io/github/stars/cyntaria/UniPal-Backend?color=yellow)](https://github.com/cyntaria/UniPal-Backend/stargazers) 
+[![Lines of code](https://sloc.xyz/github/cyntaria/UniPal-Backend/)](https://github.com/boyter/scc/) 
+[![GitHub license](https://img.shields.io/github/license/cyntaria/UniPal-Backend?color=cyan)](https://github.com/cyntaria/UniPal-Backend/blob/master/LICENSE.md) 
+
 [![BadgeNodeJS](https://img.shields.io/badge/MADE%20WITH-NODEJS-brightgreen?style=for-the-badge&logo=Node.js)](https://shields.io/) [![BadgeExpress](https://img.shields.io/badge/USES-EXPRESS-red?style=for-the-badge)](https://shields.io/) [![BadgeMySQL](https://img.shields.io/badge/USES-MYSQL-4479A1?style=for-the-badge&logo=MySQL)](https://shields.io/) [![BadgeAzure](https://img.shields.io/badge/DATABASE-AZURE-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=007FFF)](https://shields.io/) [![BadgeAzureAppService](https://img.shields.io/badge/DEPLOYED-AZURE%20APP%20SERVICE-2560E0?style=for-the-badge&logo=azurepipelines&logoColor=007FFF)](https://shields.io/) [![BadgeHeroku](https://img.shields.io/badge/STAGING-HEROKU-430098?style=for-the-badge&logo=Heroku)](https://shields.io/)
 
 ### :memo: Documentation
