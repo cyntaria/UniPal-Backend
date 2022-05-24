@@ -103,7 +103,7 @@ exports.getHangoutRequestQuerySchema = [
         .withMessage('Invalid query params!')
 ];
 
-exports.hangoutRequestOwnerCheck = async (req) => {
+exports.hangoutRequestOwnerCheck = async(req) => {
     const student = req.currentStudent;
 
     if (req.method === RequestMethods.POST) {
