@@ -125,13 +125,13 @@ class PostRepository {
                     ...postFields
                 } = postDetails;
                 
-                postDetails.author = {
+                postFields.author = {
                     erp, first_name, last_name, profile_picture_url,
                     program_id, graduation_year
                 };
                 
                 // add post details
-                postBody = {...postDetails};
+                postBody = {...postFields};
                 
                 // initialize post reactions
                 if (reaction_type_id === null) postBody.top_3_reactions = null;
