@@ -14,7 +14,14 @@ describe("Posts API", () => {
         post_id: 1,
         body: "Some post content body",
         privacy: "public",
-        author_erp: userERP,
+        author: {
+            erp: userERP,
+            first_name: "Abdur Rafay",
+            last_name: "Saleem",
+            profile_picture_url: "https://i.pinimg.com/564x/8d/e3/89/8de389c84e919d3577f47118e2627d95.jpg",
+            program_id: 1,
+            graduation_year: 2022
+        },
         posted_at: "2021-09-17 15:53:40",
         top_3_reactions: [
             {
@@ -35,7 +42,7 @@ describe("Posts API", () => {
             }
         ]
     };
-    const unOwnedPostId = 6; // post_id(6).author_erp != userERP
+    const unOwnedPostId = 6; // post_id(6).author.erp != userERP
     const unknownPostId = 99999;
     const adminERP = '15030';
     const userToken = jwt.sign({erp: userERP}, Config.SECRET_JWT); // non expiry token
@@ -61,6 +68,8 @@ describe("Posts API", () => {
             expect(resBody[0]).to.include.all.keys(Object.keys(existingPost)); // contain all params
             const examplePost = resBody[0];
 
+            expect(examplePost.author).to.include.all.keys(Object.keys(existingPost.author));
+
             expect(examplePost.resources).to.be.an('array');
             expect(examplePost.resources[0]).to.include.all.keys(Object.keys(existingPost.resources[0])); // contain all params
             
@@ -83,7 +92,8 @@ describe("Posts API", () => {
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
             expect(resBody).to.be.an('array');
-            expect(resBody[0].author_erp).to.be.equal(author_erp);
+            expect(resBody[0].author).to.include.all.keys(Object.keys(existingPost.author));
+            expect(resBody[0].author.erp).to.be.equal(author_erp);
         });
 
         it("Scenario 3: Get all posts request unsuccessful", async() => {
@@ -144,8 +154,9 @@ describe("Posts API", () => {
             expect(res.status).to.be.equal(200);
             expect(res.body.headers.error).to.be.equal(0);
             const resBody = res.body.body;
-            expect(resBody.post_id).to.be.eql(existingPost.post_id); // should match initially sent id
+            expect(resBody.post_id).to.be.equal(existingPost.post_id); // should match initially sent id
             expect(resBody).to.include.all.keys(Object.keys(existingPost)); // contain all params
+            expect(resBody.author).to.include.all.keys(Object.keys(existingPost.author));
         });
 
         it("Scenario 2: Get a post request is unsuccessful", async() => {
@@ -233,11 +244,12 @@ describe("Posts API", () => {
     });
 
     context("POST /posts", () => {
-        const { post_id, top_3_reactions, resources, ...newPost } = existingPost;
+        const { post_id, top_3_reactions, resources, author, ...newPost } = existingPost;
         newPost.resources = resources.map(resource => ({
             resource_url: resource.resource_url,
             resource_type: resource.resource_type
         }));
+        newPost.author_erp = author.erp;
 
         it("Scenario 1: Create a post request is successful (Owner)", async() => {
             // arrange
@@ -270,6 +282,11 @@ describe("Posts API", () => {
                     resource_type: resource.resource_type
                 }
             ));
+
+            expect(resBody.author.erp).to.be.equal(data.author_erp);
+            delete resBody.author;
+            delete data.author_erp;
+
             expect(resBody).to.be.eql({
                 post_id: newId,
                 top_3_reactions: null,
@@ -452,11 +469,12 @@ describe("Posts API", () => {
     });
 
     context("DELETE /posts/:id", () => {
-        const { post_id, top_3_reactions, resources, ...newPost } = existingPost;
+        const { post_id, top_3_reactions, resources, author, ...newPost } = existingPost;
         newPost.resources = resources.map(resource => ({
             resource_url: resource.resource_url,
             resource_type: resource.resource_type
         }));
+        newPost.author_erp = author.erp;
 
         it("Scenario 1: Delete a post request is successful (Owner)", async() => {
             // arrange
