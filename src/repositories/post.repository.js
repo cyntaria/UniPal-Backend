@@ -27,11 +27,23 @@ class PostRepository {
             } = post;
 
             if (!postsDuplicatesMap.has(post_id)) { // if post not added to the object
+                // initialize post author
+                const {
+                    erp, first_name, last_name, profile_picture_url,
+                    program_id, graduation_year,
+                    ...postBody
+                } = postDetails;
+                
+                postBody.author = {
+                    erp, first_name, last_name, profile_picture_url,
+                    program_id, graduation_year
+                };
+
                 // mark true under the post_id
-                postsDuplicatesMap.set(post_id, {...postDetails});
+                postsDuplicatesMap.set(post_id, {...postBody});
 
                 // add it to the object
-                postsActualMap.set(post_id, {...postDetails});
+                postsActualMap.set(post_id, {...postBody});
 
                 // initialize post reactions
                 if (reaction_type_id === null) postsActualMap.get(post_id).top_3_reactions = null;
@@ -106,9 +118,21 @@ class PostRepository {
             } = post;
     
             if (Object.keys(postBody).length === 0) { // if post details not added
+                // initialize post author
+                const {
+                    erp, first_name, last_name, profile_picture_url,
+                    program_id, graduation_year,
+                    ...postFields
+                } = postDetails;
+                
+                postFields.author = {
+                    erp, first_name, last_name, profile_picture_url,
+                    program_id, graduation_year
+                };
+                
                 // add post details
-                postBody = postDetails;
-
+                postBody = {...postFields};
+                
                 // initialize post reactions
                 if (reaction_type_id === null) postBody.top_3_reactions = null;
                 else {
