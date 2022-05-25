@@ -62,7 +62,7 @@ class PostModel {
             SELECT 
                 P.post_id, P.body, P.privacy, P.posted_at,
                 PR.reaction_type_id, PR.reaction_count, 
-                PRes.resource_id, PRes.resource_type, PRes.resource_url
+                PRes.resource_id, PRes.resource_type, PRes.resource_url,
                 author.erp, author.first_name, author.last_name, author.profile_picture_url, author.program_id, author.graduation_year
             FROM ${tables.Posts} AS P
             LEFT OUTER JOIN ${tables.PostResources} AS PRes
