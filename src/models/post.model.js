@@ -9,9 +9,10 @@ class PostModel {
     findAll = async(filters) => {
         let sql = `
             SELECT 
-                P.post_id, P.body, P.privacy, P.author_erp, P.posted_at,
+                P.post_id, P.body, P.privacy, P.posted_at,
                 PR.reaction_type_id, PR.reaction_count,
-                PRes.resource_id, PRes.resource_type, PRes.resource_url
+                PRes.resource_id, PRes.resource_type, PRes.resource_url,
+                author.erp, author.first_name, author.last_name, author.profile_picture_url, author.program_id, author.graduation_year
             FROM ${tables.Posts} AS P
             LEFT OUTER JOIN ${tables.PostResources} AS PRes
             ON P.post_id = PRes.post_id
@@ -24,6 +25,7 @@ class PostModel {
                 GROUP BY post_id, reaction_type_id
             ) AS PR
             ON P.post_id = PR.post_id
+            INNER JOIN ${tables.Students} AS author ON P.author_erp = author.erp
             WHERE (PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions})
         `;
 
@@ -58,9 +60,10 @@ class PostModel {
     findOneWithDetails = async(post_id) => {
         const sql = `
             SELECT 
-                P.post_id, P.body, P.privacy, P.author_erp, P.posted_at,
+                P.post_id, P.body, P.privacy, P.posted_at,
                 PR.reaction_type_id, PR.reaction_count, 
-                PRes.resource_id, PRes.resource_type, PRes.resource_url
+                PRes.resource_id, PRes.resource_type, PRes.resource_url,
+                author.erp, author.first_name, author.last_name, author.profile_picture_url, author.program_id, author.graduation_year
             FROM ${tables.Posts} AS P
             LEFT OUTER JOIN ${tables.PostResources} AS PRes
             ON P.post_id = PRes.post_id
@@ -73,6 +76,7 @@ class PostModel {
                 GROUP BY post_id, reaction_type_id
             ) AS PR
             ON P.post_id = PR.post_id
+            INNER JOIN ${tables.Students} AS author ON P.author_erp = author.erp
             WHERE P.post_id = ? AND (PR.reaction_type_id IS NULL OR PR.rank <= ${PostModel.topNReactions})
             ORDER BY PR.reaction_count DESC
         `;
