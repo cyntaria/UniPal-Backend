@@ -73,17 +73,6 @@ describe("Timeslots API", () => {
             expect(res.body.headers.code).to.be.equal('ForbiddenException');
             expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
-
-        it("Scenario 4: Get all timeslots request is unauthorized", async() => {
-            // act
-            let res = await request(this.app).get(baseRoute);
-    
-            // assert
-            expect(res.status).to.be.equal(401);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('TokenMissingException');
-            expect(res.body.headers.message).to.be.equal('Access denied. No token credentials sent');
-        });
     });
 
     context("GET /timeslots/:id", () => {

@@ -9,7 +9,6 @@ const timeslotController = require('../controllers/timeslot.controller');
 const { createTimeslotSchema, updateTimeslotSchema } = require('../middleware/validators/timeslotValidator.middleware');
 
 router.get('/',
-    auth(Roles.Admin),
     awaitHandlerFactory(timeslotController.getAllTimeslots)
 ); // localhost:3000/api/API_VERSION/timeslots
 
