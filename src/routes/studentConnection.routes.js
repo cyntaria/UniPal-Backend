@@ -19,7 +19,6 @@ router.get('/',
     auth(Roles.Admin, Roles.ApiUser),
     getStudentConnectionQuerySchema,
     checkValidation,
-    ownerAuth([Roles.Admin, Roles.ApiUser], studentConnectionsOwnerCheck),
     awaitHandlerFactory(studentConnectionController.getAllStudentConnections)
 ); // localhost:3000/api/API_VERSION/student-connections
 
