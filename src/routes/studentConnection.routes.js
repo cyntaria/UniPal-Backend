@@ -11,15 +11,13 @@ const {
     updateConnectionRequestSchema,
     getConnectionRequestQuerySchema,
     getStudentConnectionQuerySchema,
-    connectionRequestOwnerCheck,
-    studentConnectionsOwnerCheck
+    connectionRequestOwnerCheck
 } = require('../middleware/validators/studentConnectionValidator.middleware');
 
 router.get('/',
     auth(Roles.Admin, Roles.ApiUser),
     getStudentConnectionQuerySchema,
     checkValidation,
-    ownerAuth([Roles.Admin, Roles.ApiUser], studentConnectionsOwnerCheck),
     awaitHandlerFactory(studentConnectionController.getAllStudentConnections)
 ); // localhost:3000/api/API_VERSION/student-connections
 

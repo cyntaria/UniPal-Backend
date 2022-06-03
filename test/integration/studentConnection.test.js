@@ -79,7 +79,30 @@ describe("Connection Requests API", () => {
             expect(res.body.body).to.be.an('array').that.is.empty;
         });
 
-        it("Scenario 3: Get all student connections is incorrect due to no query params", async() => {
+        it("Scenario 3: Get all others' friends connections is successful", async() => {
+            // arrange
+            const erp = adminERP;
+
+            // act
+            const res = await request(this.app)
+                .get(`${baseRoute}?erp=${erp}`)
+                .auth(userToken, { type: 'bearer' }); // <-- userToken.erp !== erp
+            
+            // assert
+            expect(res.status).to.be.equal(200);
+            expect(res.body.headers.error).to.be.equal(0);
+            const resBody = res.body.body;
+            expect(resBody).to.be.an('array');
+            const studentCheck = studentConn => studentConn.sender.erp === erp || studentConn.receiver.erp === erp;
+            const connectionStatusCheck = studentConn => studentConn.connection_status === 'friends';
+            const queryCheck = studentConn => studentCheck(studentConn) && connectionStatusCheck(studentConn);
+            expect(resBody.every(queryCheck)).to.be.true; // should match initially sent query params
+            expect(resBody[0]).to.include.all.keys(['student_connection_id', 'sender', 'receiver', 'connection_status', 'sent_at', 'accepted_at']);
+            expect(resBody[0].sender).to.include.all.keys(Object.keys(existingConnectionRequest.sender));
+            expect(resBody[0].receiver).to.include.all.keys(Object.keys(existingConnectionRequest.receiver));
+        });
+
+        it("Scenario 4: Get all student connections is incorrect due to no query params", async() => {
             // act
             let res = await request(this.app)
                 .get(baseRoute) // <-- must specify erp
@@ -93,7 +116,7 @@ describe("Connection Requests API", () => {
             expect(incorrectParam).to.include('erp');
         });
 
-        it("Scenario 4: Get all student connections is incorrect due to unknown query params", async() => {
+        it("Scenario 5: Get all student connections is incorrect due to unknown query params", async() => {
             // arrange
             const erp = '123'; // a valid erp is 5 digits
 
@@ -110,22 +133,6 @@ describe("Connection Requests API", () => {
             expect(incorrectParams).to.include('erp');
             const incorrectMsg = res.body.headers.data.map(o => (o.msg));
             expect(incorrectMsg).to.include('Invalid query params!');
-        });
-
-        it("Scenario 5: Get all student connections is forbidden due to querying other's friend connections", async() => {
-            // arrange
-            const erp = adminERP;
-
-            // act
-            const res = await request(this.app)
-                .get(`${baseRoute}?erp=${erp}`)
-                .auth(userToken, { type: 'bearer' }); // <-- userToken.erp !== erp
-            
-            // assert
-            expect(res.status).to.be.equal(403);
-            expect(res.body.headers.error).to.be.equal(1);
-            expect(res.body.headers.code).to.be.equal('ForbiddenException');
-            expect(res.body.headers.message).to.be.equal('User unauthorized for action');
         });
 
         it("Scenario 6: Get all student connections is unauthorized", async() => {

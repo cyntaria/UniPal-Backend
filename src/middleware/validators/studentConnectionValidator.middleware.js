@@ -132,8 +132,3 @@ exports.connectionRequestOwnerCheck = async(req) => {
 
     return isSender || isReceiver;
 };
-
-exports.studentConnectionsOwnerCheck = async(req) => {
-    const student = req.currentStudent;
-    return req.query.erp === student.erp;
-};
