@@ -11,8 +11,7 @@ const {
     updateConnectionRequestSchema,
     getConnectionRequestQuerySchema,
     getStudentConnectionQuerySchema,
-    connectionRequestOwnerCheck,
-    studentConnectionsOwnerCheck
+    connectionRequestOwnerCheck
 } = require('../middleware/validators/studentConnectionValidator.middleware');
 
 router.get('/',
