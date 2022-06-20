@@ -5,3 +5,6 @@ envs
 
 #bash scripts
 *.bat
+
+#coverage raw outputs
+./test/.nyc_output
