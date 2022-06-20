@@ -7,4 +7,4 @@ envs
 *.bat
 
 #coverage raw outputs
-./test/.nyc_output
+.nyc_output
