@@ -23,7 +23,7 @@ jobs:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
         fetch-depth: 0
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3.2.0
+      uses: actions/setup-node@v3.3.0
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
       #   mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_DATABASE;"
       #   mysql --host=$DB_HOST --port=$DB_PORT --database=$DB_DATABASE --user=$DB_USER --password=$DB_PASS < $DB_SCRIPT
     - name: Installing npm
-      run: npm install
+      run: npm ci
     - name: Code linting
       run: npm run lint
     - name: Running tests
