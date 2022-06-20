@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
-    "@sentry/node": "^7.1.1",
+    "@sentry/node": "^7.2.0",
     "@sentry/tracing": "^7.2.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
