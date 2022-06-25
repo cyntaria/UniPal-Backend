@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.17% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.17% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,28 +98,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,29 +127,29 @@
 &nbsp;
 class HangoutRequestController {
 &nbsp;
-    getAllHangoutRequests = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await HangoutRequestRepository.findAll(req.query);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getAllHangoutRequests = async(req, res, next) =&gt; {
+        const response = await HangoutRequestRepository.findAll(req.query);
+        res.send(response);
     };
 &nbsp;
-    getHangoutRequestById = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await HangoutRequestRepository.findOne(req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getHangoutRequestById = async(req, res, next) =&gt; {
+        const response = await HangoutRequestRepository.findOne(req.params.id);
+        res.send(response);
     };
 &nbsp;
-    createHangoutRequest = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await HangoutRequestRepository.create(req.body);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(201).send(response);</span>
+    createHangoutRequest = async(req, res, next) =&gt; {
+        const response = await HangoutRequestRepository.create(req.body);
+        res.status(201).send(response);
     };
 &nbsp;
-    updateHangoutRequest = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await HangoutRequestRepository.update(req.body, req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    updateHangoutRequest = async(req, res, next) =&gt; {
+        const response = await HangoutRequestRepository.update(req.body, req.params.id);
+        res.send(response);
     };
 &nbsp;
-    deleteHangoutRequest = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await HangoutRequestRepository.delete(req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    deleteHangoutRequest = async(req, res, next) =&gt; {
+        const response = await HangoutRequestRepository.delete(req.params.id);
+        res.send(response);
     };
 }
 &nbsp;
@@ -160,7 +160,7 @@ module.exports = new HangoutRequestController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

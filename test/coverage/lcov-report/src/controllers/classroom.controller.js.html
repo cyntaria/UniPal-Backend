@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.17% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.17% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -96,57 +96,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span></td><td class="text"><pre class="prettyprint lang-js">const ClassroomRepository = require('../repositories/classroom.repository');
 &nbsp;
 class ClassroomController {
-    getAllClassrooms = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassroomRepository.findAll();</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getAllClassrooms = async(req, res, next) =&gt; {
+        const response = await ClassroomRepository.findAll();
+        res.send(response);
     };
 &nbsp;
-    getClassroomById = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassroomRepository.findOne(req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getClassroomById = async(req, res, next) =&gt; {
+        const response = await ClassroomRepository.findOne(req.params.id);
+        res.send(response);
     };
 &nbsp;
-    createClassroom = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassroomRepository.create(req.body);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(201).send(response);</span>
+    createClassroom = async(req, res, next) =&gt; {
+        const response = await ClassroomRepository.create(req.body);
+        res.status(201).send(response);
     };
 &nbsp;
-    updateClassroom = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassroomRepository.update(req.body, req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    updateClassroom = async(req, res, next) =&gt; {
+        const response = await ClassroomRepository.update(req.body, req.params.id);
+        res.send(response);
     };
 &nbsp;
-    deleteClassroom = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassroomRepository.delete(req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    deleteClassroom = async(req, res, next) =&gt; {
+        const response = await ClassroomRepository.delete(req.params.id);
+        res.send(response);
     };
 }
 &nbsp;
@@ -157,7 +157,7 @@ module.exports = new ClassroomController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

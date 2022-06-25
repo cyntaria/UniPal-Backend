@@ -12,7 +12,7 @@
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
     "test:coverage": "nyc --reporter=lcov --reporter=text-summary npm run test",
     "test": "npm run test:unit && npm run test:intg",
-    "test:unit": "mocha test/unit --reporter-options reportDir=test/unit/report,reportFilename=unit-tests-report,json=false,autoOpen=true",
+    "test:unit": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha test/unit/**/*.test.js --reporter-options reportDir=test/unit/report,reportFilename=unit-tests-report,json=false,autoOpen=true -r dotenv-flow/config",
     "test:intg": "cross-env NODE_ENV=test DOTENV_FLOW_PATH=envs mocha --timeout 20000 test/integration --reporter-options reportDir=test/integration/report,reportFilename=integration-tests-report,json=false,autoOpen=true -r dotenv-flow/config",
     "lint": "eslint src/",
     "fixlint": "eslint src/ --fix"

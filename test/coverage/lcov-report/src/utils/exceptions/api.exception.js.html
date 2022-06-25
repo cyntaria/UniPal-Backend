@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.33% </span>
-                <span class="quiet">Statements</span>
-                <span class='fraction'>11/15</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
                 <span class="strong">20% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>3/15</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.57% </span>
+                <span class="strong">21.42% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/14</span>
+                <span class='fraction'>3/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -112,19 +112,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
-<span class="cline-any cline-yes">465x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">465x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,20 +155,20 @@
 const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 &nbsp;
 class ApiException extends Error {
-    constructor(message, data, status = <span class="branch-0 cbranch-no" title="branch not covered" >ErrorStatusCodes.Unauthorized)</span> {
-        super(message);
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (Config.NODE_ENV === "dev") <span class="cstat-no" title="statement not covered" >this.message = "Api Error: " + message;</span>
-        else this.message = message;
-        this.name = "Api Error";
-        this.code = this.constructor.name;
-        this.status = status;
-        this.data = data;
+<span class="fstat-no" title="function not covered" >    co</span>nstructor(message, data, status = <span class="branch-0 cbranch-no" title="branch not covered" >ErrorStatusCodes.Unauthorized)</span> {
+<span class="cstat-no" title="statement not covered" >        super(message);</span>
+<span class="cstat-no" title="statement not covered" >        if (Config.NODE_ENV === "dev") <span class="cstat-no" title="statement not covered" >this.message = "Api Error: " + message;</span></span>
+        else <span class="cstat-no" title="statement not covered" >this.message = message;</span>
+<span class="cstat-no" title="statement not covered" >        this.name = "Api Error";</span>
+<span class="cstat-no" title="statement not covered" >        this.code = this.constructor.name;</span>
+<span class="cstat-no" title="statement not covered" >        this.status = status;</span>
+<span class="cstat-no" title="statement not covered" >        this.data = data;</span>
     }
 }
 &nbsp;
 class InternalServerException extends ApiException {
-    constructor(message, data){
-        super(message, data, ErrorStatusCodes.InternalServerError);
+<span class="fstat-no" title="function not covered" >    co</span>nstructor(message, data){
+<span class="cstat-no" title="statement not covered" >        super(message, data, ErrorStatusCodes.InternalServerError);</span>
     }
 }
 &nbsp;
@@ -202,7 +202,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

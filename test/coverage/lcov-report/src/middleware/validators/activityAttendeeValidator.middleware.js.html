@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.17% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -138,27 +138,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { body } = require('express-validator');
 const { InvolvementType } = require('../../utils/enums/involvementType.utils');
 const { RequestMethods } = require('../../utils/enums/requestMethods.utils');
@@ -185,28 +185,28 @@ exports.updateActivityAttendeeSchema = [
         .isIn([...Object.values(InvolvementType)])
         .withMessage('Invalid Involvement Type'),
     body()
-        .custom(<span class="fstat-no" title="function not covered" >va</span>lue =&gt; {
-<span class="cstat-no" title="statement not covered" >            return Object.keys(value).length !== 0;</span>
+        .custom(value =&gt; {
+            return Object.keys(value).length !== 0;
         })
         .withMessage('Please provide required fields to update')
-        .custom(<span class="fstat-no" title="function not covered" >va</span>lue =&gt; {
-            const updates = <span class="cstat-no" title="statement not covered" >Object.keys(value);</span>
-            const allowUpdates = <span class="cstat-no" title="statement not covered" >["involvement_type"];</span>
-<span class="cstat-no" title="statement not covered" >            return updates.every(<span class="fstat-no" title="function not covered" >up</span>date =&gt; <span class="cstat-no" title="statement not covered" >allowUpdates.includes(update))</span>;</span>
+        .custom(value =&gt; {
+            const updates = Object.keys(value);
+            const allowUpdates = ["involvement_type"];
+            return updates.every(update =&gt; allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
 ];
 &nbsp;
-exports.activityAttendeeOwnerCheck = <span class="fstat-no" title="function not covered" >(r</span>eq) =&gt; {
-    const student = <span class="cstat-no" title="statement not covered" >req.currentStudent;</span>
+exports.activityAttendeeOwnerCheck = (req) =&gt; {
+    const student = req.currentStudent;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (req.method === RequestMethods.POST) {</span>
-<span class="cstat-no" title="statement not covered" >        return req.body.student_erp === student.erp;</span>
+    if (req.method === RequestMethods.POST) {
+        return req.body.student_erp === student.erp;
     }
 &nbsp;
-    const student_erp = <span class="cstat-no" title="statement not covered" >req.params.student_erp;</span>
+    const student_erp = req.params.student_erp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return student.erp === student_erp;</span>
+    return student.erp === student_erp;
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -214,7 +214,7 @@ exports.activityAttendeeOwnerCheck = <span class="fstat-no" title="function not 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

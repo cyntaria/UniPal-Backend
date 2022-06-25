@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30.43% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30.43% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -116,42 +116,42 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,43 +161,43 @@ const { tables } = require('../utils/tableNames.utils');
 &nbsp;
 class PostReactionModel {
 &nbsp;
-    create = <span class="fstat-no" title="function not covered" >as</span>ync({ post_id, reaction_type_id, student_erp, reacted_at }) =&gt; {
-        const valueSet = <span class="cstat-no" title="statement not covered" >{ post_id, reaction_type_id, student_erp, reacted_at };</span>
-        const { columnSet, values } = <span class="cstat-no" title="statement not covered" >multipleColumnSet(valueSet);</span>
+    create = async({ post_id, reaction_type_id, student_erp, reacted_at }) =&gt; {
+        const valueSet = { post_id, reaction_type_id, student_erp, reacted_at };
+        const { columnSet, values } = multipleColumnSet(valueSet);
 &nbsp;
-        const sql = <span class="cstat-no" title="statement not covered" >`INSERT INTO ${tables.PostReactions} SET ${columnSet}`;</span>
+        const sql = `INSERT INTO ${tables.PostReactions} SET ${columnSet}`;
 &nbsp;
-        const result = <span class="cstat-no" title="statement not covered" >await DBService.query(sql, [...values]);</span>
-        const created_resource = <span class="cstat-no" title="statement not covered" >!result ? 0 : {</span>
+        const result = await DBService.query(sql, [...values]);
+        const created_resource = !result ? <span class="branch-0 cbranch-no" title="branch not covered" >0 </span>: {
             affected_rows: result.affectedRows
         };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return created_resource;</span>
+        return created_resource;
     };
 &nbsp;
-    update = <span class="fstat-no" title="function not covered" >as</span>ync(columns, filters) =&gt; {
-        const { columnSet, values } = <span class="cstat-no" title="statement not covered" >multipleColumnSet(columns);</span>
-        const { filterSet, filterValues } = <span class="cstat-no" title="statement not covered" >multipleFilterSet(filters);</span>
+    update = async(columns, filters) =&gt; {
+        const { columnSet, values } = multipleColumnSet(columns);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 &nbsp;
-        const sql = <span class="cstat-no" title="statement not covered" >`UPDATE ${tables.PostReactions} </span>
+        const sql = `UPDATE ${tables.PostReactions} 
         SET ${columnSet} 
         WHERE ${filterSet}`;
 &nbsp;
-        const result = <span class="cstat-no" title="statement not covered" >await DBService.query(sql, [...values, ...filterValues]);</span>
+        const result = await DBService.query(sql, [...values, ...filterValues]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return result;</span>
+        return result;
     };
 &nbsp;
-    delete = <span class="fstat-no" title="function not covered" >as</span>ync(filters) =&gt; {
-        const { filterSet, filterValues } = <span class="cstat-no" title="statement not covered" >multipleFilterSet(filters);</span>
+    delete = async(filters) =&gt; {
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 &nbsp;
-        const sql = <span class="cstat-no" title="statement not covered" >`DELETE FROM ${tables.PostReactions}</span>
+        const sql = `DELETE FROM ${tables.PostReactions}
         WHERE ${filterSet}`;
 &nbsp;
-        const result = <span class="cstat-no" title="statement not covered" >await DBService.query(sql, [...filterValues]);</span>
-        const affectedRows = <span class="cstat-no" title="statement not covered" >result ? result.affectedRows : 0;</span>
+        const result = await DBService.query(sql, [...filterValues]);
+        const affectedRows = result ? result.affectedRows : <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return affectedRows;</span>
+        return affectedRows;
     };
 }
 &nbsp;
@@ -208,7 +208,7 @@ module.exports = new PostReactionModel;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

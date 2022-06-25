@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,67 +101,67 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span></td><td class="text"><pre class="prettyprint lang-js">const ActivityRepository = require('../repositories/activity.repository');
 &nbsp;
 class ActivityController {
-    getAllActivities = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.findAll(req.query);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getAllActivities = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.findAll(req.query);
+        res.send(response);
     };
 &nbsp;
-    getActivityById = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.findOne({activity_id: req.params.id});</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getActivityById = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.findOne({activity_id: req.params.id});
+        res.send(response);
     };
 &nbsp;
-    getActivityAttendees = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.findAllAttendeesByActivity(req.params.id, req.query);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getActivityAttendees = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.findAllAttendeesByActivity(req.params.id, req.query);
+        res.send(response);
     };
 &nbsp;
-    createActivity = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.create(req.body);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(201).send(response);</span>
+    createActivity = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.create(req.body);
+        res.status(201).send(response);
     };
 &nbsp;
-    updateActivity = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.update(req.body, req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    updateActivity = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.update(req.body, req.params.id);
+        res.send(response);
     };
 &nbsp;
-    deleteActivity = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ActivityRepository.delete(req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    deleteActivity = async(req, res, next) =&gt; {
+        const response = await ActivityRepository.delete(req.params.id);
+        res.send(response);
     };
 }
 &nbsp;
@@ -172,7 +172,7 @@ module.exports = new ActivityController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

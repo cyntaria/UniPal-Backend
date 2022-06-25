@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -487,14 +487,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -522,9 +522,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { body, query } = require('express-validator');
@@ -718,15 +718,15 @@ exports.updateClassSchema = [
         .isIn([...Object.values(Days)])
         .withMessage('Invalid Day 2'),
     body()
-        .custom(<span class="fstat-no" title="function not covered" >va</span>lue =&gt; {
-<span class="cstat-no" title="statement not covered" >            return Object.keys(value).length !== 0;</span>
+        .custom(value =&gt; {
+            return Object.keys(value).length !== 0;
         })
         .withMessage('Please provide required fields to update')
-        .custom(<span class="fstat-no" title="function not covered" >va</span>lue =&gt; {
-            const updates = <span class="cstat-no" title="statement not covered" >Object.keys(value);</span>
-            const allowUpdates = <span class="cstat-no" title="statement not covered" >["semester", "classroom_id", "subject_code", "teacher_id",</span>
+        .custom(value =&gt; {
+            const updates = Object.keys(value);
+            const allowUpdates = ["semester", "classroom_id", "subject_code", "teacher_id",
                 "parent_class_erp", "timeslot_1", "timeslot_2", "day_1", "day_2"];
-<span class="cstat-no" title="statement not covered" >            return updates.every(<span class="fstat-no" title="function not covered" >up</span>date =&gt; <span class="cstat-no" title="statement not covered" >allowUpdates.includes(update))</span>;</span>
+            return updates.every(update =&gt; allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
 ];
@@ -753,10 +753,10 @@ exports.getClassesQuerySchema = [
         .isInt({ min: 1 })
         .withMessage('Invalid Term ID found'),
     query()
-        .custom(<span class="fstat-no" title="function not covered" >va</span>lue =&gt; {
-            const queryParams = <span class="cstat-no" title="statement not covered" >Object.keys(value);</span>
-            const allowParams = <span class="cstat-no" title="statement not covered" >['semester', 'subject_code', 'teacher_id', 'term_id'];</span>
-<span class="cstat-no" title="statement not covered" >            return queryParams.every(<span class="fstat-no" title="function not covered" >pa</span>ram =&gt; <span class="cstat-no" title="statement not covered" >allowParams.includes(param))</span>;</span>
+        .custom(value =&gt; {
+            const queryParams = Object.keys(value);
+            const allowParams = ['semester', 'subject_code', 'teacher_id', 'term_id'];
+            return queryParams.every(param =&gt; allowParams.includes(param));
         })
         .withMessage('Invalid query params!')
 ];</pre></td></tr></table></pre>
@@ -766,7 +766,7 @@ exports.getClassesQuerySchema = [
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

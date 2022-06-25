@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,67 +101,67 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span></td><td class="text"><pre class="prettyprint lang-js">const ClassRepository = require('../repositories/class.repository');
 &nbsp;
 class ClassController {
-    getAllClasses = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.findAll(req.query);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getAllClasses = async(req, res, next) =&gt; {
+        const response = await ClassRepository.findAll(req.query);
+        res.send(response);
     };
 &nbsp;
-    getClassById = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.findOne(req.params.term_id, req.params.class_erp);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    getClassById = async(req, res, next) =&gt; {
+        const response = await ClassRepository.findOne(req.params.term_id, req.params.class_erp);
+        res.send(response);
     };
 &nbsp;
-    createClass = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.create(req.body);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(201).send(response);</span>
+    createClass = async(req, res, next) =&gt; {
+        const response = await ClassRepository.create(req.body);
+        res.status(201).send(response);
     };
 &nbsp;
-    createManyClasses = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.createMany(req.body);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(201).send(response);</span>
+    createManyClasses = async(req, res, next) =&gt; {
+        const response = await ClassRepository.createMany(req.body);
+        res.status(201).send(response);
     };
 &nbsp;
-    updateClass = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.update(req.body, req.params.term_id, req.params.class_erp);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    updateClass = async(req, res, next) =&gt; {
+        const response = await ClassRepository.update(req.body, req.params.term_id, req.params.class_erp);
+        res.send(response);
     };
 &nbsp;
-    deleteClass = <span class="fstat-no" title="function not covered" >as</span>ync(req, res, next) =&gt; {
-        const response = <span class="cstat-no" title="statement not covered" >await ClassRepository.delete(req.params.term_id, req.params.class_erp);</span>
-<span class="cstat-no" title="statement not covered" >        res.send(response);</span>
+    deleteClass = async(req, res, next) =&gt; {
+        const response = await ClassRepository.delete(req.params.term_id, req.params.class_erp);
+        res.send(response);
     };
 }
 &nbsp;
@@ -172,7 +172,7 @@ module.exports = new ClassController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 20 2022 16:55:59 GMT+0500 (Pakistan Standard Time)
+                at Sun Jun 26 2022 03:07:25 GMT+0500 (Pakistan Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>
