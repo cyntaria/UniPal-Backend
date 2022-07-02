@@ -34,8 +34,8 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
-    "@sentry/node": "^7.2.0",
-    "@sentry/tracing": "^7.2.0",
+    "@sentry/node": "^7.3.1",
+    "@sentry/tracing": "^7.3.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -48,7 +48,7 @@
     "otp-generator": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.5",
+    "@babel/core": "^7.18.6",
     "@babel/eslint-parser": "^7.18.2",
     "chai": "^4.3.6",
     "decache": "^4.6.1",
