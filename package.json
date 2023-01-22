@@ -52,7 +52,7 @@
     "@babel/eslint-parser": "^7.19.1",
     "chai": "^4.3.7",
     "decache": "^4.6.1",
-    "eslint": "^8.31.0",
+    "eslint": "^8.32.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^10.2.0",
     "mochawesome": "^7.1.3",
